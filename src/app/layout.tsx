@@ -14,6 +14,7 @@ export default async function RootLayout({
 
   const webUrl = process.env.NEXT_PUBLIC_WEB_URL || "";
   const googleAdsenseCode = process.env.NEXT_PUBLIC_GOOGLE_ADCODE || "";
+  const yandexVerification = process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || "";
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -21,6 +22,9 @@ export default async function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         {googleAdsenseCode && (
           <meta name="google-adsense-account" content={googleAdsenseCode} />
+        )}
+        {yandexVerification && (
+          <meta name="yandex-verification" content={yandexVerification} />
         )}
 
         <link rel="icon" href="/favicon.ico" />
