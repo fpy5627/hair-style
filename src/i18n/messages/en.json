@@ -128,5 +128,47 @@
     "contact_tip": "Other ways to contact us",
     "rating_tip": "How do you feel about ShipAny?",
     "placeholder": "Leave your words here..."
+  },
+  "hairstyle": {
+    "title": "AI Hairstyle",
+    "description": "Professional AI Hairstyle Changer & Stylist",
+    "nav": {
+      "changer": "Changer",
+      "free": "Free Plan",
+      "male": "For Male",
+      "female": "For Female",
+      "suits_me": "Hairstyle Finder"
+    },
+    "hero": {
+      "title": "AI Hairstyle Changer",
+      "subtitle": "Instantly try on new hairstyles with AI. Upload your photo to see yourself in hundreds of styles.",
+      "start": "Get Started"
+    },
+    "tool": {
+      "upload": "Upload your photo",
+      "upload_tip": "JPG, PNG supported. Max 5MB.",
+      "styles": "Select Style",
+      "generate": "Generate Now",
+      "processing": "AI magic in progress...",
+      "result": "Your New Look",
+      "download": "Download Result",
+      "try_another": "Try Another",
+      "before": "Before",
+      "after": "After"
+    },
+    "recommend": {
+      "title": "What Hairstyle Suits Me?",
+      "step1": "Upload Photo",
+      "step2": "AI Analysis",
+      "step3": "Get Recommendations",
+      "analyze": "Analyzing Face Shape...",
+      "result": "We recommend {style} for your {shape} face."
+    },
+    "footer": {
+      "blog": "Hairstyle Blog",
+      "friends": "Friend Links",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    }
   }
 }

@@ -128,5 +128,47 @@
     "contact_tip": "其他联系方式",
     "rating_tip": "您对 ShipAny 的看法如何？",
     "placeholder": "在这里留下您的反馈..."
+  },
+  "hairstyle": {
+    "title": "AI 换发型",
+    "description": "专业的 AI 换发型工具与发型师",
+    "nav": {
+      "changer": "换发型",
+      "free": "免费版",
+      "male": "男士发型",
+      "female": "女士发型",
+      "suits_me": "发型推荐"
+    },
+    "hero": {
+      "title": "AI 换发型工具",
+      "subtitle": "立即尝试最新发型。上传照片，AI 为你智能匹配数百种发型效果。",
+      "start": "立即开始"
+    },
+    "tool": {
+      "upload": "上传照片",
+      "upload_tip": "支持 JPG, PNG。最大 5MB。",
+      "styles": "选择风格",
+      "generate": "立即生成",
+      "processing": "AI 正在为你换装...",
+      "result": "生成效果",
+      "download": "下载结果",
+      "try_another": "再次尝试",
+      "before": "之前",
+      "after": "之后"
+    },
+    "recommend": {
+      "title": "我适合什么发型？",
+      "step1": "上传照片",
+      "step2": "AI 分析",
+      "step3": "获取建议",
+      "analyze": "正在分析脸型...",
+      "result": "根据你的 {shape} 脸型，我们推荐 {style}。"
+    },
+    "footer": {
+      "blog": "发型博客",
+      "friends": "友情链接",
+      "privacy": "隐私政策",
+      "terms": "服务条款"
+    }
   }
 }
