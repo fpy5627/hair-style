@@ -129,22 +129,169 @@
     "rating_tip": "How do you feel about ShipAny?",
     "placeholder": "Leave your words here..."
   },
+  "common": {
+    "before": "Before",
+    "after": "After",
+    "men": "Men",
+    "women": "Women",
+    "face_shapes": {
+      "oval": "Oval",
+      "round": "Round",
+      "square": "Square",
+      "heart": "Heart",
+      "long": "Long"
+    }
+  },
+  "home": {
+    "hero": {
+      "tagline": "No facial changes · AI matching based on face shape & hair",
+      "title": "AI Hairstyle Advisor Matching by Face Shape",
+      "subtitle": "Upload your photo, AI automatically identifies face shape and proportions, recommending the best hairstyles and colors for you.",
+      "ctaStart": "Analyze Face & Try Hairstyles",
+      "ctaSuitsMe": "Face Shape Finder",
+      "trust1": "Auto-identify face shape (Round, Square, etc.)",
+      "trust2": "Recommendation based on face proportions",
+      "trust3": "Only hair changes, no facial alterations",
+      "trust4": "500+ styles for men & women",
+      "trust5": "Privacy first, auto-delete photos",
+      "preview_title": "AI Preview",
+      "preview_point1": "✨ AI-generated preview",
+      "preview_point2": "Supports 500+ hairstyles",
+      "preview_point3": "Privacy-friendly · No storage",
+      "face_shape": "Face Shape: {shape}",
+      "preview_desc": "Hairstyle preview based on face analysis"
+    },
+    "preview": {
+      "title": "AI Hairstyle Showcase"
+    },
+    "library": {
+      "title": "500+ Hairstyle Candidates Filtered by Face Shape",
+      "subtitle": "AI has filtered the most suitable hairstyle types based on your facial structure.",
+      "smart_tags": {
+        "recommended": "Recommended (Based on your face shape) ⭐",
+        "try": "Tryable",
+        "not_recommended": "Not Recommended (Collapsible)"
+      },
+      "random": "Try Random",
+      "filters": {
+        "gender": "Gender",
+        "length": "Length",
+        "style": "Style",
+        "texture": "Texture",
+        "color": "Color"
+      }
+    },
+    "suits": {
+      "title": "AI Face-Shape Hairstyle Recommendation",
+      "subtitle": "AI will provide more reliable hairstyle suggestions based on your facial proportions and structure",
+      "upload_title": "Upload Photo",
+      "upload_desc": "AI will automatically recognize your face shape and proportions",
+      "recommend_title": "Recommended Hairstyle Examples",
+      "recommend_desc": "Generated based on your facial structure",
+      "analyzing": "Analyzing face shape...",
+      "result": "Result: Your face shape is {shape}",
+      "recommend": "Recommended",
+      "male": "For Men",
+      "female": "For Women",
+      "go_try": "Try It"
+    },
+    "color": {
+      "title": "Hair Color Optimization Based on Face & Skin Tone",
+      "subtitle": "Further optimize your color choice once the hairstyle fits your face shape",
+      "tone_result": "Analysis: {tone} skin",
+      "warm": "Warm",
+      "cool": "Cool",
+      "neutral": "Neutral",
+      "recommend": "Expert Picks",
+      "manual": "Manual Picker"
+    },
+    "gallery": {
+      "title": "Real Face · Real Recommend · Real Result",
+      "face_shape": "Face Shape: {shape}",
+      "reason": "Reason: {reason}",
+      "reasons": {
+        "balance_ratio": "Balance facial proportions",
+        "soften_jawline": "Soften jawline",
+        "elongate_face": "Elongate facial contour"
+      },
+      "try": "Try This"
+    },
+    "howto": {
+      "title": "3 Simple Steps",
+      "step1": "Upload Photo",
+      "step1_desc": "AI automatically recognizes face shape & proportions",
+      "step2": "Face Analysis Done",
+      "step2_desc": "Recommend more suitable hairstyles & colors for you",
+      "step3": "One-click Try-on",
+      "step3_desc": "Compare different styles and choose the best one",
+      "tips": "Tips: High resolution, front-facing, ears visible."
+    },
+    "usecases": {
+      "title": "When to use Hairnova",
+      "salon": "Before Salon Visit",
+      "social": "Social Media Refresh",
+      "creators": "Creator Inspiration",
+      "events": "Important Events"
+    },
+    "why": {
+      "title": "Why Choose Hairnova AI",
+      "reason1": "Based on face shape, not random generation",
+      "reason2": "No facial changes, results are authentic",
+      "reason3": "Reduce trial & error, avoid post-cut regret"
+    },
+    "cta": {
+      "title": "Ready to meet the new you?",
+      "subtitle": "Upload for free and unlock infinite possibilities.",
+      "start": "Start Free",
+      "explore": "Explore Library",
+      "recommend": "Get Advice"
+    }
+  },
   "hairstyle": {
-    "title": "AI Hairstyle",
-    "description": "Professional AI Hairstyle Changer & Stylist",
+    "title": "Hairnova AI",
+    "description": "Professional Hairnova AI Changer & Stylist",
     "nav": {
       "changer": "Changer",
-      "free": "Free Plan",
+      "suits_me": "Hairstyle Finder",
+      "explore": "Explore",
+      "pricing": "Pricing",
+      "signin_register": "Sign In",
       "male": "For Male",
       "female": "For Female",
-      "suits_me": "Hairstyle Finder"
+      "free": "Free Plan",
+      "free_pill": "FREE",
+      "free_trial_tip": "Quick Access"
     },
     "hero": {
-      "title": "AI Hairstyle Changer",
-      "subtitle": "Instantly try on new hairstyles with AI. Upload your photo to see yourself in hundreds of styles.",
-      "start": "Get Started"
+      "tagline": "Most Realistic Hairnova AI Stylist",
+      "title": "Hairnova AI Tool",
+      "subtitle": "Try new hairstyles instantly. Upload your photo and preview hundreds of hairstyles and hair colors with AI.",
+      "start": "Start Now"
+    },
+    "selling_points": {
+      "point1": "Only changes hair, not facial features",
+      "point2": "Online, no download required",
+      "point3": "Supports men’s and women’s hairstyles & colors"
+    },
+    "preview": {
+      "title": "Preview Results",
+      "subtitle": "See the magic happen before you start.",
+      "before": "Before",
+      "after": "After",
+      "try": "Try",
+      "simulate": "Simulate Generating",
+      "generating": "AI Styling...",
+      "success": "Success!",
+      "explore_more": "Explore 500+ More Styles"
     },
     "tool": {
+      "upload_btn": "Upload",
+      "style_btn": "Style",
+      "color_btn": "Color",
+      "men_gallery": "Men's Style Gallery",
+      "women_gallery": "Women's Style Gallery",
+      "tips_title": "Tips for Best Results",
+      "tips_desc": "For the most realistic look, ensure your photo is high-resolution, front-facing, and your ears are visible. Our AI works best when the background is simple.",
       "upload": "Upload your photo",
       "upload_tip": "JPG, PNG supported. Max 5MB.",
       "styles": "Select Style",
@@ -158,17 +305,236 @@
     },
     "recommend": {
       "title": "What Hairstyle Suits Me?",
+      "subtitle": "Our AI analyzes your unique facial features to recommend the most flattering hairstyles for you.",
       "step1": "Upload Photo",
       "step2": "AI Analysis",
       "step3": "Get Recommendations",
+      "privacy_tip": "Your photo is processed locally and never stored on our servers.",
       "analyze": "Analyzing Face Shape...",
-      "result": "We recommend {style} for your {shape} face."
+      "analyze_tip": "Detecting face shape, jawline, and forehead ratio...",
+      "analysis_tag": "Analysis Result",
+      "result": "We recommend {style} for your {shape} face.",
+      "result_desc": "Your {shape} face shape is best complemented by styles that add volume at the top while keeping the sides clean. The {style} will perfectly balance your features.",
+      "try_this": "Try This Style Now",
+      "analyze_again": "Analyze Again",
+      "alt_style": "Alternative Style {id}"
     },
     "footer": {
       "blog": "Hairstyle Blog",
+      "blog_posts": {
+        "p1": "Best Hairstyles for Round Faces in 2026",
+        "p2": "How AI is Revolutionizing Hair Salons",
+        "p3": "Top 10 Male Haircuts for Summer"
+      },
       "friends": "Friend Links",
+      "friend_links": {
+        "l1": "AI Image Generator",
+        "l2": "Face Swap Online",
+        "l3": "Background Remover",
+        "l4": "AI Headshot Pro"
+      },
+      "support_legal": "Support & Legal",
+      "help_center": "Help Center",
+      "faq": "FAQ",
+      "contact_us": "Contact Us",
       "privacy": "Privacy Policy",
       "terms": "Terms of Service"
+    },
+    "landing": {
+      "color_tryon": {
+        "title": "Hair Color Try-On",
+        "description": "Preview your look with various hair colors including natural, light, and vibrant colorful tones without touching your hair.",
+        "cta": "Try Hair Colors",
+        "disclaimer": "* For preview only. Actual results may vary.",
+        "colors": {
+          "black": "Black",
+          "brown": "Brown",
+          "blonde": "Blonde",
+          "red": "Red",
+          "silver": "Silver",
+          "colorful": "Colorful"
+        }
+      },
+      "face_shape": {
+        "title": "What Hairstyle Suits Me?",
+        "description": "Get personalized AI recommendations based on your face shape, features, and overall style for your next salon visit.",
+        "cta": "Get Recommendations",
+        "step1": "Upload",
+        "step1_desc": "Upload a clear front-facing photo",
+        "step2": "Analyze",
+        "step2_desc": "AI analyzes your face shape",
+        "step3": "Results",
+        "step3_desc": "Get tailored style suggestions",
+        "supported_faces": "Supported Face Shapes:",
+        "f1": "Oval",
+        "f2": "Round",
+        "f3": "Square",
+        "f4": "Heart",
+        "f5": "Long"
+      },
+      "popular_styles": {
+        "title": "Popular Hairstyle Styles",
+        "m_title": "Male Styles",
+        "m_desc": "Fade, Buzz, Business Professional",
+        "f_title": "Female Styles",
+        "f_desc": "Bob, Bangs, Elegant Long Waves",
+        "c_title": "Texture Styles",
+        "c_desc": "Curly, Straight, and Voluminous",
+        "v_title": "Vibrant Colors",
+        "v_desc": "Bold, Neon, and Natural Balayage",
+        "t_title": "Trending Now",
+        "t_desc": "Stay ahead with latest fashion styles",
+        "tag_new": "NEW",
+        "tag_hot": "HOT"
+      },
+      "seo_block": {
+        "p1": "Hairnova AI automatically recognizes your face shape and proportions, recommending hairstyles and colors that better suit your facial structure, helping you see the results before making a real change.",
+        "p2": "No download, no registration required. Just upload a photo to start the experience.",
+        "p3": ""
+      },
+      "faq": {
+        "title": "Common Questions",
+        "q1": "How does AI determine my face shape?",
+        "a1": "Our AI analyzes 68 key facial landmarks including jawline curvature, forehead width, and facial proportions to accurately identify your face shape (Oval, Round, Square, etc.) and calculate the best hairstyle ratios.",
+        "q2": "What hairstyles suit a round face?",
+        "a2": "For round faces, we generally recommend styles that add height at the top or use side lines to create an elongating effect, such as voluminous waves or side-parted cuts. Our AI provides more tailored advice based on your specific features.",
+        "q3": "What if I don't like the recommended hairstyles?",
+        "a3": "AI recommendations are optimized choices based on proportions, but you can always try other styles manually in our 'Hairstyle Candidate Library'. AI also marks 'Tryable' styles for you to explore.",
+        "q4": "Will the AI change my facial features?",
+        "a4": "Definitely not. Our technology uses high-precision facial masking to only modify hair and color. Your original eyes, nose, and mouth remain 100% authentic and unchanged.",
+        "q5": "Are the recommendation results accurate?",
+        "a5": "Our recommendations are based on millions of facial and hair data points. While style is subjective, the AI suggestions follow structural balance principles, providing highly valuable scientific decision-making advice.",
+        "q6": "Is Hairnova AI Advisor free to use?",
+        "a6": "Yes, we offer free trial credits for every user. You can experience the core AI face shape recognition and hairstyle recommendation features without any initial cost.",
+        "q7": "Does the tool support both men and women?",
+        "a7": "Absolutely. We have dedicated AI models optimized for both male and female hair textures and facial contours, supporting over 500 styles across business, casual, and trendy categories.",
+        "q8": "Do you store or save my photos?",
+        "a8": "We prioritize your privacy. All photos are processed through encrypted channels and deleted immediately from server cache after generation, following a 'Generate-and-Destroy' policy."
+      },
+      "what_is": {
+        "title": "What Is Hairnova AI?",
+        "description": "Hairnova AI lets you virtually try different hairstyles online. By uploading a photo, the AI analyzes your face and hair area, then applies new hairstyles and colors without changing your facial features.",
+        "card1_title": "AI Face & Hair Detection",
+        "card1_desc": "AI-powered face and hair detection",
+        "card2_title": "Facial Feature Safety",
+        "card2_desc": "Hair-only replacement, no facial changes",
+        "card3_title": "Endless Previews",
+        "card3_desc": "Preview multiple hairstyles, lengths, and colors"
+      },
+      "can_do": {
+        "title": "What Can Hairnova AI Do for You?",
+        "f1_title": "Try Different Hairstyles",
+        "f1_desc": "Short, long, curly, straight, and more",
+        "f2_title": "Preview Hair Colors",
+        "f2_desc": "Brown, blonde, black, and other tones",
+        "f3_title": "Men & Women Support",
+        "f3_desc": "Tailored hairstyle options",
+        "f4_title": "Smart Recommendations",
+        "f4_desc": "Suggestions based on face shape"
+      },
+      "scenarios": {
+        "title": "When Should You Use Hairnova AI?",
+        "s1_title": "Before a Haircut",
+        "s1_desc": "Preview the result before your salon visit",
+        "s2_title": "New Hair Color",
+        "s2_desc": "When considering a new hair color",
+        "s3_title": "Profile Photos",
+        "s3_desc": "For profile photos or professional headshots",
+        "s4_title": "Face Shape Match",
+        "s4_desc": "To find hairstyles that match your face shape"
+      },
+      "why_us": {
+        "title": "Why Choose Hairnova AI Advisor?",
+        "reason1": "Based on face shape, not random generation",
+        "reason2": "No facial changes, results are authentic",
+        "reason3": "Reduce trial & error, avoid post-cut regret",
+        "reason4": "Free trial available, auto-delete photos"
+      },
+      "bottom_cta": {
+        "title": "Ready to find the hairstyle that truly fits your face shape?",
+        "subtitle": "Upload your photo and see the result instantly.",
+        "button": "Analyze Face & Try Hairstyles"
+      },
+      "intent": {
+        "changer_desc": "Try on any hairstyle instantly.",
+        "suits_me_desc": "Get expert recommendations.",
+        "male_desc": "Fade, buzz cut, business styles.",
+        "female_desc": "Bob, bangs, long hair.",
+        "color_desc": "Natural and creative hair colors.",
+        "recommend_desc": "Based on face shape.",
+        "try_now": "Try it now"
+      },
+      "steps": {
+        "title": "3 Simple Steps to a New You",
+        "step1": "Upload Photo",
+        "step1_desc": "AI automatically recognizes face shape & proportions",
+        "step2": "Face Analysis Done",
+        "step2_desc": "Recommend more suitable hairstyles & colors for you",
+        "step3": "One-click Try-on",
+        "step3_desc": "Compare different styles and choose the best one"
+      },
+      "preview_examples": {
+        "title": "Hairstyle Preview Examples",
+        "note": "The following examples show AI-generated hairstyle previews for reference only. Actual results may vary."
+      },
+      "explore_more": "Popular Face-Shape Hairstyle Searches",
+      "explore_by_category": "Explore Hairstyles by Category",
+      "related_links": {
+        "l1": "Hairstyles for Oval Faces",
+        "l2": "Hairstyles for Round Faces",
+        "l3": "Hairstyles for Square Faces",
+        "l4": "How to Determine Your Face Shape"
+      },
+      "comparison": {
+        "title": "Free vs Pro",
+        "subtitle": "Choose the plan that fits your style needs.",
+        "feature": "Feature",
+        "free": "Free",
+        "pro": "Pro",
+        "unlock_tip": "Want to unlock everything?",
+        "upgrade_btn": "Upgrade to Pro Now",
+        "f1": "Daily Generations",
+        "f1_free": "3",
+        "f1_pro": "Unlimited",
+        "f2": "Hairstyle Library",
+        "f2_free": "Basic (50+)",
+        "f2_pro": "Premium (500+)",
+        "f3": "Image Resolution",
+        "f3_free": "Standard",
+        "f3_pro": "4K Ultra HD",
+        "f4": "Watermark",
+        "f4_free": "Yes",
+        "f4_pro": "No",
+        "f5": "Processing Speed",
+        "f5_free": "Normal",
+        "f5_pro": "Instant",
+        "f6": "Commercial Use",
+        "f6_free": "No",
+        "f6_pro": "Yes"
+      }
+    },
+    "categories": {
+      "all": "All",
+      "trendy": "Trendy",
+      "short": "Short",
+      "long": "Long",
+      "curly": "Curly",
+      "classic": "Classic"
+    },
+    "styles": {
+      "buzz_cut": "Buzz Cut",
+      "long_waves": "Long Waves",
+      "pompadour": "Pompadour",
+      "curly_bob": "Curly Bob",
+      "side_part": "Side Part",
+      "mullet": "Mullet",
+      "undercut": "Undercut",
+      "man_bun": "Man Bun",
+      "wolf_cut": "Wolf Cut",
+      "pixie_cut": "Pixie Cut",
+      "french_braid": "French Braid",
+      "sleek_ponytail": "Sleek Ponytail",
+      "balayage": "Balayage"
     }
   }
 }

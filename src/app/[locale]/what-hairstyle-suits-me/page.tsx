@@ -41,13 +41,13 @@ export default function SuitsMePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f5f3ff] to-[#faf5ff]">
       <HairstyleHeader />
       
       <main className="max-w-7xl mx-auto px-4 pb-20">
         <ToolShell 
           title={tr('title')} 
-          subtitle="Our AI analyzes your unique facial features to recommend the most flattering hairstyles for you."
+          subtitle={tr('subtitle')}
         >
           <div className="lg:col-span-12">
             {/* Step Indicator */}
@@ -57,11 +57,11 @@ export default function SuitsMePage() {
                   <React.Fragment key={s}>
                     <div className={cn(
                       "w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all",
-                      step >= s ? "bg-blue-600 text-white shadow-lg" : "bg-white text-slate-300 border border-slate-200"
+                      step >= s ? "bg-blue-600 text-white shadow-lg" : "bg-white/60 backdrop-blur-sm text-slate-300 border border-white/40"
                     )}>
                       {step > s ? <CheckCircle2 size={20} /> : s}
                     </div>
-                    {s < 3 && <div className={cn("w-12 h-0.5", step > s ? "bg-blue-600" : "bg-slate-200")} />}
+                    {s < 3 && <div className={cn("w-12 h-0.5", step > s ? "bg-blue-600" : "bg-slate-200/50")} />}
                   </React.Fragment>
                 ))}
               </div>
@@ -72,7 +72,7 @@ export default function SuitsMePage() {
                 <div className="space-y-6">
                   <UploadCard preview={preview} onUpload={handleUpload} onClear={() => setPreview(null)} />
                   <div className="text-center text-xs text-slate-400">
-                    <p>Your photo is processed locally and never stored on our servers.</p>
+                    <p>{tr('privacy_tip')}</p>
                   </div>
                 </div>
               )}
@@ -80,7 +80,7 @@ export default function SuitsMePage() {
               {step === 2 && (
                 <GlassCard className="p-12 text-center space-y-8">
                   <div className="relative w-24 h-24 mx-auto">
-                    <div className="absolute inset-0 border-4 border-blue-100 rounded-full" />
+                    <div className="absolute inset-0 border-4 border-blue-100/50 rounded-full" />
                     <div className="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center text-blue-600">
                       <Brain size={32} />
@@ -88,7 +88,7 @@ export default function SuitsMePage() {
                   </div>
                   <div className="space-y-2">
                     <h3 className="text-xl font-bold text-slate-900">{tr('analyze')}</h3>
-                    <p className="text-sm text-slate-500">Detecting face shape, jawline, and forehead ratio...</p>
+                    <p className="text-sm text-slate-500">{tr('analyze_tip')}</p>
                   </div>
                   {preview && (
                     <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl relative">
@@ -107,30 +107,30 @@ export default function SuitsMePage() {
                     </div>
                     
                     <div className="flex flex-col md:flex-row gap-10 items-center">
-                      <div className="w-48 h-48 rounded-2xl overflow-hidden shadow-2xl border-4 border-white rotate-3">
+                      <div className="w-48 h-48 rounded-2xl overflow-hidden shadow-2xl border-4 border-white rotate-3 transition-transform hover:rotate-0 duration-500">
                         {preview && <img src={preview} className="w-full h-full object-cover" alt="Analyzed" />}
                       </div>
                       
                       <div className="flex-1 space-y-6 text-center md:text-left">
                         <div className="space-y-2">
-                          <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-bold uppercase tracking-widest">Analysis Result</span>
+                          <span className="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-bold uppercase tracking-widest border border-blue-200">{tr('analysis_tag')}</span>
                           <h2 className="text-3xl font-extrabold text-slate-900 leading-tight">
                             {tr('result', { shape: analysis.shape, style: analysis.style })}
                           </h2>
                         </div>
                         
                         <p className="text-base text-slate-500 leading-relaxed">
-                          Your <span className="text-slate-900 font-semibold">{analysis.shape}</span> face shape is best complemented by styles that add volume at the top while keeping the sides clean. The <span className="text-slate-900 font-semibold">{analysis.style}</span> will perfectly balance your features.
+                          {tr('result_desc', { shape: analysis.shape, style: analysis.style })}
                         </p>
                         
                         <div className="flex flex-col sm:flex-row gap-4">
                           <Link href="/ai-hairstyle-changer">
                             <Button3D variant="primary" className="w-full">
-                              Try This Style Now <ArrowRight size={18} />
+                              {tr('try_this')} <ArrowRight size={18} />
                             </Button3D>
                           </Link>
                           <Button3D variant="outline" onClick={() => setStep(1)} className="w-full">
-                            Analyze Again
+                            {tr('analyze_again')}
                           </Button3D>
                         </div>
                       </div>
@@ -147,7 +147,7 @@ export default function SuitsMePage() {
                           alt="Recommended"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <p className="text-white text-xs font-bold uppercase tracking-wider">Alternative Style {i}</p>
+                          <p className="text-white text-xs font-bold uppercase tracking-wider">{tr('alt_style', { id: i })}</p>
                         </div>
                       </GlassCard>
                     ))}

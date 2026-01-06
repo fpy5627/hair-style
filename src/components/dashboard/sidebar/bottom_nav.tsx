@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Nav } from "@/types/blocks/base";
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 import Icon from "@/components/icon";
 
 export function BottomNav({
@@ -23,16 +23,18 @@ export function BottomNav({
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu>
-          {nav.items?.map((item, index) => (
-            <SidebarMenuItem key={index}>
-              <SidebarMenuButton asChild>
-                <Link href={item.url as any} target={item.target}>
-                  {item.icon && <Icon name={item.icon} />}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {nav.items
+            ?.filter((item) => item.url && item.url.trim() !== "")
+            .map((item, index) => (
+              <SidebarMenuItem key={index}>
+                <SidebarMenuButton asChild>
+                  <SafeLink href={item.url as any} target={item.target}>
+                    {item.icon && <Icon name={item.icon} />}
+                    <span>{item.title}</span>
+                  </SafeLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronsUpDown, LogOut } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -93,14 +93,14 @@ export default function SidebarUser({ account }: { account?: Account }) {
                   {account?.items?.map((item, index) => (
                     <Fragment key={index}>
                       <DropdownMenuItem className="cursor-pointer">
-                        <Link
+                        <SafeLink
                           href={item.url as any}
                           target={item.target}
                           className="w-full flex items-center gap-2"
                         >
                           {item.icon && <Icon name={item.icon} />}
                           {item.title}
-                        </Link>
+                        </SafeLink>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </Fragment>

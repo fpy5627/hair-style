@@ -29,3 +29,9 @@ button {
 pre {
   @apply px-4;
 }
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}

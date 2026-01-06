@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Blog as BlogType } from "@/types/blocks/blog";
+import { SafeLink } from "@/components/common/safe-link";
 
 export default function Blog({ blog }: { blog: BlogType }) {
   if (blog.disabled) {
@@ -21,13 +22,18 @@ export default function Blog({ blog }: { blog: BlogType }) {
           </p>
         </div>
         <div className="w-full flex flex-wrap items-start">
-          {blog.items?.map((item, idx) => (
-            <a
-              key={idx}
-              href={item.url || `/${item.locale}/posts/${item.slug}`}
-              target={item.target || "_self"}
-              className="w-full md:w-1/3 p-4"
-            >
+          {blog.items
+            ?.filter((item) => {
+              const href = item.url || `/${item.locale}/posts/${item.slug}`;
+              return href && href.trim() !== "";
+            })
+            .map((item, idx) => (
+              <SafeLink
+                key={idx}
+                href={item.url || `/${item.locale}/posts/${item.slug}`}
+                target={item.target || "_self"}
+                className="w-full md:w-1/3 p-4"
+              >
               <div className="flex flex-col overflow-clip rounded-xl border border-border">
                 {item.cover_url && (
                   <div>
@@ -53,7 +59,7 @@ export default function Blog({ blog }: { blog: BlogType }) {
                   )}
                 </div>
               </div>
-            </a>
+            </SafeLink>
           ))}
         </div>
       </div>

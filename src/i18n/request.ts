@@ -21,6 +21,15 @@ export default getRequestConfig(async ({ requestLocale }) => {
     return {
       locale: locale,
       messages: messages,
+      onError(error) {
+        if (error.code === 'MISSING_MESSAGE') {
+          // 缺失 key 时显示 key，而不是另一种语言
+          return;
+        }
+      },
+      getMessageFallback({ key }) {
+        return key;
+      }
     };
   } catch (e) {
     return {

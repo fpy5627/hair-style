@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/icon";
-import Link from "next/link";
+import { SafeLink } from "@/components/common/safe-link";
 import { Section as SectionType } from "@/types/blocks/section";
 
 export default function CTA({ section }: { section: SectionType }) {
@@ -21,20 +21,22 @@ export default function CTA({ section }: { section: SectionType }) {
             </p>
             {section.buttons && (
               <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                {section.buttons.map((item, idx) => (
-                  <Button key={idx} variant={item.variant || "default"}>
-                    <Link
-                      href={item.url || ""}
-                      target={item.target}
-                      className="flex items-center justify-center gap-1"
-                    >
-                      {item.title}
-                      {item.icon && (
-                        <Icon name={item.icon as string} className="size-6" />
-                      )}
-                    </Link>
-                  </Button>
-                ))}
+                {section.buttons
+                  ?.filter((item) => item.url && item.url.trim() !== "")
+                  .map((item, idx) => (
+                    <Button key={idx} variant={item.variant || "default"}>
+                      <SafeLink
+                        href={item.url || ""}
+                        target={item.target}
+                        className="flex items-center justify-center gap-1"
+                      >
+                        {item.title}
+                        {item.icon && (
+                          <Icon name={item.icon as string} className="size-6" />
+                        )}
+                      </SafeLink>
+                    </Button>
+                  ))}
               </div>
             )}
           </div>

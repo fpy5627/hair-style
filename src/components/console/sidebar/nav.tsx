@@ -1,7 +1,7 @@
 "use client";
 
 import Icon from "@/components/icon";
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 import { NavItem } from "@/types/blocks/base";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ export default function ({
       {...props}
     >
       {items.map((item, index) => (
-        <Link
+        <SafeLink
           key={index}
           href={item.url as any}
           className={cn(
@@ -40,7 +40,7 @@ export default function ({
         >
           {item.icon && <Icon name={item.icon} className="w-4 h-4" />}
           {item.title}
-        </Link>
+        </SafeLink>
       ))}
     </nav>
   );

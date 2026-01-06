@@ -7,6 +7,11 @@ export const localeNames: any = {
   zh: "中文",
 };
 
+export const localeShortNames: any = {
+  en: "EN",
+  zh: "中文",
+};
+
 export const defaultLocale = "en";
 
 export const localePrefix = "as-needed";

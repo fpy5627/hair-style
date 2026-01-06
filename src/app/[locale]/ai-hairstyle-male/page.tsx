@@ -13,31 +13,32 @@ import { Button3D } from '@/components/ui/Button3D';
 import { Sparkles, User } from 'lucide-react';
 import { RelatedLinks } from '@/components/blocks/hairstyle/LandingComponents';
 
-const MOCK_MALE_STYLES = [
-  { id: 'm1', name: 'Buzz Cut', category: 'Short', preview: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop' },
-  { id: 'm2', name: 'Pompadour', category: 'Classic', preview: 'https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?w=200&h=200&fit=crop' },
-  { id: 'm3', name: 'Side Part', category: 'Trendy', preview: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop' },
-  { id: 'm4', name: 'Mullet', category: 'Trendy', preview: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=200&h=200&fit=crop' },
-  { id: 'm5', name: 'Undercut', category: 'Trendy', preview: 'https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?w=200&h=200&fit=crop' },
-  { id: 'm6', name: 'Man Bun', category: 'Long', preview: 'https://images.unsplash.com/photo-1519085185750-7407a27503ca?w=200&h=200&fit=crop' },
-];
-
 /**
  * 男士发型页
  */
 export default function HairstyleMalePage() {
   const t = useTranslations('hairstyle');
+  const ts = useTranslations('hairstyle.styles');
   const [status, setStatus] = useState<'idle' | 'ready' | 'loading' | 'success'>('idle');
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
 
+  const MOCK_MALE_STYLES = [
+    { id: 'm1', name: ts('buzz_cut'), category: 'Short', preview: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop' },
+    { id: 'm2', name: ts('pompadour'), category: 'Classic', preview: 'https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?w=200&h=200&fit=crop' },
+    { id: 'm3', name: ts('side_part'), category: 'Trendy', preview: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop' },
+    { id: 'm4', name: ts('mullet'), category: 'Trendy', preview: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=200&h=200&fit=crop' },
+    { id: 'm5', name: ts('undercut'), category: 'Trendy', preview: 'https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?w=200&h=200&fit=crop' },
+    { id: 'm6', name: ts('man_bun'), category: 'Long', preview: 'https://images.unsplash.com/photo-1519085185750-7407a27503ca?w=200&h=200&fit=crop' },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f5f3ff] to-[#faf5ff]">
       <HairstyleHeader />
       <main className="max-w-7xl mx-auto px-4 pb-20">
         <ToolShell 
           title={t('nav.male')} 
-          subtitle="Explore the best hairstyles for men. From classic buzz cuts to modern pompadours."
+          subtitle={t('nav.male_subtitle')}
         >
           <div className="lg:col-span-7 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
@@ -54,7 +55,7 @@ export default function HairstyleMalePage() {
               <GlassCard className="p-6 flex flex-col space-y-4">
                 <div className="flex items-center gap-2 mb-2">
                   <User size={18} className="text-blue-600" />
-                  <h3 className="font-bold text-slate-900">Men's Style Gallery</h3>
+                  <h3 className="font-bold text-slate-900">{t('tool.men_gallery')}</h3>
                 </div>
                 <div className="flex-1 overflow-y-auto">
                   <HairstyleGrid 

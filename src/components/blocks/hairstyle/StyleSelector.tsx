@@ -14,16 +14,16 @@ interface StyleTabsProps {
  */
 export const StyleTabs = ({ categories, activeCategory, onCategoryChange }: StyleTabsProps) => {
   return (
-    <div className="flex gap-2 p-1 bg-slate-100/50 backdrop-blur-sm rounded-xl overflow-x-auto no-scrollbar border border-slate-200/50">
+    <div className="flex gap-2 p-1 bg-white/40 backdrop-blur-md rounded-xl overflow-x-auto no-scrollbar border border-white/40">
       {categories.map((category) => (
         <button
           key={category}
           onClick={() => onCategoryChange(category)}
           className={cn(
-            "px-4 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap",
+            "px-4 py-1.5 rounded-lg text-sm font-bold transition-all whitespace-nowrap",
             activeCategory === category
-              ? "bg-white text-blue-600 shadow-sm"
-              : "text-slate-500 hover:text-slate-800 hover:bg-white/50"
+              ? "bg-white text-blue-600 shadow-md border border-white/20"
+              : "text-slate-500 hover:text-slate-800 hover:bg-white/20"
           )}
         >
           {category}
@@ -34,7 +34,7 @@ export const StyleTabs = ({ categories, activeCategory, onCategoryChange }: Styl
 };
 
 interface HairstyleGridProps {
-  styles: Array<{ id: string; name: string; preview: string }>;
+  styles: Array<{ id: string; name: string; preview: string; isMatch?: boolean }>;
   selectedStyleId: string | null;
   onStyleSelect: (id: string) => void;
 }
@@ -61,6 +61,14 @@ export const HairstyleGrid = ({ styles, selectedStyleId, onStyleSelect }: Hairst
             alt={style.name} 
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
           />
+          
+          {/* Smart Match Badge */}
+          {style.isMatch && (
+            <div className="absolute top-2 left-2 z-[5] bg-indigo-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter shadow-lg flex items-center gap-1">
+              <span>Best Match</span>
+            </div>
+          )}
+
           <div className={cn(
             "absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity",
             selectedStyleId === style.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"

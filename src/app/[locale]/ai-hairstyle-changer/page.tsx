@@ -14,28 +14,37 @@ import { Sparkles, Info } from 'lucide-react';
 import { RelatedLinks } from '@/components/blocks/hairstyle/LandingComponents';
 
 /**
- * Mock 数据：发型分类与列表
- */
-const STYLE_CATEGORIES = ['All', 'Trendy', 'Short', 'Long', 'Curly', 'Classic'];
-const MOCK_STYLES = [
-  { id: '1', name: 'Buzz Cut', category: 'Short', preview: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop' },
-  { id: '2', name: 'Long Waves', category: 'Long', preview: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=200&h=200&fit=crop' },
-  { id: '3', name: 'Pompadour', category: 'Classic', preview: 'https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?w=200&h=200&fit=crop' },
-  { id: '4', name: 'Curly Bob', category: 'Curly', preview: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=200&h=200&fit=crop' },
-  { id: '5', name: 'Side Part', category: 'Trendy', preview: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop' },
-  { id: '6', name: 'Mullet', category: 'Trendy', preview: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=200&h=200&fit=crop' },
-];
-
-/**
- * AI 换发型核心工具页
+ * Hairnova AI 换发型核心工具页
  */
 export default function HairstyleChangerPage() {
   const t = useTranslations('hairstyle');
+  const tc = useTranslations('hairstyle.categories');
+  const ts = useTranslations('hairstyle.styles');
+
   const [status, setStatus] = useState<'idle' | 'ready' | 'loading' | 'success'>('idle');
   const [preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState('All');
+
+  const STYLE_CATEGORIES = ['All', 'Trendy', 'Short', 'Long', 'Curly', 'Classic'];
+  const CATEGORY_MAP: any = {
+    'All': tc('all'),
+    'Trendy': tc('trendy'),
+    'Short': tc('short'),
+    'Long': tc('long'),
+    'Curly': tc('curly'),
+    'Classic': tc('classic'),
+  };
+
+  const MOCK_STYLES = [
+    { id: '1', name: ts('buzz_cut'), category: 'Short', preview: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=200&h=200&fit=crop' },
+    { id: '2', name: ts('long_waves'), category: 'Long', preview: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=200&h=200&fit=crop' },
+    { id: '3', name: ts('pompadour'), category: 'Classic', preview: 'https://images.unsplash.com/photo-1593702275687-f8b402bf1fb5?w=200&h=200&fit=crop' },
+    { id: '4', name: ts('curly_bob'), category: 'Curly', preview: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=200&h=200&fit=crop' },
+    { id: '5', name: ts('side_part'), category: 'Trendy', preview: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop' },
+    { id: '6', name: ts('mullet'), category: 'Trendy', preview: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=200&h=200&fit=crop' },
+  ];
 
   const handleUpload = (file: File) => {
     const reader = new FileReader();
@@ -60,7 +69,7 @@ export default function HairstyleChangerPage() {
     : MOCK_STYLES.filter(s => s.category === activeCategory);
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f5f3ff] to-[#faf5ff]">
       <HairstyleHeader />
       
       <main className="max-w-7xl mx-auto px-4 pb-20">
@@ -83,9 +92,12 @@ export default function HairstyleChangerPage() {
                 </div>
                 
                 <StyleTabs 
-                  categories={STYLE_CATEGORIES} 
-                  activeCategory={activeCategory} 
-                  onCategoryChange={setActiveCategory} 
+                  categories={STYLE_CATEGORIES.map(c => CATEGORY_MAP[c])} 
+                  activeCategory={CATEGORY_MAP[activeCategory]} 
+                  onCategoryChange={(translated) => {
+                    const original = STYLE_CATEGORIES.find(c => CATEGORY_MAP[c] === translated);
+                    if (original) setActiveCategory(original);
+                  }} 
                 />
                 
                 <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-[200px]">
@@ -122,15 +134,15 @@ export default function HairstyleChangerPage() {
 
         {/* 补充说明 / Free vs Pro */}
         <div className="mt-12">
-          <GlassCard className="p-6 border-blue-100 bg-blue-50/30">
+          <GlassCard className="p-6 border-blue-100 shadow-blue-500/5">
             <div className="flex gap-4">
-              <div className="p-2 bg-blue-100 text-blue-600 rounded-lg h-fit">
+              <div className="p-2 bg-blue-100 text-blue-600 rounded-lg h-fit border border-blue-200">
                 <Info size={20} />
               </div>
               <div className="space-y-1">
-                <h4 className="font-bold text-slate-900">Tips for Best Results</h4>
+                <h4 className="font-bold text-slate-900">{t('tool.tips_title')}</h4>
                 <p className="text-sm text-slate-600 leading-relaxed">
-                  For the most realistic look, ensure your photo is high-resolution, front-facing, and your ears are visible. Our AI works best when the background is simple.
+                  {t('tool.tips_desc')}
                 </p>
               </div>
             </div>

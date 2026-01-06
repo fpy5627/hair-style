@@ -7,7 +7,7 @@ import { Table as TableSlotType } from "@/types/slots/table";
 import { getTranslations } from "next-intl/server";
 import moment from "moment";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { SafeLink } from "@/components/common/safe-link";
 import { getStripeBilling } from "@/services/order";
 
 export default async function () {
@@ -81,9 +81,9 @@ export default async function () {
           const billing = await getStripeBilling(sub_id);
 
           return (
-            <Link href={billing.url} target="_blank">
+            <SafeLink href={billing.url} target="_blank">
               {t("my_orders.table.manage_billing")}
-            </Link>
+            </SafeLink>
           );
         }
 

@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/sidebar";
 import Nav from "./nav";
 import { Sidebar as SidebarType } from "@/types/blocks/sidebar";
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 import Image from "next/image";
 import SidebarUser from "./user";
 import Footer from "./footer";
@@ -50,7 +50,7 @@ export default function DashboardSidebar({
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <Link
+              <SafeLink
                 href={sidebar.brand?.url as any}
                 className="flex items-center gap-2"
               >
@@ -66,7 +66,7 @@ export default function DashboardSidebar({
                 <span className="text-base font-semibold">
                   {sidebar.brand?.title}
                 </span>
-              </Link>
+              </SafeLink>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,0 +1,279 @@
+AI Hairstyle 产品【功能蓝图（最终版）】
+
+定位一句话：
+一个支持中英双语、移动端/PC 一套代码、免费可用、主打换发型 + 发型推荐的 AI Hairstyle Web 工具
+
+1️⃣ 核心功能层（必须做，直接变现 & SEO）
+A. AI 换发型（Hairstyle Changer）
+
+用户能做什么
+
+上传照片（UI-only mock）
+
+选择男 / 女 / 通用发型
+
+选择发型长度 / 风格 / 卷直 / 发色
+
+查看 Before / After 效果
+
+下载 / 分享（UI-only）
+
+搜索意图覆盖
+
+ai hairstyle
+
+ai hairstyle changer
+
+ai change hairstyle
+
+ai hairstyle online
+
+B. 免费换发型（Free Mode）
+
+用户能做什么
+
+免费在线预览
+
+明确看到“免费限制”
+
+对比 Free vs Pro
+
+搜索意图覆盖
+
+ai hairstyle changer free
+
+ai hairstyle online free
+
+free ai hairstyle
+
+C. 男 / 女发型专属入口
+
+男性
+
+Buzz / Fade / Business / Modern
+
+搜索意图：ai hairstyle male / free ai hairstyle male
+
+女性
+
+Bob / Bangs / Long / Curly / Color
+
+搜索意图：ai hairstyle female / ai hairstyle online free female
+
+D. 适合我的发型（推荐决策）
+
+用户能做什么
+
+上传照片
+
+查看“脸型分析”（mock）
+
+获取 Top 5 发型推荐
+
+一键跳转试戴推荐发型
+
+搜索意图覆盖
+
+ai what hairstyle suits me
+
+what hairstyle fits my face
+
+2️⃣ SEO & 内容层（增长）
+E. Hub 总入口
+
+聚合所有功能
+
+作为 SEO 权重中心
+
+F. Blog + FAQ
+
+教程、指南、趋势
+
+FAQ 内嵌站内链接
+
+G. Footer 友情链接
+
+除 Blog 外，新增 Friend Links
+
+可配置数组，利于 SEO 互链
+
+3️⃣ 体验与设计层（你新增的关键要求）
+
+✅ 一套代码：移动端 / PC 响应式
+
+✅ 全站中英双语（i18n）
+
+✅ 字体不大、页面简洁
+
+✅ 所有卡片：毛玻璃 / 磨砂玻璃
+
+✅ 关键按钮：3D 立体效果
+
+✅ Footer：Blog + Friend Links
+
+二、网站结构（URL 规划 + SEO 标题 / 描述）
+
+原则：
+一个 URL = 一个清晰搜索意图
+Hub → Money Page → 细分页 → 内容页
+
+🟢 Hub 总入口（权重中心）
+/ai-hairstyle
+
+SEO Title
+
+AI Hairstyle – Try AI Hairstyle Changer Online Free
+
+Meta Description
+
+Try AI hairstyle online for free. Upload your photo and preview different hairstyles instantly. No app, no download.
+
+语言
+
+EN / ZH 两套
+
+中文示例：
+
+AI 发型 – 在线免费换发型工具
+
+🔴 核心钱页（转化最高）
+/ai-hairstyle-changer
+
+SEO Title
+
+AI Hairstyle Changer – Change Hairstyle Online Free
+
+Meta Description
+
+Upload your photo and use our AI hairstyle changer to preview hairstyles online. Fast, realistic, no app required.
+
+/ai-hairstyle-changer-free
+
+SEO Title
+
+Free AI Hairstyle Changer – Try Hairstyles Online Free
+
+Meta Description
+
+Free AI hairstyle changer online. Preview hairstyles without signup. Compare free vs pro features.
+
+🧑‍🦱 性别细分页（SEO 极强）
+/ai-hairstyle-male
+
+SEO Title
+
+AI Hairstyle for Men – Try Men’s Hairstyles Online Free
+
+Meta Description
+
+Try AI hairstyle for men online free. Buzz cut, fade, business and modern men’s hairstyles with instant preview.
+
+/ai-hairstyle-female
+
+SEO Title
+
+AI Hairstyle for Women – Try Women’s Hairstyles Online Free
+
+Meta Description
+
+Try AI hairstyle for women online free. Bob, bangs, long, curly and colorful hairstyles with realistic preview.
+
+🧠 决策推荐页（差异化）
+/what-hairstyle-suits-me
+
+SEO Title
+
+What Hairstyle Suits Me? – AI Hairstyle Recommendation
+
+Meta Description
+
+Not sure which hairstyle suits you? Upload your photo and get AI hairstyle recommendations based on face shape.
+
+📝 内容页（增长）
+/blog
+/blog/ai-hairstyle-guide
+/blog/face-shape-hairstyle
+🔗 可选（SEO/合作）
+/links（友情链接聚合页，可选）
+/pricing
+/login
+/privacy
+/terms
+三、【完整可复制】Cursor / 产品统一提示词（最终版）
+
+⚠️ 这是“整套产品级 Prompt”
+你可以直接复制给 Cursor，用于整体生成 / 重构 / 对齐
+
+你是一名资深 SaaS 产品设计师 + 前端工程师。
+请基于以下要求，完整设计并实现一个 AI Hairstyle 网站的【前端 UI-only】版本。
+
+========================
+一、核心约束（必须遵守）
+========================
+1) 移动端和 PC 端必须使用同一套代码，仅通过 Tailwind 响应式类控制布局（禁止两套页面）。
+2) 全站支持中英双语（中文 / English），所有文案必须走 i18n 字典 key，禁止硬编码。
+3) 页面简洁明了，字体不要太大：
+   - H1：2xl–3xl
+   - 正文：sm–base
+   - 辅助说明：xs–sm
+4) 所有卡片区域必须使用毛玻璃 / 磨砂玻璃效果：
+   - bg-white/60 + backdrop-blur-md + border + soft shadow + rounded-2xl
+   - 封装为统一组件 GlassCard
+5) 核心 CTA（立即开始 / 登录 / Start）必须有 3D 立体按钮效果：
+   - hover 阴影增强
+   - active 下压 1px
+   - 封装为 Button3D
+6) Footer 必须包含 Blog 模块和 Friend Links（友情链接），友情链接使用配置数组。
+
+========================
+二、页面范围（必须实现）
+========================
+- /ai-hairstyle                （Hub 总入口）
+- /ai-hairstyle-changer        （核心换发型工具页）
+- /ai-hairstyle-changer-free   （免费换发型页）
+- /ai-hairstyle-male           （男士发型页）
+- /ai-hairstyle-female         （女士发型页）
+- /what-hairstyle-suits-me     （发型推荐页）
+- 全站 Footer（含 Friend Links）
+
+========================
+三、功能模块（UI-only）
+========================
+- AI 换发型工具（Upload / Style Select / Before-After / Download）
+- 免费策略展示（Free Policy + Free vs Pro 对比表）
+- 男 / 女专属发型入口（默认预设）
+- 发型推荐流程（Upload → Analyze → Recommend）
+- FAQ + Related Links（站内内链）
+- Blog / Friend Links / Legal Footer
+
+所有“上传 / 生成 / 分析”仅使用 mock 数据 + useState + setTimeout
+状态机：idle / ready / loading / success / error
+禁止任何后端 API 或真实 AI 调用。
+
+========================
+四、组件复用要求
+========================
+- 所有卡片：GlassCard
+- 所有核心按钮：Button3D
+- 工具组件统一复用：
+  ToolShell / UploadCard / ResultCard / StyleTabs / StyleFilters / HairstyleGrid
+- 内容组件：
+  QuickStartSteps / IntentCards / FAQAccordion / ComparisonTable / RelatedLinks
+
+========================
+五、SEO 与结构
+========================
+- 每个页面必须有：
+  - Hero CTA 内链
+  - FAQ 内链
+  - Related Links 模块
+  - Footer 固定链接
+- Hub 页面作为权重中心，强链到 Changer / Free / Male / Female / Suits-me
+
+========================
+六、输出要求
+========================
+- 只实现前端 UI（mock）
+- 代码结构清晰、组件可复用
+- 所有页面支持中英切换
+- 视觉统一、简洁、高级、有玻璃质感

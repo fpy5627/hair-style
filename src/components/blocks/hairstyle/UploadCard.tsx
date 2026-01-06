@@ -44,7 +44,7 @@ export const UploadCard = ({ onUpload, onClear, preview }: UploadCardProps) => {
       ) : (
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="w-full h-full border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all group"
+          className="w-full h-full border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-blue-400 hover:bg-white/40 transition-all group"
         >
           <input 
             type="file" 

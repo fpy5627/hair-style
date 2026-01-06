@@ -30,15 +30,21 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.ico" />
 
         {locales &&
-          locales.map((loc) => (
-            <link
-              key={loc}
-              rel="alternate"
-              hrefLang={loc}
-              href={`${webUrl}${loc === "en" ? "" : `/${loc}`}/`}
-            />
-          ))}
-        <link rel="alternate" hrefLang="x-default" href={webUrl} />
+          locales.map((loc) => {
+            const href = webUrl 
+              ? `${webUrl}${loc === "en" ? "" : `/${loc}`}/`
+              : undefined;
+            if (!href) return null;
+            return (
+              <link
+                key={loc}
+                rel="alternate"
+                hrefLang={loc}
+                href={href}
+              />
+            );
+          })}
+        {webUrl && <link rel="alternate" hrefLang="x-default" href={webUrl} />}
       </head>
       <body>{children}</body>
     </html>

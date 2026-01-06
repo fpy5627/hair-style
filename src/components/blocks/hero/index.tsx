@@ -4,7 +4,7 @@ import HappyUsers from "./happy-users";
 import HeroBg from "./bg";
 import { Hero as HeroType } from "@/types/blocks/hero";
 import Icon from "@/components/icon";
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 
 export default function Hero({ hero }: { hero: HeroType }) {
   if (hero.disabled) {
@@ -33,7 +33,7 @@ export default function Hero({ hero }: { hero: HeroType }) {
           )}
           <div className="text-center">
             {hero.announcement && (
-              <Link
+              <SafeLink
                 href={hero.announcement.url as any}
                 className="mx-auto mb-3 inline-flex items-center gap-3 rounded-full border px-2 py-1 text-sm"
               >
@@ -41,7 +41,7 @@ export default function Hero({ hero }: { hero: HeroType }) {
                   <Badge>{hero.announcement.label}</Badge>
                 )}
                 {hero.announcement.title}
-              </Link>
+              </SafeLink>
             )}
 
             {texts && texts.length > 1 ? (
@@ -66,7 +66,7 @@ export default function Hero({ hero }: { hero: HeroType }) {
               <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                 {hero.buttons.map((item, i) => {
                   return (
-                    <Link
+                    <SafeLink
                       key={i}
                       href={item.url as any}
                       target={item.target || ""}
@@ -80,7 +80,7 @@ export default function Hero({ hero }: { hero: HeroType }) {
                         {item.icon && <Icon name={item.icon} className="" />}
                         {item.title}
                       </Button>
-                    </Link>
+                    </SafeLink>
                   );
                 })}
               </div>

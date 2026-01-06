@@ -22,7 +22,7 @@ export const ResultCard = ({ status, originalImage, resultImage, onReset }: Resu
 
   if (status === 'idle' || !originalImage) {
     return (
-      <GlassCard className="h-full flex flex-col items-center justify-center p-8 bg-slate-50/50">
+      <GlassCard className="h-full flex flex-col items-center justify-center p-8">
         <div className="text-center space-y-3 opacity-40">
           <ImageIcon size={48} className="mx-auto text-slate-400" />
           <p className="text-sm text-slate-500">{t('result')}</p>

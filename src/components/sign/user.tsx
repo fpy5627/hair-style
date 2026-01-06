@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Link } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 import { User } from "@/types/user";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
@@ -54,9 +54,9 @@ export default function SignUser({ user }: { user: User }) {
               className="flex justify-center cursor-pointer"
             >
               {item.url ? (
-                <Link href={item.url as any} target={item.target}>
+                <SafeLink href={item.url as any} target={item.target}>
                   {item.title}
-                </Link>
+                </SafeLink>
               ) : (
                 <button onClick={item.onClick}>{item.title}</button>
               )}

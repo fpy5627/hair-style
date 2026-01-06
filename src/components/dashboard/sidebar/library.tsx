@@ -25,7 +25,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Library as LibraryType } from "@/types/blocks/base";
 import Icon from "@/components/icon";
-import { Link, usePathname } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
+import { SafeLink } from "@/components/common/safe-link";
 
 export function Library({ library }: { library: LibraryType }) {
   const { isMobile } = useSidebar();
@@ -45,14 +46,14 @@ export function Library({ library }: { library: LibraryType }) {
                   : ""
               }`}
             >
-              <Link
+              <SafeLink
                 href={(item.url || "") as any}
                 target={item.target}
                 className="w-full flex items-center gap-2 cursor-pointer"
               >
                 {item.icon && <Icon name={item.icon} />}
                 <span>{item.title}</span>
-              </Link>
+              </SafeLink>
             </SidebarMenuButton>
             <DropdownMenu>
               {/* <DropdownMenuTrigger asChild>

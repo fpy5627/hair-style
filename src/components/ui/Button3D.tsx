@@ -1,35 +1,57 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
+import { Slot } from "@radix-ui/react-slot";
 
 interface Button3DProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'brand';
+  radius?: 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  asChild?: boolean;
 }
 
 /**
  * 3D 立体按钮组件
  * hover 阴影增强，active 下压特效
- * 输入：children (ReactNode), variant (样式类型), className
+ * 输入：children (ReactNode), variant (样式类型), className, asChild (是否作为子组件渲染)
  * 输出：具有 3D 点击感的交互按钮
  */
-export const Button3D = ({ children, className, variant = 'primary', ...props }: Button3DProps) => {
+export const Button3D = ({ 
+  children, 
+  className, 
+  variant = 'primary', 
+  radius = 'lg',
+  asChild = false,
+  ...props 
+}: Button3DProps) => {
+  const Comp = asChild ? Slot : "button";
+
   const variants = {
     primary: "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_4px_0_0_#1d4ed8] hover:shadow-[0_6px_0_0_#1d4ed8] active:shadow-none active:translate-y-[4px]",
     secondary: "bg-gradient-to-b from-purple-500 to-purple-600 text-white shadow-[0_4px_0_0_#7e22ce] hover:shadow-[0_6px_0_0_#7e22ce] active:shadow-none active:translate-y-[4px]",
+    brand: "bg-gradient-to-r from-violet-500 to-sky-400 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] active:translate-y-0 ring-1 ring-white/20",
     outline: "bg-white/80 border border-slate-200 text-slate-800 shadow-[0_4px_0_0_#e2e8f0] hover:shadow-[0_6px_0_0_#e2e8f0] active:shadow-none active:translate-y-[4px]"
   };
 
+  const radiusMap = {
+    md: "rounded-md",
+    lg: "rounded-lg",
+    xl: "rounded-xl",
+    '2xl': "rounded-2xl",
+    full: "rounded-full"
+  };
+
   return (
-    <button 
+    <Comp 
       className={cn(
-        "px-6 py-2.5 rounded-xl font-medium transition-all duration-75 flex items-center justify-center gap-2 select-none",
+        "px-6 py-2.5 font-medium transition-all duration-75 flex items-center justify-center gap-2 select-none",
+        radiusMap[radius],
         variants[variant],
         className
       )}
       {...props}
     >
       {children}
-    </button>
+    </Comp>
   );
 };
 
