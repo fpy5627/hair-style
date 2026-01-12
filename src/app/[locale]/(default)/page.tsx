@@ -19,6 +19,7 @@ import {
   History,
   Plus,
   HelpCircle,
+  Info,
   User,
   UserRound,
   ChevronsRight,
@@ -30,6 +31,7 @@ import { Button3D } from '@/components/ui/Button3D';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SafeLink } from '@/components/common/safe-link';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Reuse existing components
 import { 
@@ -329,12 +331,99 @@ const HeroPreviewPanel = () => {
 };
 
 /**
+ * 发色选项组件，带 Tooltip 提示
+ */
+const ColorOption = ({ 
+  color, 
+  isSelected, 
+  onSelect, 
+  isMobile 
+}: { 
+  color: any; 
+  isSelected: boolean; 
+  onSelect: (id: string) => void;
+  isMobile: boolean;
+}) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleToggleTooltip = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setShowTooltip(!showTooltip);
+  };
+
+  return (
+    <div className="relative flex flex-col items-center">
+      <button 
+        onClick={() => {
+          onSelect(color.id);
+          if (isMobile) setShowTooltip(false);
+        }}
+        className="group relative flex flex-col items-center gap-2 transition-all active:scale-95"
+        onMouseEnter={() => !isMobile && setShowTooltip(true)}
+        onMouseLeave={() => !isMobile && setShowTooltip(false)}
+      >
+        <div className={cn(
+          "w-11 h-11 rounded-full border-2 p-0.5 transition-all shadow-sm relative",
+          isSelected 
+            ? "border-indigo-500 bg-indigo-50 shadow-indigo-100" 
+            : "border-white/80 hover:border-indigo-300"
+        )}>
+          <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color.hex }} />
+          
+          {/* Mobile Info Icon */}
+          {isMobile && (
+            <div 
+              className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white shadow-md rounded-full border border-slate-100 flex items-center justify-center text-slate-400 z-20 active:scale-110 transition-transform"
+              onClick={handleToggleTooltip}
+            >
+              <Info size={11} strokeWidth={2.5} className={cn("transition-colors", showTooltip ? "text-indigo-600" : "text-slate-400")} />
+            </div>
+          )}
+        </div>
+        <span className={cn(
+          "text-[9px] font-bold transition-colors truncate w-full text-center leading-none",
+          isSelected ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"
+        )}>
+          {color.name}
+        </span>
+      </button>
+
+      {/* Tooltip Content */}
+      <div className={cn(
+        "absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-slate-900/95 backdrop-blur-md text-white text-[10px] transition-all duration-300 z-[60] shadow-2xl min-w-[140px] max-w-[220px] border border-white/10 flex flex-col gap-1 pointer-events-none",
+        showTooltip ? "opacity-100 translate-y-0 visible scale-100" : "opacity-0 translate-y-2 invisible scale-95",
+        "!rounded-[14px]"
+      )}>
+        <div className="flex items-center gap-1.5 border-b border-white/10 pb-1.5 mb-0.5">
+          <div className="w-2 h-2 rounded-full ring-1 ring-white/20" style={{ backgroundColor: color.hex }} />
+          <span className="font-black text-[10px] tracking-tight">{color.name}</span>
+        </div>
+        <div className="space-y-1 leading-tight">
+          <div className="flex items-baseline gap-1">
+            <span className="text-white/40 font-medium shrink-0">适合：</span>
+            <span className="text-slate-200">{color.skinTone || '所有肤色'}</span>
+          </div>
+          <div className="flex items-baseline gap-1">
+            <span className="text-white/40 font-medium shrink-0">风格：</span>
+            <span className="text-indigo-300 font-semibold">{color.style || '经典百搭'}</span>
+          </div>
+        </div>
+        {/* 小箭头 */}
+        <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[6px] border-transparent border-t-slate-900/95" />
+      </div>
+    </div>
+  );
+};
+
+/**
  * Hairnova AI 主首页 - 软件工具型布局
  */
 export default function HomePage() {
   const t = useTranslations('home');
   const tt = useTranslations('hairstyle.tool');
   const tc = useTranslations('common');
+
+  const isMobile = useIsMobile();
 
   const safeTc =
     typeof tc === 'function'
@@ -834,36 +923,13 @@ export default function HomePage() {
                           <div className="space-y-3">
                             <div className="grid grid-cols-5 gap-4 px-1">
                               {HAIR_COLORS.basic.map(color => (
-                                <button 
-                                  key={color.id} 
-                                  onClick={() => setSelectedColor(color.id)}
-                                  className="group relative flex flex-col items-center gap-2 transition-all active:scale-95"
-                                  title={color.skinTone && color.style ? `${color.skinTone} · ${color.style}` : color.skinTone || color.style}
-                                >
-                                  <div className={cn(
-                                    "w-11 h-11 rounded-full border-2 p-0.5 transition-all shadow-sm",
-                                    selectedColor === color.id 
-                                      ? "border-indigo-500 bg-indigo-50 shadow-indigo-100" 
-                                      : "border-white/80 hover:border-indigo-300"
-                                  )}>
-                                    <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color.hex }} />
-                                  </div>
-                                  <span className={cn(
-                                    "text-[9px] font-bold transition-colors truncate w-full text-center leading-none",
-                                    selectedColor === color.id ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"
-                                  )}>
-                                    {color.name}
-                                  </span>
-                                  {/* Hover 提示 */}
-                                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2.5 py-1.5 bg-slate-900 text-white text-[10px] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
-                                    <div className="flex flex-col gap-0.5">
-                                      {color.skinTone && <span className="text-[9px] text-slate-300">{color.skinTone}</span>}
-                                      {color.style && <span className="text-[9px] font-semibold">{color.style}</span>}
-                                    </div>
-                                    {/* 小箭头 */}
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-slate-900" />
-                                  </div>
-                                </button>
+                                <ColorOption 
+                                  key={color.id}
+                                  color={color}
+                                  isSelected={selectedColor === color.id}
+                                  onSelect={setSelectedColor}
+                                  isMobile={isMobile}
+                                />
                               ))}
                             </div>
 
@@ -889,31 +955,13 @@ export default function HomePage() {
                               {showStyleColors && (
                                 <div className="grid grid-cols-5 gap-4 px-1 animate-in slide-in-from-top-2 duration-200">
                                   {HAIR_COLORS.style.map(color => (
-                                    <button 
-                                      key={color.id} 
-                                      onClick={() => setSelectedColor(color.id)}
-                                      className="group relative flex flex-col items-center gap-2 transition-all active:scale-95"
-                                      title={color.skinTone && color.style ? `${color.skinTone} · ${color.style}` : color.skinTone || color.style}
-                                    >
-                                      <div className={cn(
-                                        "w-11 h-11 rounded-full border-2 p-0.5 transition-all shadow-sm",
-                                        selectedColor === color.id 
-                                          ? "border-indigo-500 bg-indigo-50 shadow-indigo-100" 
-                                          : "border-white/80 hover:border-indigo-300"
-                                      )}>
-                                        <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color.hex }} />
-                                      </div>
-                                      <span className={cn(
-                                        "text-[9px] font-bold transition-colors truncate w-full text-center leading-none",
-                                        selectedColor === color.id ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"
-                                      )}>
-                                        {color.name}
-                                      </span>
-                                      {/* Hover 提示 */}
-                                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 text-white text-[10px] rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                                        {color.skinTone && color.style ? `${color.skinTone} · ${color.style}` : color.skinTone || color.style}
-                                      </div>
-                                    </button>
+                                    <ColorOption 
+                                      key={color.id}
+                                      color={color}
+                                      isSelected={selectedColor === color.id}
+                                      onSelect={setSelectedColor}
+                                      isMobile={isMobile}
+                                    />
                                   ))}
                                 </div>
                               )}
@@ -941,31 +989,13 @@ export default function HomePage() {
                               {showAdvancedColors && (
                                 <div className="grid grid-cols-5 gap-4 px-1 animate-in slide-in-from-top-2 duration-200">
                                   {HAIR_COLORS.advanced.map(color => (
-                                    <button 
-                                      key={color.id} 
-                                      onClick={() => setSelectedColor(color.id)}
-                                      className="group relative flex flex-col items-center gap-2 transition-all active:scale-95"
-                                      title={color.skinTone && color.style ? `${color.skinTone} · ${color.style}` : color.skinTone || color.style}
-                                    >
-                                      <div className={cn(
-                                        "w-11 h-11 rounded-full border-2 p-0.5 transition-all shadow-sm",
-                                        selectedColor === color.id 
-                                          ? "border-indigo-500 bg-indigo-50 shadow-indigo-100" 
-                                          : "border-white/80 hover:border-indigo-300"
-                                      )}>
-                                        <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color.hex }} />
-                                      </div>
-                                      <span className={cn(
-                                        "text-[9px] font-bold transition-colors truncate w-full text-center leading-none",
-                                        selectedColor === color.id ? "text-indigo-600" : "text-slate-500 group-hover:text-slate-700"
-                                      )}>
-                                        {color.name}
-                                      </span>
-                                      {/* Hover 提示 */}
-                                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-slate-900 text-white text-[10px] rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
-                                        {color.skinTone && color.style ? `${color.skinTone} · ${color.style}` : color.skinTone || color.style}
-                                      </div>
-                                    </button>
+                                    <ColorOption 
+                                      key={color.id}
+                                      color={color}
+                                      isSelected={selectedColor === color.id}
+                                      onSelect={setSelectedColor}
+                                      isMobile={isMobile}
+                                    />
                                   ))}
                                 </div>
                               )}

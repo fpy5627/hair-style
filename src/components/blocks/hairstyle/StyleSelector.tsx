@@ -246,37 +246,36 @@ export const HairstyleGrid = ({ styles, selectedStyleId, onStyleSelect }: Hairst
           key={style.id}
           onClick={() => onStyleSelect(style.id)}
           className={cn(
-            "group flex flex-col rounded overflow-hidden bg-white shadow-sm border border-slate-100 transition-all duration-300 cursor-pointer",
+            "group flex flex-col rounded-[8px] bg-white shadow-sm border border-slate-100 transition-all duration-300 cursor-pointer",
             selectedStyleId === style.id ? "ring-2 ring-indigo-500" : "hover:-translate-y-1 hover:shadow-md"
           )}
         >
-          {/* 图片区域 - 稳定矩形，使用 aspect-[4/3] 并加高度上下限 */}
-          <div className="relative w-full aspect-[4/3] max-h-[180px] min-h-[140px] overflow-hidden rounded-t rounded-b-none bg-slate-100">
+          {/* 1) 图片区域 - 顶部圆角 8px */}
+          <div className="relative w-full aspect-[4/3] max-h-[170px] min-h-[130px] rounded-t-[8px] overflow-hidden bg-slate-100">
             <Image 
               src={style.preview} 
               alt={style.name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            
-            {/* 标签 - 放在图片容器内部底部，确保 z-index 高于可能存在的 overlay */}
-            {style.badge && (
-              <div className={cn(
-                "absolute bottom-0 left-0 right-0 z-20",
-                "text-white text-[8px] font-black h-5 flex items-center justify-center uppercase tracking-widest pointer-events-none whitespace-nowrap shrink-0",
-                "!opacity-100 !visible outline-red", // 强制显示调试
-                style.badge === 'BEST MATCH' && "bg-indigo-600/90 backdrop-blur-sm",
-                style.badge === 'RECOMMENDED' && "bg-blue-500/90 backdrop-blur-sm",
-                style.badge === 'TRENDING' && "bg-orange-500/90 backdrop-blur-sm",
-                style.badge === 'NEW' && "bg-emerald-500/90 backdrop-blur-sm"
-              )}>
-                {style.badge}
-              </div>
-            )}
           </div>
 
-          {/* 名称和选择按钮 */}
-          <div className="p-1 md:p-1.5 shrink-0 bg-white">
+          {/* 2) 标签条 - 直角 */}
+          {style.badge && (
+            <div className={cn(
+              "w-full h-5 flex items-center justify-center text-white text-[8px] font-black uppercase tracking-widest pointer-events-none whitespace-nowrap shrink-0",
+              style.badge === 'BEST MATCH' && "bg-indigo-600",
+              style.badge === 'RECOMMENDED' && "bg-blue-500",
+              style.badge === 'TRENDING' && "bg-orange-500",
+              style.badge === 'NEW' && "bg-emerald-500",
+              style.badge === 'HOT' && "bg-rose-500"
+            )}>
+              {style.badge}
+            </div>
+          )}
+
+          {/* 3) 信息区 - 底部圆角 8px */}
+          <div className="p-1.5 md:p-2 shrink-0 bg-white rounded-b-[8px]">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold text-slate-700 truncate">{style.name || '时尚发型'}</span>
               <div className={cn(

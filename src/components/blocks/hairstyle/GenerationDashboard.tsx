@@ -72,13 +72,17 @@ export const GenerationDashboard = ({
                     key={style.id}
                     onClick={() => onStyleSelect(style.id)}
                     className={cn(
-                      "group relative w-full max-w-[160px] flex flex-col rounded overflow-hidden cursor-pointer transition-all duration-500 group/card bg-white shadow-sm border border-slate-100",
+                      "group relative w-full max-w-[160px] flex flex-col rounded-[8px] cursor-pointer transition-all duration-500 group/card bg-white shadow-sm border border-slate-100",
                       isSelected 
                         ? "ring-4 ring-indigo-600 shadow-2xl shadow-indigo-100 scale-[0.98]" 
                         : "hover:scale-[1.02] hover:shadow-xl hover:shadow-slate-200"
                     )}
                   >
-                    <div className="relative w-full aspect-[4/3] max-h-[180px] min-h-[140px] overflow-hidden rounded-t rounded-b-none bg-slate-100">
+                    {/* 1) 图片区域 - 顶部圆角 8px */}
+                    <div className={cn(
+                      "relative w-full aspect-[4/3] max-h-[170px] min-h-[130px] rounded-t-[8px] overflow-hidden bg-slate-100",
+                      !style.badge && "rounded-b-[8px]"
+                    )}>
                       <Image 
                         src={style.preview} 
                         alt={style.name}
@@ -86,33 +90,32 @@ export const GenerationDashboard = ({
                         className="object-cover transition-transform duration-700 group-hover/card:scale-110"
                       />
 
-                      {/* 核心功能 - 状态标签 (Tags) - 移入图片内部底部 */}
-                      {style.badge && (
-                        <div className={cn(
-                          "absolute bottom-0 left-0 right-0 z-20 h-6 flex items-center justify-center text-[8px] font-black uppercase tracking-[0.15em] text-white",
-                          "!opacity-100 !visible outline-red", // 调试要求
-                          style.badge === 'BEST MATCH' && "bg-blue-500/90 backdrop-blur-sm",
-                          style.badge === 'RECOMMENDED' && "bg-indigo-600/90 backdrop-blur-sm",
-                          style.badge === 'TRENDING' && "bg-purple-600/90 backdrop-blur-sm",
-                          style.badge === 'NEW' && "bg-emerald-500/90 backdrop-blur-sm",
-                          style.badge === 'HOT' && "bg-red-500/90 backdrop-blur-sm"
-                        )}>
-                          {style.badge}
-                        </div>
-                      )}
-
-                      {/* 选中交互 - 蓝色 Check 标记 - 移入图片容器以防与顶部标签冲突 */}
+                      {/* 选中交互 - 蓝色 Check 标记 */}
                       {isSelected && (
                         <div className="absolute top-2 right-2 z-30 w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center text-white shadow-lg animate-in zoom-in duration-300">
                           <Check size={10} strokeWidth={4} />
                         </div>
                       )}
 
-                      {/* 底部文案渐变遮罩 - 加深遮罩保证文字清晰 - 增加 pointer-events-none */}
+                      {/* 底部文案渐变遮罩 - 仅用于图片上的名字显示 */}
                       <div className="absolute inset-x-0 bottom-0 p-3.5 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 pointer-events-none">
-                        <p className="text-white text-[11px] font-black tracking-tight line-clamp-1 mb-2">{style.name}</p>
+                        <p className="text-white text-[11px] font-black tracking-tight line-clamp-1">{style.name}</p>
                       </div>
                     </div>
+
+                    {/* 2) 标签条 - 直角，如果有标签则底部圆角 8px */}
+                    {style.badge && (
+                      <div className={cn(
+                        "w-full h-5 flex items-center justify-center text-[8px] font-black uppercase tracking-[0.15em] text-white shrink-0 rounded-b-[8px]",
+                        style.badge === 'BEST MATCH' && "bg-blue-500",
+                        style.badge === 'RECOMMENDED' && "bg-indigo-600",
+                        style.badge === 'TRENDING' && "bg-purple-600",
+                        style.badge === 'NEW' && "bg-emerald-500",
+                        style.badge === 'HOT' && "bg-rose-500"
+                      )}>
+                        {style.badge}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -226,4 +229,5 @@ export const GenerationDashboard = ({
     </div>
   );
 };
+
 
