@@ -36,7 +36,7 @@ export const SafeLink = ({ href, children, className, ...props }: SafeLinkProps)
   if (!isValidHref) {
     return (
       <span 
-        className={cn("cursor-default opacity-80 pointer-events-none", className)} 
+        className={cn("cursor-default pointer-events-none", className)} 
         aria-disabled="true"
         {...(props as any)}
       >
@@ -51,7 +51,7 @@ export const SafeLink = ({ href, children, className, ...props }: SafeLinkProps)
   if (!mounted) {
     return (
       <span 
-        className={cn("cursor-default opacity-80", className)} 
+        className={cn("cursor-default", className)} 
         aria-disabled="true"
         {...(props as any)}
       >
@@ -61,8 +61,10 @@ export const SafeLink = ({ href, children, className, ...props }: SafeLinkProps)
   }
 
   return (
-    <Link href={href as string} className={className} {...(props as any)}>
-      {children}
+    <Link href={href as string} legacyBehavior>
+      <a className={cn(className)} {...(props as any)}>
+        {children}
+      </a>
     </Link>
   );
 };

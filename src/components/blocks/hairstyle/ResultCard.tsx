@@ -37,7 +37,7 @@ export const ResultCard = ({ status, originalImage, resultImage, onReset }: Resu
         {/* Before */}
         <div className="flex-1 space-y-2">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t('before')}</p>
-          <div className="aspect-[3/4] rounded-xl overflow-hidden bg-slate-100 relative">
+          <div className="aspect-[3/4] rounded-md overflow-hidden bg-slate-100 relative">
             <img src={originalImage} alt="Before" className="w-full h-full object-cover" />
           </div>
         </div>
@@ -45,7 +45,7 @@ export const ResultCard = ({ status, originalImage, resultImage, onReset }: Resu
         {/* After / Processing */}
         <div className="flex-1 space-y-2">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t('after')}</p>
-          <div className="aspect-[3/4] rounded-xl overflow-hidden bg-slate-100 relative flex items-center justify-center">
+          <div className="aspect-[3/4] rounded-md overflow-hidden bg-slate-100 relative flex items-center justify-center">
             {status === 'loading' ? (
               <div className="text-center space-y-4">
                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto" />

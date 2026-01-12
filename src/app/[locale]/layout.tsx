@@ -6,7 +6,7 @@ import {
 import { AppContextProvider } from "@/contexts/app";
 import { Metadata } from "next";
 import { NextAuthSessionProvider } from "@/auth/session";
-import { NextIntlClientProvider } from "next-intl";
+import { IntlProviderClient } from "@/components/common/IntlProviderClient";
 import { ThemeProvider } from "@/providers/theme";
 
 export async function generateMetadata({
@@ -42,12 +42,15 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <IntlProviderClient 
+      messages={messages} 
+      locale={locale}
+    >
       <NextAuthSessionProvider>
         <AppContextProvider>
           <ThemeProvider>{children}</ThemeProvider>
         </AppContextProvider>
       </NextAuthSessionProvider>
-    </NextIntlClientProvider>
+    </IntlProviderClient>
   );
 }

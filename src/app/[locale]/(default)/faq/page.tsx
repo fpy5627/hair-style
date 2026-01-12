@@ -68,7 +68,7 @@ export default function FAQPage() {
         </div>
 
         {/* 底部引导 */}
-        <div className="mt-20 p-12 rounded-[3rem] bg-indigo-600 text-white text-center space-y-6 shadow-2xl shadow-indigo-200">
+        <div className="mt-20 p-12 rounded-3xl bg-indigo-600 text-white text-center space-y-6 shadow-2xl shadow-indigo-200">
           <h2 className="text-2xl font-black">准备好尝试您的新发型了吗？</h2>
           <p className="opacity-90 max-w-md mx-auto text-sm font-medium">
             立即上传照片，AI 将在几秒钟内为您生成个性化推荐。

@@ -150,7 +150,7 @@ export default function Header({ header }: { header: HeaderType }) {
               </NavigationMenu>
             </div>
           </div>
-          <div className="shrink-0 flex gap-2 items-center">
+          <div className="shrink-0 flex gap-2 items-center relative z-20">
             {header.show_locale && <LocaleToggle />}
             {header.show_theme && <ThemeToggle />}
 

@@ -31,7 +31,7 @@
   --sidebar-accent-foreground: oklch(0.67 0.16 245);
   --sidebar-border: oklch(0.93 0.01 238.52);
   --sidebar-ring: oklch(0.68 0.16 243.35);
-  --font-sans: Open Sans, sans-serif;
+  --font-sans: Inter, Noto Sans SC, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -83,7 +83,7 @@
   --sidebar-accent-foreground: oklch(0.67 0.16 245.01);
   --sidebar-border: oklch(0.38 0.02 240.59);
   --sidebar-ring: oklch(0.68 0.16 243.35);
-  --font-sans: Open Sans, sans-serif;
+  --font-sans: Inter, Noto Sans SC, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 1.3rem;
@@ -153,4 +153,14 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+}
+
+@layer utilities {
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

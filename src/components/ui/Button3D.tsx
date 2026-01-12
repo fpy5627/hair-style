@@ -4,7 +4,7 @@ import { Slot } from "@radix-ui/react-slot";
 
 interface Button3DProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'brand';
+  variant?: 'primary' | 'secondary' | 'outline' | 'brand' | 'gradient';
   radius?: 'md' | 'lg' | 'xl' | '2xl' | 'full';
   asChild?: boolean;
 }
@@ -28,15 +28,16 @@ export const Button3D = ({
   const variants = {
     primary: "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[0_4px_0_0_#1d4ed8] hover:shadow-[0_6px_0_0_#1d4ed8] active:shadow-none active:translate-y-[4px]",
     secondary: "bg-gradient-to-b from-purple-500 to-purple-600 text-white shadow-[0_4px_0_0_#7e22ce] hover:shadow-[0_6px_0_0_#7e22ce] active:shadow-none active:translate-y-[4px]",
+    gradient: "bg-gradient-to-br from-[#6366f1] via-[#7c3aed] to-[#a855f7] text-white shadow-[0_20px_40px_-10px_rgba(99,102,241,0.5)] hover:shadow-[0_25px_50px_-10px_rgba(99,102,241,0.6)] transition-all duration-500 active:scale-[0.98] ring-1 ring-white/30",
     brand: "bg-gradient-to-r from-violet-500 to-sky-400 text-white shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 active:scale-[0.98] active:translate-y-0 ring-1 ring-white/20",
     outline: "bg-white/80 border border-slate-200 text-slate-800 shadow-[0_4px_0_0_#e2e8f0] hover:shadow-[0_6px_0_0_#e2e8f0] active:shadow-none active:translate-y-[4px]"
   };
 
   const radiusMap = {
-    md: "rounded-md",
-    lg: "rounded-lg",
-    xl: "rounded-xl",
-    '2xl': "rounded-2xl",
+    md: "rounded-[6px]",
+    lg: "rounded-[8px]",
+    xl: "rounded-[12px]",
+    '2xl': "rounded-[16px]",
     full: "rounded-full"
   };
 

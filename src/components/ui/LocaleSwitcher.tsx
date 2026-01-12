@@ -36,7 +36,7 @@ export const LocaleSwitcher = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "flex items-center gap-1.5 px-2.5 h-9 text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors bg-white/40 backdrop-blur-sm border border-white/20",
+          "flex items-center gap-1.5 px-4 h-10 py-0 text-sm font-medium text-slate-600 transition-all duration-200 bg-indigo-50/70 backdrop-blur-sm border border-indigo-200/70 rounded-[10px] shadow-sm outline-none hover:bg-indigo-50/90 hover:border-indigo-300 hover:text-indigo-600 active:bg-indigo-100/80",
           buttonClassName
         )}
       >

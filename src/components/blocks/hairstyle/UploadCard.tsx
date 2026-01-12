@@ -4,11 +4,15 @@ import React, { useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
-import { Upload, X, ImageIcon } from 'lucide-react';
+import { Upload, X, ImageIcon, Camera } from 'lucide-react';
+import { CameraModal } from './CameraModal';
+import { cn } from "@/lib/utils";
 
 interface UploadCardProps {
   onUpload: (file: File) => void;
   onClear: () => void;
+  onCamera?: () => void;
+  onPhotoRequirementsClick?: () => void;
   preview: string | null;
 }
 
@@ -16,53 +20,164 @@ interface UploadCardProps {
  * 照片上传组件
  * 支持拖拽、点击上传和预览显示
  */
-export const UploadCard = ({ onUpload, onClear, preview }: UploadCardProps) => {
+export const UploadCard = ({ 
+  onUpload, 
+  onClear, 
+  onCamera, 
+  onPhotoRequirementsClick,
+  preview 
+}: UploadCardProps) => {
   const t = useTranslations('hairstyle.tool');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // 检测是否为移动端
+  const isMobile = () => {
+    if (typeof window === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) onUpload(file);
   };
 
+  const handleCameraClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onCamera) {
+      onCamera();
+      return;
+    }
+
+    if (isMobile()) {
+      // 移动端使用系统相机
+      cameraInputRef.current?.click();
+    } else {
+      // 桌面端打开自定义相机 Modal
+      setIsCameraModalOpen(true);
+    }
+  };
+
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const onDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      onUpload(file);
+    }
+  };
+
   return (
-    <GlassCard className="h-full flex flex-col items-center justify-center p-8 min-h-[400px] relative group">
-      {preview ? (
-        <div className="relative w-full h-full flex items-center justify-center">
-          <img 
-            src={preview} 
-            alt="Upload Preview" 
-            className="max-h-[340px] rounded-xl object-contain shadow-md"
-          />
-          <button 
-            onClick={onClear}
-            className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-600 hover:text-red-500 shadow-sm transition-colors"
+    <>
+      <GlassCard 
+        className="h-full flex flex-col items-center justify-center p-4 md:p-6 min-h-0 relative group cursor-pointer shadow-[0_8px_32px_0_rgba(31,38,135,0.08)] rounded-lg"
+        onClick={() => !preview && fileInputRef.current?.click()}
+        onDragOver={!preview ? onDragOver : undefined}
+        onDragLeave={!preview ? onDragLeave : undefined}
+        onDrop={!preview ? onDrop : undefined}
+      >
+        {preview ? (
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={preview} 
+              alt="Upload Preview" 
+              className="w-full h-full rounded-md object-contain shadow-sm"
+            />
+            <button 
+              onClick={onClear}
+              className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur-sm rounded-full text-slate-600 hover:text-red-500 shadow-md transition-all z-10 hover:scale-110"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <div 
+            data-slot="upload-dropzone"
+            className={cn(
+              "w-full h-full border-2 border-dashed rounded-md flex flex-col items-center justify-center gap-8 transition-all duration-300 p-4 md:p-8",
+              isDragging 
+                ? "border-indigo-500 bg-indigo-50/30 scale-[0.99]" 
+                : "border-slate-200 bg-[#F8FAFF] group-hover:border-indigo-400/60 group-hover:bg-indigo-50/5"
+            )}
           >
-            <X size={18} />
-          </button>
-        </div>
-      ) : (
-        <div 
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full h-full border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-blue-400 hover:bg-white/40 transition-all group"
-        >
-          <input 
-            type="file" 
-            className="hidden" 
-            ref={fileInputRef} 
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-          <div className="p-4 bg-blue-50 rounded-full text-blue-500 group-hover:scale-110 transition-transform">
-            <Upload size={32} />
+            <input 
+              type="file" 
+              className="hidden" 
+              ref={fileInputRef} 
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <input 
+              type="file" 
+              className="hidden" 
+              ref={cameraInputRef} 
+              accept="image/*"
+              capture
+              onChange={handleFileChange}
+            />
+            
+            {/* 中心上传 Icon */}
+            <div className={cn(
+              "p-4 rounded-full bg-indigo-50/50 text-indigo-400/90 transition-all duration-300",
+              "group-hover:bg-indigo-50/80 group-hover:text-indigo-500 group-hover:-translate-y-1",
+              isDragging && "bg-indigo-100 text-indigo-600 scale-110 -translate-y-2"
+            )}>
+              <Upload size={24} className="stroke-[1.5]" />
+            </div>
+
+            <div className="text-center space-y-6">
+              <p className={cn(
+                "text-sm font-medium transition-colors duration-300",
+                isDragging ? "text-indigo-600" : "text-slate-700"
+              )}>
+                {t('upload')}
+              </p>
+              
+              <div className="flex flex-col items-center gap-4 px-4 w-full">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="w-full max-w-[240px] h-12 bg-indigo-600/80 hover:bg-indigo-700/90 text-white rounded-[10px] text-[13px] font-bold shadow-md backdrop-blur-md transition-all active:scale-95 flex items-center justify-center gap-3 border border-white/10"
+                >
+                  <ImageIcon size={18} />
+                  {t('select_file')}
+                </button>
+                <button 
+                  onClick={handleCameraClick}
+                  className="w-full max-w-[240px] h-12 bg-white/70 border border-white/40 hover:bg-white/90 hover:border-indigo-200/60 text-slate-600 hover:text-indigo-600 rounded-[10px] flex items-center justify-center gap-3 text-[13px] font-bold shadow-sm backdrop-blur-md transition-all active:scale-95"
+                >
+                  <Camera size={18} className="text-indigo-500" />
+                  {t('camera')}
+                </button>
+              </div>
+
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-[11px] text-slate-400/80 mt-1">{t('upload_tip')}</p>
+              </div>
+            </div>
           </div>
-          <div className="text-center">
-            <p className="text-base font-medium text-slate-700">{t('upload')}</p>
-            <p className="text-xs text-slate-400 mt-1">{t('upload_tip')}</p>
-          </div>
-        </div>
-      )}
-    </GlassCard>
+        )}
+      </GlassCard>
+
+      <CameraModal 
+        isOpen={isCameraModalOpen}
+        onClose={() => setIsCameraModalOpen(false)}
+        onCapture={onUpload}
+      />
+    </>
   );
 };
 

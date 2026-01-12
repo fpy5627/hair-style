@@ -15,7 +15,7 @@ interface GlassCardProps {
 export const GlassCard = ({ children, className }: GlassCardProps) => {
   return (
     <div className={cn(
-      "bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.12)] relative before:absolute before:inset-0 before:rounded-2xl before:border-t before:border-white/40 before:pointer-events-none",
+      "bg-white/40 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.12)] relative before:absolute before:inset-0 before:rounded-2xl before:border-t before:border-white/40 before:pointer-events-none",
       className
     )}>
       {children}

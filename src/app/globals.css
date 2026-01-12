@@ -35,3 +35,115 @@ pre {
     stroke-dashoffset: -20;
   }
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.02); opacity: 0.95; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.animate-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-shine::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -100%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: rotate(30deg);
+  animation: shine 4s infinite;
+}
+
+/* ============================================
+   分页按钮样式覆盖 - 移除胶囊形状，改为矩形小圆角
+   覆盖范围：分页区域的上一页/下一页按钮和页码按钮
+   目标 DOM：page.tsx 中第 604-660 行的分页组件
+   ============================================ */
+
+/* 覆盖分页容器内的所有按钮（上一页/下一页/页码） */
+div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button,
+div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button,
+div.flex.items-center.justify-center.gap-2 > button,
+div.flex.items-center.justify-center.gap-4 > button {
+  border-radius: 8px !important;
+}
+
+/* 覆盖上一页/下一页按钮的字体大小 */
+div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button:has(span),
+div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button:has(span),
+div.flex.items-center.justify-center.gap-2 > button:has(span),
+div.flex.items-center.justify-center.gap-4 > button:has(span) {
+  font-size: 10px !important;
+}
+
+/* 响应式：中等屏幕及以上调整上一页/下一页字体大小 */
+@media (min-width: 768px) {
+  div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button:has(span),
+  div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button:has(span),
+  div.flex.items-center.justify-center.gap-2 > button:has(span),
+  div.flex.items-center.justify-center.gap-4 > button:has(span) {
+    font-size: 11px !important;
+  }
+}
+
+/* 覆盖页码数字按钮区域 */
+div.flex.items-center.gap-1 > button,
+div.flex.items-center.gap-2 > button {
+  border-radius: 8px !important;
+}
+
+/* 覆盖包含 ArrowRight 图标的导航按钮（上一页/下一页） */
+button:has(svg[class*="lucide-arrow-right"]),
+button:has(svg[class*="ArrowRight"]) {
+  border-radius: 8px !important;
+  font-size: 10px !important;
+}
+
+/* 响应式：中等屏幕及以上调整字体大小 */
+@media (min-width: 768px) {
+  button:has(svg[class*="lucide-arrow-right"]),
+  button:has(svg[class*="ArrowRight"]) {
+    font-size: 11px !important;
+  }
+}
+
+/* 覆盖小尺寸页码按钮（w-7 h-7 或 w-8 h-8） */
+button[class*="w-7"][class*="h-7"],
+button[class*="w-8"][class*="h-8"] {
+  border-radius: 8px !important;
+}

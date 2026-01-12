@@ -270,6 +270,7 @@ export const SeoTextBlock = () => {
  */
 export const FAQSection = () => {
   const t = useTranslations('hairstyle.landing.faq');
+  const [openIndex, setOpenIndex] = React.useState<number | null>(0);
   
   const faqs = [
     { q: t('q1'), a: t('a1') },
@@ -280,34 +281,49 @@ export const FAQSection = () => {
   ];
 
   return (
-    <div className="py-24 max-w-3xl mx-auto px-4">
-      <div className="flex flex-col items-center gap-4 mb-12 text-center">
-        <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
-          <HelpCircle size={28} />
-        </div>
-        <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">{t('title')}</h2>
+    <div className="py-32 max-w-4xl mx-auto px-4">
+      <div className="text-center space-y-4 mb-16">
+        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{t('title')}</h2>
+        <p className="text-base text-slate-500 font-medium">关于 AI 发型顾问的常见疑问解答</p>
       </div>
-      <div className="grid grid-cols-1 gap-4">
+      <div className="space-y-4">
         {faqs.map((faq, idx) => (
-          <GlassCard key={idx} className="p-6 transition-all duration-300 group">
-            <h4 className="font-bold text-slate-900 mb-2 flex items-start gap-3">
-              <span className="text-blue-500 font-black mt-0.5 shrink-0">Q.</span>
-              {faq.q}
-            </h4>
-            <div className="flex items-start gap-3 text-sm text-slate-500 leading-relaxed">
-              <span className="text-slate-300 font-black mt-0.5 shrink-0">A.</span>
-              <p>{faq.a}</p>
+          <div 
+            key={idx} 
+            className={cn(
+              "rounded-xl border transition-all duration-500 overflow-hidden",
+              openIndex === idx 
+                ? "bg-white border-indigo-100 shadow-xl shadow-indigo-100/20" 
+                : "bg-slate-50/50 border-slate-100 hover:bg-white hover:border-slate-200"
+            )}
+          >
+            <button 
+              onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
+              className="w-full px-8 py-6 flex items-center justify-between text-left group"
+            >
+              <span className={cn(
+                "text-lg font-bold transition-colors duration-300",
+                openIndex === idx ? "text-indigo-600" : "text-slate-900"
+              )}>
+                {faq.q}
+              </span>
+              <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500",
+                openIndex === idx ? "bg-indigo-600 text-white rotate-180" : "bg-white text-slate-400 border border-slate-200 group-hover:border-indigo-200 group-hover:text-indigo-600"
+              )}>
+                <ArrowRight size={16} className="rotate-90" />
+              </div>
+            </button>
+            <div className={cn(
+              "transition-all duration-500 ease-in-out",
+              openIndex === idx ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            )}>
+              <div className="px-8 pb-8 text-base text-slate-500 leading-relaxed font-medium">
+                {faq.a}
+              </div>
             </div>
-          </GlassCard>
+          </div>
         ))}
-      </div>
-
-      <div className="mt-10 text-center">
-        <SafeLink href="/faq">
-          <Button3D variant="outline" className="px-8 h-12 text-sm font-bold bg-white/50">
-            查看全部常见问题 <ArrowRight size={16} className="ml-2" />
-          </Button3D>
-        </SafeLink>
       </div>
     </div>
   );
@@ -354,7 +370,7 @@ export const BottomCTA = () => {
   return (
     <section className="py-24 px-4">
       <div className="max-w-5xl mx-auto text-center">
-        <div className="p-12 md:p-20 space-y-8 relative overflow-hidden group rounded-[3rem] bg-indigo-50/50">
+        <div className="p-12 md:p-20 space-y-8 relative overflow-hidden group rounded-3xl bg-indigo-50/50">
           {/* 3D 增强背景光晕 */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/20 blur-[120px] rounded-full -mr-48 -mt-48 transition-all duration-700 group-hover:scale-110" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400/20 blur-[120px] rounded-full -ml-48 -mb-48 transition-all duration-700 group-hover:scale-110" />
@@ -364,7 +380,7 @@ export const BottomCTA = () => {
             <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto font-medium">{tl('subtitle')}</p>
             <div className="pt-4">
               <SafeLink href="/ai-hairstyle-changer">
-                <Button3D variant="primary" className="px-12 h-16 text-lg mx-auto">
+                <Button3D variant="primary" radius="xl" className="px-12 h-16 text-lg mx-auto">
                   {tl('button')} <ArrowRight size={20} />
                 </Button3D>
               </SafeLink>

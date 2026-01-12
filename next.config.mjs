@@ -36,4 +36,15 @@ const configWithMDX = {
   },
 };
 
-export default withBundleAnalyzer(withNextIntl(withMDX(configWithMDX)));
+const finalConfig = withBundleAnalyzer(withNextIntl(withMDX(configWithMDX)));
+
+// Next.js 15 可能不再允许顶层的 turbopack 键，或者某些插件（如 fumadocs）错误地添加了它
+if (finalConfig.turbopack) {
+  finalConfig.experimental = {
+    ...finalConfig.experimental,
+    turbopack: finalConfig.turbopack,
+  };
+  delete finalConfig.turbopack;
+}
+
+export default finalConfig;
