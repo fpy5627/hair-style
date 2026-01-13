@@ -39,6 +39,9 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
   const [errorType, setErrorType] = useState<CameraErrorType | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [currentDeviceId, setCurrentDeviceId] = useState<string>('');
+  const [isShaking, setIsShaking] = useState(false);
+  const [isUploadClicked, setIsUploadClicked] = useState(false);
+  const [isUploadHovered, setIsUploadHovered] = useState(false);
 
   // 获取摄像头列表
   const updateDevices = async () => {
@@ -80,7 +83,7 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
 
       const mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
       setStream(mediaStream);
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
         videoRef.current.onloadedmetadata = () => {
@@ -89,11 +92,11 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
           videoRef.current?.play().catch(e => console.error("Play error:", e));
         };
       }
-      
+
       await updateDevices();
     } catch (err: any) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      
+
       // 1) 详细记录错误信息
       console.error('Camera Access Error Detailed:', {
         name: err.name,
@@ -191,10 +194,15 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
     }
   };
 
+  const triggerShake = () => {
+    setIsShaking(true);
+    setTimeout(() => setIsShaking(false), 500);
+  };
+
   const getActionBtnConfig = () => {
     if (status === 'captured') return { text: t('use_photo'), disabled: false };
     if (status === 'preview') return { text: t('take_photo'), disabled: false };
-    if (status === 'permission') return { text: t('btn_permission'), disabled: true };
+    if (status === 'permission') return { text: '我已开启权限，刷新重试', disabled: true };
     if (status === 'loading') return { text: t('btn_loading'), disabled: true };
     if (status === 'error') return { text: t('btn_error'), disabled: true };
     return { text: t('take_photo'), disabled: true };
@@ -205,45 +213,50 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[560px] bg-white rounded-2xl p-0 overflow-hidden border border-slate-100 shadow-2xl">
-        <DialogHeader className="p-5 pb-3 flex flex-row items-center justify-between space-y-0 border-b border-slate-100">
-          <div className="flex-1">
-            <div className="flex items-center gap-2.5 mb-1">
-              <DialogTitle className="text-lg font-black text-slate-900">{t('camera_modal_title')}</DialogTitle>
-              {status !== 'error' && (
-                <Badge variant="secondary" className={cn(
-                  "rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider",
-                  status === 'preview' && "bg-emerald-50 text-emerald-600 border-emerald-100",
-                  status === 'loading' && "bg-amber-50 text-amber-600 border-amber-100",
-                  status === 'permission' && "bg-blue-50 text-blue-600 border-blue-100",
-                  status === 'captured' && "bg-indigo-50 text-indigo-600 border-indigo-100",
-                )}>
-                  {t(`status_${status}`)}
-                </Badge>
-              )}
-            </div>
-            <DialogDescription className="text-xs text-slate-500">
-              {t('camera_modal_desc')}
-            </DialogDescription>
+        <DialogHeader className="p-5 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-2.5 mb-1">
+            <DialogTitle className="text-lg font-black text-slate-900">{t('camera_modal_title')}</DialogTitle>
+            {status !== 'error' && (
+              <Badge variant="secondary" className={cn(
+                "rounded-full px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider",
+                status === 'preview' && "bg-emerald-50 text-emerald-600 border-emerald-100",
+                status === 'loading' && "bg-amber-50 text-amber-600 border-amber-100",
+                status === 'permission' && "bg-orange-50 text-orange-600 border-orange-100",
+                status === 'captured' && "bg-indigo-50 text-indigo-600 border-indigo-100",
+              )}>
+                {t(`status_${status}`)}
+              </Badge>
+            )}
           </div>
-          <button onClick={onClose} className="p-1.5 hover:bg-slate-50 rounded-lg transition-colors ml-2">
-            <X size={18} className="text-slate-400" />
-          </button>
+          <DialogDescription className="text-xs text-slate-500">
+            {t('camera_modal_desc')}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="relative aspect-[4/3] bg-slate-50 mt-4 mx-5 rounded-xl overflow-hidden border border-slate-100 shadow-inner group">
-          {/* 1. Permission / Guide */}
+          {/* 1. Permission / Guide - Google Material Design 3.0 Style */}
           {status === 'permission' && (
-            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50/30 backdrop-blur-[2px] p-6 text-center animate-in fade-in duration-500">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/10 mb-4 ring-2 ring-blue-100">
-                <ShieldAlert size={32} className="text-blue-500" />
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30 backdrop-blur-sm p-8 text-center animate-in fade-in duration-700">
+              {/* Frosted Glass Icon Container */}
+              <div className="relative w-20 h-20 rounded-3xl flex items-center justify-center mb-6 group/icon">
+                {/* Glass background with blur */}
+                <div className="absolute inset-0 bg-white/40 backdrop-blur-2xl rounded-3xl border border-white/60 shadow-[0_8px_32px_rgba(251,146,60,0.2),inset_0_1px_0_rgba(255,255,255,0.8)]"></div>
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-orange-500/10 rounded-3xl"></div>
+                {/* Inner glow */}
+                <div className="absolute inset-[2px] bg-gradient-to-br from-white/50 to-transparent rounded-3xl opacity-60"></div>
+                {/* Icon */}
+                <ShieldAlert size={36} className="relative z-10 text-orange-500 drop-shadow-sm" strokeWidth={1.5} />
               </div>
-              <h4 className="text-base font-black text-slate-900 mb-2.5">等待摄像头授权</h4>
-              <p className="text-xs text-slate-600 max-w-[320px] leading-relaxed font-medium mb-3">
+              <h4 className="text-lg font-bold text-slate-900 mb-3 tracking-tight">摄像头权限请求</h4>
+              <p className="text-sm text-slate-600 max-w-[280px] leading-relaxed mb-6">
                 {t('guide_permission')}
               </p>
-              <p className="text-[11px] text-slate-500 max-w-[300px] leading-relaxed">
-                {t('guide_permission_steps')}
-              </p>
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200/50 shadow-sm max-w-[300px]">
+                <p className="text-xs text-slate-500 leading-relaxed text-left">
+                  {t('guide_permission_steps')}
+                </p>
+              </div>
             </div>
           )}
 
@@ -276,7 +289,7 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
                 {errorType === 'constraint' && t('guide_error_default')}
               </p>
               <div className="flex gap-2.5">
-                <Button3D onClick={() => startCamera(currentDeviceId)} variant="primary" className="px-5 h-10 text-sm">
+                <Button3D onClick={() => startCamera(currentDeviceId)} variant="gradient" className="px-5 h-10 text-sm">
                   {t('retry_connect')}
                 </Button3D>
                 <Button3D onClick={onClose} variant="outline" className="px-5 h-10 text-sm border-slate-200">
@@ -300,81 +313,141 @@ export const CameraModal = ({ isOpen, onClose, onCapture }: CameraModalProps) =>
 
           {/* Captured Image */}
           {status === 'captured' && capturedImage && (
-            <img 
-              src={capturedImage} 
-              alt="Captured" 
-              className="absolute inset-0 z-40 w-full h-full object-cover animate-in fade-in zoom-in-95 duration-300" 
+            <img
+              src={capturedImage}
+              alt="Captured"
+              className="absolute inset-0 z-40 w-full h-full object-cover animate-in fade-in zoom-in-95 duration-300"
             />
           )}
-          
+
           <canvas ref={canvasRef} className="hidden" />
         </div>
 
-        <DialogFooter className="p-5 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/30 border-t border-slate-100">
-          {/* Left: Switch Camera */}
-          <div className="flex-1 w-full sm:w-auto">
-            {devices.length > 1 && status === 'preview' && (
-              <button 
-                onClick={toggleCamera}
-                className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-indigo-600 transition-colors bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm hover:shadow"
-              >
-                <FlipHorizontal size={12} />
-                {t('switch_camera')}
-              </button>
-            )}
-          </div>
+        <DialogFooter className="p-5 pt-4 bg-slate-50/30 border-t border-slate-100">
+          {/* Preview/Captured state: Three-column layout */}
+          {(status === 'preview' || status === 'captured') && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
+              {/* Left: Switch Camera */}
+              <div className="flex-1 w-full sm:w-auto">
+                {devices.length > 1 && status === 'preview' && (
+                  <button
+                    onClick={toggleCamera}
+                    className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 hover:text-indigo-600 transition-colors bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-sm hover:shadow"
+                  >
+                    <FlipHorizontal size={12} />
+                    {t('switch_camera')}
+                  </button>
+                )}
+              </div>
 
-          {/* Center: Action */}
-          <div className="flex-none order-first sm:order-none w-full sm:w-auto">
-            {status !== 'captured' ? (
+              {/* Center: Action */}
+              <div className="flex-none order-first sm:order-none w-full sm:w-auto">
+                {status !== 'captured' ? (
+                  <Button3D
+                    onClick={() => {
+                      if (btnConfig.disabled) {
+                        triggerShake();
+                      } else {
+                        capturePhoto();
+                      }
+                    }}
+                    disabled={btnConfig.disabled}
+                    variant="gradient"
+                    className={cn(
+                      "w-full sm:w-48 h-12 flex items-center justify-center gap-2.5 text-base",
+                      isShaking && "animate-[shake_0.5s_ease-in-out]"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-3 h-3 rounded-full border-2 border-white",
+                      status === 'preview' ? "bg-white animate-pulse shadow-[0_0_8px_white]" : "bg-transparent opacity-30"
+                    )} />
+                    {btnConfig.text}
+                  </Button3D>
+                ) : (
+                  <div className="flex gap-3 w-full sm:w-auto">
+                    <Button3D
+                      onClick={() => startCamera(currentDeviceId)}
+                      variant="outline"
+                      className="flex-1 sm:flex-none sm:w-28 h-12 text-sm border-slate-200 bg-white"
+                    >
+                      <RefreshCw size={18} className="mr-1.5" />
+                      {t('retake')}
+                    </Button3D>
+                    <Button3D
+                      onClick={handleUsePhoto}
+                      variant="gradient"
+                      className="flex-1 sm:flex-none sm:w-40 h-12 text-sm"
+                    >
+                      <Check size={18} className="mr-1.5" />
+                      {btnConfig.text}
+                    </Button3D>
+                  </div>
+                )}
+              </div>
+
+              {/* Right: Placeholder */}
+              <div className="flex-1 w-full sm:w-auto"></div>
+            </div>
+          )}
+
+          {/* Permission/Loading/Error state: Centered layout */}
+          {(status === 'permission' || status === 'loading' || status === 'error') && (
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
               <Button3D
-                onClick={capturePhoto}
+                onClick={() => {
+                  if (btnConfig.disabled) {
+                    triggerShake();
+                  } else {
+                    // This button is only active for 'preview' and 'captured' states in the other layout.
+                    // For permission/loading/error, it's disabled and serves as a prompt.
+                    // The actual action for 'error' is handled by the retry button in the error overlay.
+                    // For 'permission' and 'loading', it's just a disabled placeholder.
+                  }
+                }}
                 disabled={btnConfig.disabled}
-                variant="primary"
-                className="w-full sm:w-48 h-12 flex items-center justify-center gap-2.5 text-base"
+                variant="gradient"
+                className={cn(
+                  "w-full sm:w-auto sm:min-w-[240px] h-12 flex items-center justify-center gap-2.5 text-base whitespace-nowrap px-6",
+                  isShaking && "animate-[shake_0.5s_ease-in-out]"
+                )}
               >
-                <div className={cn(
-                  "w-3 h-3 rounded-full border-2 border-white",
-                  status === 'preview' ? "bg-white animate-pulse shadow-[0_0_8px_white]" : "bg-transparent opacity-30"
-                )} />
+                <RefreshCw size={18} className="opacity-90" />
                 {btnConfig.text}
               </Button3D>
-            ) : (
-              <div className="flex gap-3 w-full sm:w-auto">
-                <Button3D
-                  onClick={() => startCamera(currentDeviceId)}
-                  variant="outline"
-                  className="flex-1 sm:flex-none sm:w-28 h-12 text-sm border-slate-200 bg-white"
-                >
-                  <RefreshCw size={18} className="mr-1.5" />
-                  {t('retake')}
-                </Button3D>
-                <Button3D
-                  onClick={handleUsePhoto}
-                  variant="primary"
-                  className="flex-1 sm:flex-none sm:w-40 h-12 text-sm"
-                >
-                  <Check size={18} className="mr-1.5" />
-                  {btnConfig.text}
-                </Button3D>
-              </div>
-            )}
-          </div>
 
-          {/* Right: Close/Upload */}
-          <div className="flex-1 w-full sm:w-auto flex justify-end">
-            {(status === 'permission' || status === 'loading' || status === 'error') && (
-              <button 
-                onClick={onClose}
-                className="text-[11px] font-bold text-slate-400 hover:text-slate-600 transition-colors"
+              <button
+                type="button"
+                onClick={() => {
+                  setIsUploadClicked(true);
+                  setTimeout(() => {
+                    onClose();
+                    setIsUploadClicked(false);
+                  }, 150);
+                }}
+                onMouseEnter={() => setIsUploadHovered(true)}
+                onMouseLeave={() => setIsUploadHovered(false)}
+                className="w-full sm:w-48 !transition-all !duration-200 !select-none !cursor-pointer"
+                style={{
+                  height: '48px',
+                  padding: '0 24px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  borderRadius: '8px',
+                  border: '2px solid',
+                  borderColor: (isUploadClicked || isUploadHovered) ? '#6366f1' : '#cbd5e1',
+                  color: (isUploadClicked || isUploadHovered) ? '#4f46e5' : '#94a3b8',
+                  backgroundColor: (isUploadClicked || isUploadHovered) ? 'rgba(238, 242, 255, 0.3)' : 'transparent',
+                  boxShadow: 'none',
+                  transition: 'all 200ms ease'
+                }}
               >
                 {t('use_upload_instead')}
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 };
-

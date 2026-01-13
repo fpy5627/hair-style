@@ -156,7 +156,7 @@
       "title_part1": "根据脸型自动匹配的",
       "title_part2": "AI 发型顾问",
       "subtitle": "专业的 AI 脸型分析与发型匹配技术，助你找到真正提升气质的完美造型。",
-      "ctaStart": "立即识别脸型并试发型",
+      "ctaStart": "立即开始AI识别脸型并试发型",
       "ctaSuitsMe": "脸型测发型",
       "trust1": "AI 自动识别脸型（圆脸/方脸/长脸等）",
       "trust2": "基于脸型比例推荐更合适的发型",
@@ -184,12 +184,12 @@
     "howitworks": {
       "title": "Hairnova AI 是如何工作的？",
       "subtitle": "从脸型分析到完美发色，只需一个流程",
-      "step1": "1. 识别脸型",
-      "step1_desc": "上传照片，AI 扫描面部轮廓",
-      "step2": "2. 智能推荐",
-      "step2_desc": "基于脸型比例匹配最佳发型",
-      "step3": "3. 发色优化",
-      "step3_desc": "进阶选项：根据肤色匹配发色",
+      "step1": "上传照片",
+      "step1_desc": "上传正脸清晰照",
+      "step2": "AI 识别",
+      "step2_desc": "分析脸型与比例",
+      "step3": "智能推荐",
+      "step3_desc": "生成发型 + 发色",
       "analyzing": "正在分析您的脸型与五官比例...",
       "analysis_done": "分析完成！您的脸型属于 {shape}",
       "advanced_color": "发色进阶选项 (Advanced)",
@@ -512,7 +512,7 @@
       "bottom_cta": {
         "title": "准备好找到真正适合你脸型的发型了吗？",
         "subtitle": "上传照片，立即查看效果。",
-        "button": "立即识别脸型并试发型"
+        "button": "立即开始AI识别脸型并试发型"
       },
       "intent": {
         "changer_desc": "立即尝试任何发型效果。",

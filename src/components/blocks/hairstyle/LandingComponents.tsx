@@ -5,20 +5,20 @@ import { useTranslations } from 'next-intl';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
 import { SafeLink } from '@/components/common/safe-link';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  User, 
-  UserCheck, 
-  HelpCircle, 
-  Zap, 
-  ShieldCheck, 
-  Target, 
-  Camera, 
-  Heart, 
-  Scissors, 
-  Palette, 
-  Layers, 
+import {
+  ArrowRight,
+  Sparkles,
+  User,
+  UserCheck,
+  HelpCircle,
+  Zap,
+  ShieldCheck,
+  Target,
+  Camera,
+  Heart,
+  Scissors,
+  Palette,
+  Layers,
   MousePointer2,
   Brain,
   Upload,
@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
  */
 export const ColorTryOnCard = () => {
   const t = useTranslations('hairstyle.landing.color_tryon');
-  
+
   const colors = [
     { name: t('colors.black'), color: 'bg-slate-900' },
     { name: t('colors.brown'), color: 'bg-[#4a3728]' },
@@ -57,7 +57,7 @@ export const ColorTryOnCard = () => {
             <p className="text-sm md:text-base text-slate-500 leading-relaxed">
               {t('description')}
             </p>
-            
+
             <div className="pt-4">
               <SafeLink href="/ai-hairstyle-changer?tab=color">
                 <Button3D variant="primary" className="h-12 px-8">
@@ -65,7 +65,7 @@ export const ColorTryOnCard = () => {
                 </Button3D>
               </SafeLink>
             </div>
-            
+
             <p className="text-[10px] text-slate-400 font-medium">
               {t('disclaimer')}
             </p>
@@ -98,7 +98,7 @@ export const ColorTryOnCard = () => {
  */
 export const SuitsMeSection = () => {
   const t = useTranslations('hairstyle.landing.face_shape');
-  
+
   const steps = [
     { title: t('step1'), desc: t('step1_desc'), icon: <Camera size={24} /> },
     { title: t('step2'), desc: t('step2_desc'), icon: <Brain size={24} /> },
@@ -155,42 +155,42 @@ export const SuitsMeSection = () => {
  */
 export const PopularStylesGrid = () => {
   const t = useTranslations('hairstyle.landing.popular_styles');
-  
+
   const categories = [
-    { 
-      title: t('m_title'), 
-      desc: t('m_desc'), 
-      href: '/ai-hairstyle-changer?gender=male', 
+    {
+      title: t('m_title'),
+      desc: t('m_desc'),
+      href: '/ai-hairstyle-changer?gender=male',
       tag: t('tag_hot'),
-      image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop' 
+      image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop'
     },
-    { 
-      title: t('f_title'), 
-      desc: t('f_desc'), 
-      href: '/ai-hairstyle-changer?gender=female', 
+    {
+      title: t('f_title'),
+      desc: t('f_desc'),
+      href: '/ai-hairstyle-changer?gender=female',
       tag: t('tag_hot'),
-      image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&h=500&fit=crop' 
+      image: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&h=500&fit=crop'
     },
-    { 
-      title: t('c_title'), 
-      desc: t('c_desc'), 
-      href: '/ai-hairstyle-changer?texture=curly', 
+    {
+      title: t('c_title'),
+      desc: t('c_desc'),
+      href: '/ai-hairstyle-changer?texture=curly',
       tag: t('tag_new'),
-      image: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=400&h=500&fit=crop' 
+      image: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=400&h=500&fit=crop'
     },
-    { 
-      title: t('v_title'), 
-      desc: t('v_desc'), 
-      href: '/ai-hairstyle-changer?tab=color', 
+    {
+      title: t('v_title'),
+      desc: t('v_desc'),
+      href: '/ai-hairstyle-changer?tab=color',
       tag: t('tag_new'),
-      image: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=400&h=500&fit=crop' 
+      image: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=400&h=500&fit=crop'
     },
-    { 
-      title: t('t_title'), 
-      desc: t('t_desc'), 
-      href: '/ai-hairstyle-changer?sort=trending', 
+    {
+      title: t('t_title'),
+      desc: t('t_desc'),
+      href: '/ai-hairstyle-changer?sort=trending',
       tag: 'HOT',
-      image: 'https://images.unsplash.com/photo-1552046122-03184de85e08?w=400&h=500&fit=crop' 
+      image: 'https://images.unsplash.com/photo-1552046122-03184de85e08?w=400&h=500&fit=crop'
     },
   ];
 
@@ -198,7 +198,7 @@ export const PopularStylesGrid = () => {
     <section className="py-24 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
         <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight text-center">{t('title')}</h2>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((c, idx) => (
             <SafeLink key={idx} href={c.href}>
@@ -271,7 +271,7 @@ export const SeoTextBlock = () => {
 export const FAQSection = () => {
   const t = useTranslations('hairstyle.landing.faq');
   const [openIndex, setOpenIndex] = React.useState<number | null>(0);
-  
+
   const faqs = [
     { q: t('q1'), a: t('a1') },
     { q: t('q4'), a: t('a4') },
@@ -282,22 +282,22 @@ export const FAQSection = () => {
 
   return (
     <div className="py-32 max-w-4xl mx-auto px-4">
-      <div className="text-center space-y-4 mb-16">
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{t('title')}</h2>
-        <p className="text-base text-slate-500 font-medium">关于 AI 发型顾问的常见疑问解答</p>
+      <div className="text-center space-y-3 mb-12">
+        <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('title')}</h2>
+        <p className="text-sm md:text-base text-slate-500 font-medium">关于 AI 发型顾问的常见疑问解答</p>
       </div>
       <div className="space-y-4">
         {faqs.map((faq, idx) => (
-          <div 
-            key={idx} 
+          <div
+            key={idx}
             className={cn(
               "rounded-xl border transition-all duration-500 overflow-hidden",
-              openIndex === idx 
-                ? "bg-white border-indigo-100 shadow-xl shadow-indigo-100/20" 
+              openIndex === idx
+                ? "bg-white border-indigo-100 shadow-xl shadow-indigo-100/20"
                 : "bg-slate-50/50 border-slate-100 hover:bg-white hover:border-slate-200"
             )}
           >
-            <button 
+            <button
               onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
               className="w-full px-8 py-6 flex items-center justify-between text-left group"
             >
@@ -374,7 +374,7 @@ export const BottomCTA = () => {
           {/* 3D 增强背景光晕 */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-400/20 blur-[120px] rounded-full -mr-48 -mt-48 transition-all duration-700 group-hover:scale-110" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-400/20 blur-[120px] rounded-full -ml-48 -mb-48 transition-all duration-700 group-hover:scale-110" />
-          
+
           <div className="relative z-10 space-y-6">
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">{tl('title')}</h2>
             <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto font-medium">{tl('subtitle')}</p>
@@ -503,7 +503,7 @@ export const RelatedLinks = () => {
  */
 export const ExplainerModule = () => {
   const tl = useTranslations('hairstyle.landing.what_is');
-  
+
   const cards = [
     { title: tl('card1_title'), icon: <Zap className="text-amber-500" /> },
     { title: tl('card2_title'), icon: <ShieldCheck className="text-blue-500" /> },

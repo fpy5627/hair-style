@@ -2,20 +2,20 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { 
-  Sparkles, 
-  Check, 
-  ArrowRight, 
-  Scissors, 
-  Camera, 
-  Palette, 
+import {
+  Sparkles,
+  Check,
+  ArrowRight,
+  Scissors,
+  Camera,
+  Palette,
   Target,
   RefreshCw,
-  Zap, 
-  ShieldCheck, 
-  X, 
-  Download, 
-  RotateCcw, 
+  Zap,
+  ShieldCheck,
+  X,
+  Download,
+  RotateCcw,
   History,
   Plus,
   HelpCircle,
@@ -26,7 +26,9 @@ import {
   ChevronDown,
   ChevronUp,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Upload,
+  Eye
 } from 'lucide-react';
 
 import { Button3D } from '@/components/ui/Button3D';
@@ -36,8 +38,8 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 // Reuse existing components
-import { 
-  FAQSection, 
+import {
+  FAQSection,
   RelatedLinks,
   SeoTextBlock,
   BottomCTA
@@ -48,15 +50,16 @@ import { StyleTabs, HairstyleCandidatePool, HistoryRecord, HairstyleGrid } from 
 import { GenerationDashboard } from '@/components/blocks/hairstyle/GenerationDashboard';
 import { ResultCard } from '@/components/blocks/hairstyle/ResultCard';
 import { HairstyleGuideModal } from '@/components/ai-hairstyle/HairstyleGuideModal';
+import { RecommendationResultPanel } from '@/components/blocks/hairstyle/RecommendationResultPanel';
 
 const SHOW_BIG_CARD = false;
 
 // Import data
-import { 
-  MOCK_HAIRSTYLES, 
+import {
+  MOCK_HAIRSTYLES,
   HAIR_COLORS,
-  USE_CASES, 
-  WHY_REASONS, 
+  USE_CASES,
+  WHY_REASONS,
   GALLERY_ITEMS,
   HERO_PREVIEW_DATA
 } from '@/lib/homeSectionsData';
@@ -64,12 +67,12 @@ import {
 /**
  * 历史记录预览 Modal
  */
-const HistoryPreviewModal = ({ 
-  record, 
-  onClose, 
-  onRetry 
-}: { 
-  record: HistoryRecord | null; 
+const HistoryPreviewModal = ({
+  record,
+  onClose,
+  onRetry
+}: {
+  record: HistoryRecord | null;
   onClose: () => void;
   onRetry: (styleId: string) => void;
 }) => {
@@ -80,7 +83,7 @@ const HistoryPreviewModal = ({
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative w-full max-w-lg bg-white rounded-xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-200">
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 p-2 bg-black/10 hover:bg-black/20 rounded-full transition-colors"
         >
@@ -88,9 +91,9 @@ const HistoryPreviewModal = ({
         </button>
 
         <div className="aspect-[4/5] relative bg-slate-100">
-          <img 
-            src={record.resultImageUrl} 
-            alt={record.styleName} 
+          <img
+            src={record.resultImageUrl}
+            alt={record.styleName}
             className="w-full h-full object-cover"
           />
         </div>
@@ -107,7 +110,7 @@ const HistoryPreviewModal = ({
           </div>
 
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={() => onRetry(record.styleId)}
               className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md font-bold flex items-center justify-center gap-2 transition-colors"
             >
@@ -145,11 +148,11 @@ const HeroPreviewPanel = () => {
       return fallback || key;
     }
   };
-  
+
   // 分组数据
   const maleItems = HERO_PREVIEW_DATA.filter(item => item.gender === 'male');
   const femaleItems = HERO_PREVIEW_DATA.filter(item => item.gender === 'female');
-  
+
   const [selectedGender, setSelectedGender] = useState<'male' | 'female'>('female');
   const currentItems = selectedGender === 'male' ? maleItems : femaleItems;
   const totalSteps = currentItems.length * 2;
@@ -200,7 +203,7 @@ const HeroPreviewPanel = () => {
         if (!start) start = timestamp;
         const elapsed = timestamp - start;
         const p = Math.min((elapsed / duration) * 100, 100);
-        
+
         setProgress(p);
 
         if (p < 100) {
@@ -245,7 +248,7 @@ const HeroPreviewPanel = () => {
     <div className="bg-white/40 backdrop-blur-xl border border-white/50 rounded-xl p-4 md:p-5 shadow-[0_20px_80px_rgba(15,23,42,0.15)] relative group">
       {/* 装饰性背景光晕 */}
       <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-      
+
       <div className="relative space-y-3">
         {/* 顶部状态标签 */}
         <div className="flex items-center justify-between mb-4 px-1">
@@ -271,21 +274,21 @@ const HeroPreviewPanel = () => {
         {/* 主展示区 - 相对定位容器 */}
         <div className="relative w-full aspect-[4/5] rounded-md overflow-hidden ring-1 ring-white/50 shadow-inner bg-slate-100">
           {/* A) Layer 1: 底层图片 (currentSrc，完整铺满) */}
-          <img 
-            src={currentSrc} 
+          <img
+            src={currentSrc}
             className="absolute inset-0 w-full h-full object-cover"
             alt={safeTc('before')}
           />
-          
+
           {/* A) Layer 2: 上层图片 (nextSrc，通过 clip-path 控制揭示) */}
           {isAnimating && nextSrc && (
-            <img 
-              src={nextSrc} 
+            <img
+              src={nextSrc}
               className="absolute inset-0 w-full h-full object-cover z-10"
-              style={{ 
-                clipPath: direction === 'rtl' 
-                  ? `inset(0 0 0 ${100 - progress}%)` 
-                  : `inset(0 ${100 - progress}% 0 0)` 
+              style={{
+                clipPath: direction === 'rtl'
+                  ? `inset(0 0 0 ${100 - progress}%)`
+                  : `inset(0 ${100 - progress}% 0 0)`
               }}
               alt={safeTc('after')}
             />
@@ -293,23 +296,23 @@ const HeroPreviewPanel = () => {
 
           {/* 交互浮窗：性别切换 */}
           <div className="absolute top-4 right-4 flex items-center gap-2 z-40">
-            <button 
+            <button
               onClick={() => handleGenderChange('female')}
               className={cn(
                 "px-2.5 py-0.5 rounded-[6px] text-[9px] md:text-[10px] font-medium transition-all duration-300 border backdrop-blur-md shadow-lg flex items-center gap-1",
-                selectedGender === 'female' 
-                  ? "bg-white/50 text-indigo-800/90 border-white/40" 
+                selectedGender === 'female'
+                  ? "bg-white/50 text-indigo-800/90 border-white/40"
                   : "bg-black/20 text-white border-white/10 hover:bg-black/40"
               )}
             >
               {safeTc('women')}
             </button>
-            <button 
+            <button
               onClick={() => handleGenderChange('male')}
               className={cn(
                 "px-2.5 py-0.5 rounded-[6px] text-[9px] md:text-[10px] font-medium transition-all duration-300 border backdrop-blur-md shadow-lg flex items-center gap-1",
-                selectedGender === 'male' 
-                  ? "bg-white/50 text-indigo-800/90 border-white/40" 
+                selectedGender === 'male'
+                  ? "bg-white/50 text-indigo-800/90 border-white/40"
                   : "bg-black/20 text-white border-white/10 hover:bg-black/40"
               )}
             >
@@ -335,14 +338,14 @@ const HeroPreviewPanel = () => {
 /**
  * 发色选项组件，带 Tooltip 提示
  */
-const ColorOption = ({ 
-  color, 
-  isSelected, 
-  onSelect, 
-  isMobile 
-}: { 
-  color: any; 
-  isSelected: boolean; 
+const ColorOption = ({
+  color,
+  isSelected,
+  onSelect,
+  isMobile
+}: {
+  color: any;
+  isSelected: boolean;
   onSelect: (id: string) => void;
   isMobile: boolean;
 }) => {
@@ -355,7 +358,7 @@ const ColorOption = ({
 
   return (
     <div className="relative flex flex-col items-center">
-      <button 
+      <button
         onClick={() => {
           onSelect(color.id);
           if (isMobile) setShowTooltip(false);
@@ -366,15 +369,15 @@ const ColorOption = ({
       >
         <div className={cn(
           "w-11 h-11 rounded-full border-2 p-0.5 transition-all shadow-sm relative",
-          isSelected 
-            ? "border-indigo-500 bg-indigo-50 shadow-indigo-100" 
+          isSelected
+            ? "border-indigo-500 bg-indigo-50 shadow-indigo-100"
             : "border-white/80 hover:border-indigo-300"
         )}>
           <div className="w-full h-full rounded-full shadow-inner" style={{ backgroundColor: color.hex }} />
-          
+
           {/* Mobile Info Icon */}
           {isMobile && (
-            <div 
+            <div
               className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white shadow-md rounded-full border border-slate-100 flex items-center justify-center text-slate-400 z-20 active:scale-110 transition-transform"
               onClick={handleToggleTooltip}
             >
@@ -431,7 +434,7 @@ export default function HomePage() {
     typeof tc === 'function'
       ? tc
       : (v: string) => v;
-  
+
   // Helper for safe translation
   const safeT = (key: string, fallback?: string, values?: any) => {
     try {
@@ -449,11 +452,11 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeSmartTag, setActiveSmartTag] = useState<'recommended' | 'try' | 'not_recommended'>('recommended');
   const [selectedGender, setSelectedGender] = useState<'male' | 'female'>('female');
-  
+
   // 发色选择展开状态
   const [showStyleColors, setShowStyleColors] = useState(false);
   const [showAdvancedColors, setShowAdvancedColors] = useState(false);
-  
+
   // Handle filter changes
   useEffect(() => {
     setCurrentPage(1);
@@ -462,7 +465,7 @@ export default function HomePage() {
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
-  
+
   // History States
   const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<HistoryRecord | null>(null);
@@ -494,7 +497,7 @@ export default function HomePage() {
       localStorage.setItem('hairnova_history', JSON.stringify(history));
     }
   }, [history]);
-  
+
   // Analysis States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzedFaceShape, setAnalyzedFaceShape] = useState<string | null>(null);
@@ -526,16 +529,36 @@ export default function HomePage() {
     }
   }, []);
 
-  // Tool Logic
-  const handleUpload = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setOriginalImage(e.target?.result as string);
-      setToolStatus('ready');
-      // Auto trigger analysis mock
-      startAnalysis();
-    };
-    reader.readAsDataURL(file);
+  // Tool Logic - Handle file upload (supports both File objects and URLs)
+  const handleUpload = async (fileOrUrl: File | string) => {
+    try {
+      if (typeof fileOrUrl === 'string') {
+        // It's a URL, fetch and convert to Blob
+        const response = await fetch(fileOrUrl);
+        const blob = await response.blob();
+
+        // Create preview URL from blob
+        const previewUrl = URL.createObjectURL(blob);
+        setOriginalImage(previewUrl);
+        setToolStatus('ready');
+
+        // Auto trigger analysis
+        startAnalysis();
+      } else {
+        // It's a File object - use FileReader as before
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setOriginalImage(e.target?.result as string);
+          setToolStatus('ready');
+          // Auto trigger analysis
+          startAnalysis();
+        };
+        reader.readAsDataURL(fileOrUrl);
+      }
+    } catch (error) {
+      console.error('Error loading image:', error);
+      alert('图片加载失败，请重试');
+    }
   };
 
   const handleClear = () => {
@@ -552,14 +575,19 @@ export default function HomePage() {
     }, 2000);
   };
 
+  // Handle example image click
+  const handleExampleClick = async (imageUrl: string) => {
+    await handleUpload(imageUrl);
+  };
+
   const handleStyleSelect = (id: string) => {
     setSelectedStyle(id);
     setToolStatus('loading');
-    
+
     // Simulate generation success
     setTimeout(() => {
       setToolStatus('success');
-      
+
       // Add to history
       const style = MOCK_HAIRSTYLES.find(s => s.id === id);
       if (style) {
@@ -592,7 +620,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
       <main className="max-w-7xl mx-auto px-4 sm:px-6">
-        
+
         {/* ① Hero｜你是做什么的？为什么值得我现在试？ */}
         <section className="pt-6 md:pt-10 pb-4 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 lg:gap-8 items-center">
           <div className="space-y-5 md:space-y-7 animate-in fade-in slide-in-from-left duration-700">
@@ -624,10 +652,10 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-6 md:pt-8">
-              <Button3D 
-                variant="gradient" 
+              <Button3D
+                variant="gradient"
                 radius="xl"
-                className="w-full sm:w-auto px-8 md:px-10 h-12 md:h-14 font-black" 
+                className="w-full sm:w-auto px-8 md:px-10 h-12 md:h-14 font-black"
                 onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
               >
                 <span className="!text-sm md:!text-base whitespace-nowrap leading-[1.1] font-semibold">
@@ -644,426 +672,199 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ② How Hairnova Works｜极简磁贴布局流程 */}
-        <section id="library" ref={libraryRef} className="py-24 border-t border-slate-200/60 space-y-16 relative overflow-visible z-10 pb-16 md:pb-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-50/40 via-white/0 to-white/0 -z-10" />
-          <div className="text-center space-y-4 px-4 relative z-10">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{t('howitworks.title')}</h2>
-            <p className="text-base text-slate-500 font-medium max-w-2xl mx-auto">{t('howitworks.subtitle')}</p>
-          </div>
+        {/* ② How Hairnova Works｜Compressed Number Flow */}
+        <section id="library" ref={libraryRef} className="py-12 bg-white/50 backdrop-blur-sm relative z-10 w-full mt-24 md:mt-32">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
 
-          <div className="max-w-7xl mx-auto px-4 overflow-visible">
-            {/* SharedShell：流程内容 + 右侧工具栏的共同大卡片 */}
-            <div className="relative overflow-visible">
-              {/* Bottom Glass Glow - 底部玻璃垫 */}
-              <div className="pointer-events-none absolute bottom-4 left-1/2 h-20 w-[92%] -translate-x-1/2 rounded-full bg-indigo-200/50 blur-3xl opacity-80" />
-              <div className="pointer-events-none absolute bottom-8 left-1/2 h-12 w-[80%] -translate-x-1/2 rounded-full bg-white/70 blur-2xl opacity-90" />
-              
-              <div className="rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_12px_40px_rgba(15,23,42,0.10)] overflow-hidden p-6 lg:p-8 relative z-10">
-                {/* 流程卡片 */}
-                <div className="space-y-8">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {[1, 2, 3].map((num) => (
-                      <div key={num} className="p-8 rounded-3xl bg-white/40 backdrop-blur-sm border border-white/60 space-y-4 hover:bg-white/60 hover:shadow-xl transition-all duration-500 group">
-                        <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl font-black shadow-lg shadow-indigo-200 group-hover:scale-110 transition-transform">{num}</div>
-                        <h3 className="text-lg font-black text-slate-900">{t(`howitworks.step${num}`)}</h3>
-                        <p className="text-sm text-slate-500 font-medium leading-relaxed">{t(`howitworks.step${num}_desc`)}</p>
-                      </div>
-                    ))}
-                  </div>
+              {/* Step 1 */}
+              <div className="flex items-center gap-4">
+                <span className="text-4xl font-black text-slate-200/80">01</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step1')}</span>
+                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step1_desc')}</span>
                 </div>
               </div>
+
+              <div className="hidden md:block text-slate-200">
+                <ArrowRight size={20} strokeWidth={1.5} />
+              </div>
+              <div className="md:hidden h-8 w-px bg-slate-100"></div>
+
+              {/* Step 2 */}
+              <div className="flex items-center gap-4">
+                <span className="text-4xl font-black text-slate-200/80">02</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step2')}</span>
+                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step2_desc')}</span>
+                </div>
+              </div>
+
+              <div className="hidden md:block text-slate-200">
+                <ArrowRight size={20} strokeWidth={1.5} />
+              </div>
+              <div className="md:hidden h-8 w-px bg-slate-100"></div>
+
+              {/* Step 3 */}
+              <div className="flex items-center gap-4">
+                <span className="text-4xl font-black text-slate-200/80">03</span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step3')}</span>
+                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step3_desc')}</span>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
 
-        {/* ③ Hairstyle Candidates｜500+ 发型候选库 */}
-        <section className="mt-32 md:mt-48 lg:mt-64 relative overflow-visible z-10 pb-16 md:pb-20">
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-50/40 via-white/0 to-white/0 -z-10" />
-          <div className="w-full max-w-[1440px] mx-auto px-4 md:px-6 overflow-visible">
-            {/* SharedShell：左侧候选库 + 右侧工具栏的共同大卡片 */}
-            <div className="relative overflow-visible">
-              {/* Bottom Glass Glow - 底部玻璃垫 */}
-              <div className="pointer-events-none absolute bottom-4 left-1/2 h-20 w-[92%] -translate-x-1/2 rounded-full bg-indigo-200/50 blur-3xl opacity-80" />
-              <div className="pointer-events-none absolute bottom-8 left-1/2 h-12 w-[80%] -translate-x-1/2 rounded-full bg-white/70 blur-2xl opacity-90" />
-              
-              <div className="rounded-3xl bg-white/80 backdrop-blur-md shadow-[0_12px_40px_rgba(15,23,42,0.08)] overflow-hidden p-8 lg:p-14 relative z-10">
-                {/* 标题与副标题 - 整个卡片居中 */}
-                <div className="flex flex-col items-center text-center mb-12 md:mb-20 animate-in fade-in slide-in-from-bottom duration-1000">
-                  <h2 className="text-xl md:text-3xl font-black text-slate-900 tracking-tighter mb-3">
-                    {safeT('hairstyle.library.title', '500+ 发型候选库')}
-                  </h2>
-                  <p className="text-xs md:text-sm text-slate-500 font-medium max-w-2xl leading-relaxed">
-                    {safeT('hairstyle.library.subtitle', 'AI 已经根据脸型筛选出最适合您的候选风格')}
-                  </p>
-                </div>
+        {/* ③ Core Experience Zone｜核心交互区 */}
+        <section className="mt-0 pt-8 pb-20 relative overflow-visible z-10">
+          <div className="max-w-7xl mx-auto px-4">
 
-                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,740px)_440px] gap-8 lg:gap-16 items-start justify-center">
-                
-                {/* LEFT：候选库 */}
-                <div className="flex flex-col">
-                  {/* tabs & filters */}
-                  <div className="w-full flex flex-col items-start gap-5 mb-6">
-                    {/* 性别选择按钮 */}
-                    <div className="flex gap-1 p-0.5 bg-slate-100/60 rounded-[8px] border border-slate-200/60 shadow-inner">
-                      <button 
-                        onClick={() => setSelectedGender('female')}
-                        className={cn(
-                          "px-4 py-1.5 rounded-[6px] text-[11px] font-medium transition-all flex items-center gap-1.5",
-                          selectedGender === 'female' 
-                            ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" 
-                            : "text-slate-500 hover:bg-white/40 hover:text-slate-700"
-                        )}
-                      >
-                        <UserRound size={13} />
-                        {safeTc('women')}
-                      </button>
-                      <button 
-                        onClick={() => setSelectedGender('male')}
-                        className={cn(
-                          "px-4 py-1.5 rounded-[6px] text-[11px] font-medium transition-all flex items-center gap-1.5",
-                          selectedGender === 'male' 
-                            ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" 
-                            : "text-slate-500 hover:bg-white/40 hover:text-slate-700"
-                        )}
-                      >
-                        <User size={13} />
-                        {safeTc('men')}
-                      </button>
-                    </div>
+            {/* Section Header */}
+            <div className="text-center mb-12 space-y-3 animate-in fade-in slide-in-from-bottom duration-700">
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">
+                立即开始 AI 发型实验室
+              </h2>
+              <p className="text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium">
+                上传一张清晰的正脸照片，AI 将在秒级时间内为您量身打造最佳发型方案
+              </p>
+            </div>
 
-                    {/* 发型分类标签 */}
-                    <div className="w-full">
-                      <StyleTabs 
-                        categories={['Long', 'Medium', 'Short', 'Straight', 'Wavy', 'Curly', 'Round', 'Square', 'Long_face', 'Heart', 'Diamond', 'Oval']} 
-                        activeCategory={activeCategory} 
-                        onCategoryChange={setActiveCategory} 
+            <div className="rounded-[40px] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden relative">
+              {/* Decorative Background */}
+              <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+
+              <div className="p-6 lg:p-10 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-12 items-start">
+
+                  {/* Left Column: Upload Area */}
+                  <div className="flex flex-col space-y-6">
+                    <div className="aspect-[3/2] w-full relative rounded-2xl overflow-hidden shadow-2xl shadow-indigo-100/50 border border-slate-100 bg-white">
+                      <UploadCard
+                        onUpload={handleUpload}
+                        onClear={handleClear}
+                        preview={originalImage}
+                        onPhotoRequirementsClick={() => setShowPhotoRequirements(true)}
                       />
                     </div>
-                  </div>
 
-                  {/* grid（多行） */}
-                  <div className="flex-1">
-                    {(() => {
-                      const filteredStyles = MOCK_HAIRSTYLES
-                        .filter(s => {
-                          const matchesGender = s.gender === selectedGender;
-                          const matchesCategory = activeCategory === 'All'
-                            ? true // 显示所有
-                            : ['Long', 'Medium', 'Short'].includes(activeCategory)
-                            ? s.category === activeCategory
-                            : true; // 对于脸型和发质，暂时展示所有
-                          return matchesGender && matchesCategory;
-                        });
-                      
-                      // 模拟 500+ 数据量进行分页占位
-                      const VIRTUAL_TOTAL_COUNT = 512; 
-                      const totalPages = Math.ceil(VIRTUAL_TOTAL_COUNT / itemsPerPage);
-                      
-                      // 为了演示效果，如果当前页没有真实数据，则循环展示过滤后的真实数据
-                      /**
-                       * 获取当前页的分页数据
-                       * 
-                       * @returns 过滤并去重后的发型列表，避免 React key 重复
-                       */
-                      const getPaginatedStyles = () => {
-                        const start = (currentPage - 1) * itemsPerPage;
-                        const pStyles = [];
-                        if (filteredStyles.length === 0) return [];
-                        
-                        // 为了解决同页 key 重复报错，且遵循 deduplicate 逻辑
-                        // 我们确保在同一页中，每个发型 ID 仅出现一次
-                        const seenIds = new Set<string>();
-                        for (let i = 0; i < itemsPerPage; i++) {
-                          const itemIndex = (start + i) % filteredStyles.length;
-                          const item = filteredStyles[itemIndex];
-                          if (item && !seenIds.has(item.id)) {
-                            pStyles.push(item);
-                            seenIds.add(item.id);
-                          }
-                          // 如果已经遍历完所有可用发型（过滤后的），也提前退出
-                          if (seenIds.size >= filteredStyles.length) break;
-                        }
-                        return pStyles;
-                      };
-
-                      const paginatedStyles = getPaginatedStyles();
-
-                      return (
-                        <div className="space-y-12 px-0">
-                          <HairstyleGrid 
-                            styles={paginatedStyles.map(s => s as any)}
-                            selectedStyleId={selectedStyle}
-                            onStyleSelect={handleStyleSelect}
-                          />
-
-                          {/* 翻页组件 */}
-                          {totalPages > 1 && (
-                            <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6 pt-8 border-t border-slate-100/50">
-                              <button 
-                                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                                disabled={currentPage === 1}
-                                className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-[6px] border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
-                                aria-label="Previous page"
-                              >
-                                <ChevronLeft size={16} />
-                              </button>
-                              
-                              <div className="flex items-center gap-1 md:gap-2">
-                                {(() => {
-                                  const pages = [];
-                                  const showEllipsis = totalPages > 7;
-                                  
-                                  if (!showEllipsis) {
-                                    for (let i = 1; i <= totalPages; i++) pages.push(i);
-                                  } else {
-                                    if (currentPage <= 4) {
-                                      pages.push(1, 2, 3, 4, 5, '...', totalPages);
-                                    } else if (currentPage >= totalPages - 3) {
-                                      pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-                                    } else {
-                                      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages);
-                                    }
-                                  }
-
-                                  return pages.map((p, i) => (
-                                    p === '...' ? (
-                                      <span key={`ell-${i}`} className="px-1 md:px-2 text-slate-400">...</span>
-                                    ) : (
-                                      <button
-                                        key={`page-${p}`}
-                                        onClick={() => setCurrentPage(p as number)}
-                                        className={cn(
-                                          "w-7 h-7 md:w-8 md:h-8 rounded-[6px] text-[9px] md:text-xs font-medium transition-all",
-                                          currentPage === p 
-                                            ? "bg-indigo-600 text-white shadow-md shadow-indigo-100" 
-                                            : "text-slate-500 hover:bg-slate-100"
-                                        )}
-                                      >
-                                        {p}
-                                      </button>
-                                    )
-                                  ));
-                                })()}
-                              </div>
-
-                              <button 
-                                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                                disabled={currentPage === totalPages}
-                                className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-[6px] border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
-                                aria-label="Next page"
-                              >
-                                <ChevronRight size={16} />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </div>
-                </div>
-
-                {/* RIGHT：上传 + 历史记录 */}
-                <aside className="w-full lg:w-[440px] shrink-0 min-w-0">
-                  <div className="lg:sticky lg:top-24 relative overflow-y-auto max-h-[calc(100vh-120px)] md:overflow-visible md:max-h-none h-fit pr-1 custom-scrollbar">
-                    {/* RightPanel：内层卡片 */}
-                    <div className="relative overflow-visible">
-                      {/* Bottom Glass Glow - 底部玻璃垫 */}
-                      <div className="pointer-events-none absolute bottom-4 left-1/2 h-20 w-[92%] -translate-x-1/2 rounded-full bg-indigo-200/50 blur-3xl opacity-80" />
-                      <div className="pointer-events-none absolute bottom-8 left-1/2 h-12 w-[80%] -translate-x-1/2 rounded-full bg-white/70 blur-2xl opacity-90" />
-                      
-                      <div className="space-y-6 md:space-y-8 relative z-10 min-w-0">
-                        {/* 1. 上传区 */}
-                        <div className="rounded-xl bg-white/60 backdrop-blur-md shadow-[0_10px_26px_rgba(15,23,42,0.06)] p-6 lg:p-8 space-y-4">
-                          <div className="flex items-center justify-between px-1 gap-2">
-                            <h3 className="text-sm md:text-base font-black text-slate-900 truncate break-words whitespace-normal">{t('howto.step1')}</h3>
+                    {/* Example Photos - Quick Action */}
+                    {!originalImage && (
+                      <div className="pt-2">
+                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 block">Or try with examples</span>
+                        <div className="flex gap-3">
+                          {[1, 2, 3].map((i) => (
                             <button
-                              onClick={() => setShowPhotoRequirements(true)}
-                              className="shrink-0 text-[10px] md:text-[11px] text-indigo-500/70 hover:text-indigo-600 font-bold transition-colors flex items-center gap-1 whitespace-nowrap"
+                              key={i}
+                              onClick={async () => {
+                                const imageUrl = `https://images.unsplash.com/photo-${i === 1 ? '1544005313-94ddf0286df2' : i === 2 ? '1506794778202-cad84cf45f1d' : '1534528741775-53994a69daeb'}?w=400&h=500&fit=crop`;
+                                await handleUpload(imageUrl);
+                              }}
+                              className="w-16 h-20 rounded-lg overflow-hidden border border-slate-200 hover:border-indigo-500 hover:scale-105 transition-all cursor-pointer relative group"
                             >
-                              <HelpCircle size={12} className="stroke-[2.5]" />
-                              {tt('tips_title')}
+                              <img
+                                src={`https://images.unsplash.com/photo-${i === 1 ? '1544005313-94ddf0286df2' : i === 2 ? '1506794778202-cad84cf45f1d' : '1534528741775-53994a69daeb'}?w=200&h=300&fit=crop`}
+                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+                                alt="Example"
+                              />
                             </button>
-                          </div>
-                          <div className="aspect-[4/5] max-h-[360px] md:max-h-[460px] relative flex flex-col overflow-hidden rounded-2xl bg-white/40 p-1 hover:bg-white/60 transition-all border-none outline-none shadow-none">
-                            <UploadCard 
-                              onUpload={handleUpload} 
-                              onClear={handleClear}
-                              preview={originalImage}
-                              onPhotoRequirementsClick={() => setShowPhotoRequirements(true)}
-                            />
-                          </div>
-                          
-                          <button 
-                            data-cta="generate"
-                            disabled={isDisabled}
-                            onClick={() => {
-                              if (!selectedStyle) {
-                                alert(tt('no_style_alert'));
-                                return;
-                              }
-                              handleStyleSelect(selectedStyle);
-                            }}
-                            style={{ borderRadius: '12px' }}
-                            className={cn(
-                              "relative w-full h-12 md:h-14 text-white font-semibold tracking-wide ring-1 ring-white/20 transition-all duration-200 overflow-hidden flex items-center justify-center gap-2 before:absolute before:inset-0 before:bg-[radial-gradient(80%_60%_at_50%_0%,rgba(255,255,255,0.22),transparent_60%)] before:pointer-events-none px-2",
-                              isDisabled 
-                                ? "bg-slate-300 cursor-not-allowed shadow-none" 
-                                : "bg-gradient-to-r from-indigo-500 to-violet-500 shadow-[0_8px_20px_-12px_rgba(79,70,229,0.5)] hover:brightness-[1.03] hover:-translate-y-[1px] active:translate-y-0"
-                            )}
-                          >
-                            <span className="text-xs md:text-sm line-clamp-2 leading-tight font-black uppercase tracking-wider">{tt('generate')}</span>
-                          </button>
-                        </div>
-
-                        {/* 2. 发色选择（三层结构） */}
-                        <div className="rounded-xl bg-white/60 backdrop-blur-md shadow-[0_10px_26px_rgba(15,23,42,0.06)] p-6 lg:p-8 space-y-5">
-                          <div className="flex items-center gap-2 px-1">
-                            <Palette size={16} className="text-indigo-600 shrink-0" />
-                            <h3 className="text-sm md:text-base font-black text-slate-900 truncate break-words whitespace-normal">发色选择</h3>
-                          </div>
-                          
-                          {/* 基础发色（默认展示） */}
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-5 gap-4 px-1">
-                              {HAIR_COLORS.basic.map(color => (
-                                <ColorOption 
-                                  key={color.id}
-                                  color={color}
-                                  isSelected={selectedColor === color.id}
-                                  onSelect={setSelectedColor}
-                                  isMobile={isMobile}
-                                />
-                              ))}
-                            </div>
-
-                            {/* 风格发色（可展开） */}
-                            <div className="space-y-3">
-                              <button
-                                onClick={() => setShowStyleColors(!showStyleColors)}
-                                className="flex items-center gap-2 text-[10px] font-bold text-slate-600 hover:text-indigo-600 transition-colors px-1"
-                              >
-                                {showStyleColors ? (
-                                  <>
-                                    <ChevronUp size={14} />
-                                    <span>收起风格发色</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <ChevronDown size={14} />
-                                    <span>展开风格发色</span>
-                                  </>
-                                )}
-                              </button>
-                              
-                              {showStyleColors && (
-                                <div className="grid grid-cols-5 gap-4 px-1 animate-in slide-in-from-top-2 duration-200">
-                                  {HAIR_COLORS.style.map(color => (
-                                    <ColorOption 
-                                      key={color.id}
-                                      color={color}
-                                      isSelected={selectedColor === color.id}
-                                      onSelect={setSelectedColor}
-                                      isMobile={isMobile}
-                                    />
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-
-                            {/* 高级发色（Advanced） */}
-                            <div className="space-y-3 border-t border-slate-200/60 pt-4">
-                              <button
-                                onClick={() => setShowAdvancedColors(!showAdvancedColors)}
-                                className="flex items-center gap-2 text-[10px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors px-1"
-                              >
-                                {showAdvancedColors ? (
-                                  <>
-                                    <ChevronUp size={14} />
-                                    <span>收起高级发色</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <ChevronDown size={14} />
-                                    <span>高级发色 (Advanced)</span>
-                                  </>
-                                )}
-                              </button>
-                              
-                              {showAdvancedColors && (
-                                <div className="grid grid-cols-5 gap-4 px-1 animate-in slide-in-from-top-2 duration-200">
-                                  {HAIR_COLORS.advanced.map(color => (
-                                    <ColorOption 
-                                      key={color.id}
-                                      color={color}
-                                      isSelected={selectedColor === color.id}
-                                      onSelect={setSelectedColor}
-                                      isMobile={isMobile}
-                                    />
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* 3. 最近试戴 */}
-                        <div className="rounded-xl bg-white/60 backdrop-blur-md shadow-[0_10px_26px_rgba(15,23,42,0.06)] p-6 lg:p-8 space-y-5">
-                          <h3 className="text-sm md:text-base font-black text-slate-900 px-1 truncate break-words whitespace-normal">{useTranslations('history')('title')}</h3>
-
-                          <div className="grid grid-cols-3 gap-3 md:gap-4">
-                            {[...Array(6)].map((_, i) => {
-                              const record = history[i];
-                              return (
-                                <div key={i} className="flex flex-col items-center gap-1.5 min-w-0">
-                                  <div className="relative w-full aspect-square group/item shrink-0">
-                                    <button
-                                      onClick={() => record && setSelectedHistory(record)}
-                                      disabled={!record}
-                                      className={cn(
-                                        "w-full h-full rounded-md overflow-hidden flex flex-col items-center justify-center transition-all group/hist border border-white/30 shadow-sm",
-                                        record 
-                                          ? "bg-white/50 hover:bg-white/80" 
-                                          : "bg-white/10"
-                                      )}
-                                    >
-                                      {record ? (
-                                        <img src={record.resultImageUrl} alt="History" className="w-full h-full object-cover group-hover/hist:scale-110 transition-transform" />
-                                      ) : (
-                                        <Plus size={16} className="text-slate-300" />
-                                      )}
-                                    </button>
-                                    
-                                    {record && (
-                                      <button
-                                        onClick={(e) => handleDeleteHistory(record.id, e)}
-                                        className="absolute -top-1 -right-1 p-0.5 bg-white shadow-md rounded-full text-slate-400 hover:text-red-500 hover:scale-110 transition-all opacity-0 group-hover/item:opacity-100 z-20 border border-slate-100"
-                                      >
-                                        <X size={10} strokeWidth={3} />
-                                      </button>
-                                    )}
-                                  </div>
-                                  <span className="text-[9px] md:text-[10px] font-bold text-slate-400 truncate w-full text-center px-0.5">
-                                    {record ? record.styleName : `${t('hairstyle.tool.result')} ${i + 1}`}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
+                          ))}
                         </div>
                       </div>
+                    )}
+                  </div>
+
+                  {/* Right Column: AI Results */}
+                  <div className="flex flex-col space-y-6 h-full">
+                    <div className="flex-1 min-h-[480px] relative">
+                      {toolStatus === 'success' || originalImage ? (
+                        <div className="w-full h-full flex flex-col gap-6">
+                          {/* BEST MATCH - Main Recommendation */}
+                          <div className="relative rounded-2xl overflow-hidden bg-white border-2 border-indigo-200 shadow-lg">
+                            <div className="absolute top-4 right-4 z-10">
+                              <div className="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1.5">
+                                <Sparkles size={12} />
+                                BEST MATCH
+                              </div>
+                            </div>
+                            <div className="aspect-[4/5] relative">
+                              <img
+                                src={history[0]?.resultImageUrl || MOCK_HAIRSTYLES[0].preview}
+                                alt="Best Match"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 border-t border-indigo-100">
+                              <h4 className="text-sm font-bold text-slate-900 mb-1">为您推荐的最佳发型</h4>
+                              <p className="text-xs text-slate-600">基于您的 <span className="font-semibold text-indigo-600">{analyzedFaceShape || 'Oval'}</span> 脸型分析</p>
+                            </div>
+                          </div>
+
+                          {/* Other Recommendations */}
+                          <div className="space-y-3">
+                            <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">其他推荐</h5>
+                            <div className="grid grid-cols-3 gap-3">
+                              {MOCK_HAIRSTYLES.slice(1, 4).map((style, idx) => (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleStyleSelect(style.id)}
+                                  className="aspect-square rounded-xl overflow-hidden border-2 border-slate-100 hover:border-indigo-400 transition-all hover:scale-105 relative group"
+                                >
+                                  <img src={style.preview} className="w-full h-full object-cover" alt={style.name} />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
+                                    <span className="text-[9px] text-white font-bold">{style.name}</span>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Continue to Hair Color CTA */}
+                          <button
+                            onClick={() => {
+                              // Navigate to color try-on or open color panel
+                              console.log('Continue to hair color');
+                            }}
+                            className="w-full h-14 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+                          >
+                            继续试发色
+                            <ArrowRight size={18} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full rounded-2xl bg-white flex flex-col items-center justify-center relative border-2 border-slate-200 transition-all duration-500 shadow-sm">
+                          {/* Title Top Left */}
+                          <div className="absolute top-6 left-6">
+                            <h3 className="text-xl font-bold text-slate-400 tracking-tight">AI 智能推荐结果</h3>
+                          </div>
+
+                          {/* Center Content */}
+                          <div className="flex flex-col items-center gap-5">
+                            <div className="w-20 h-20 rounded-full bg-slate-100/60 flex items-center justify-center mb-1">
+                              <Eye size={36} className="text-slate-300" strokeWidth={1.5} />
+                            </div>
+                            <p className="text-sm font-medium text-slate-400 tracking-wide">
+                              等待上传照片以开始分析
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                </aside>
+
+                </div>
               </div>
             </div>
+
           </div>
-        </div>
-      </section>
+        </section>
 
         {/* 历史预览弹窗 */}
-        <HistoryPreviewModal 
-          record={selectedHistory} 
+        <HistoryPreviewModal
+          record={selectedHistory}
           onClose={() => setSelectedHistory(null)}
           onRetry={(styleId) => {
             setSelectedHistory(null);
@@ -1073,7 +874,7 @@ export default function HomePage() {
         />
 
         {/* 照片要求指南弹窗 */}
-        <HairstyleGuideModal 
+        <HairstyleGuideModal
           open={showPhotoRequirements}
           onOpenChange={setShowPhotoRequirements}
         />
@@ -1081,11 +882,11 @@ export default function HomePage() {
         {/* ④ Real Results｜三列扫描对比网格 */}
         <section className="py-32 border-t border-slate-200/60 bg-white">
           <div className="space-y-16 max-w-7xl mx-auto px-4">
-            <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{t('gallery.title')}</h2>
-              <p className="text-base text-slate-500 font-medium">真实用户生成的 AI 发型转换效果</p>
+            <div className="text-center space-y-3">
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('gallery.title')}</h2>
+              <p className="text-sm md:text-base text-slate-500 font-medium">真实用户生成的 AI 发型转换效果</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {GALLERY_ITEMS.slice(0, 3).map(item => (
                 <div key={item.id} className="group relative overflow-hidden flex flex-col rounded-xl bg-slate-50 border border-slate-100 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
@@ -1094,7 +895,7 @@ export default function HomePage() {
                     <div className="w-1/2 relative h-full">
                       <img src={item.before} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Before" />
                     </div>
-                    
+
                     {/* Pulse Scanner Line */}
                     <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gradient-to-b from-transparent via-indigo-500 to-transparent z-10 animate-pulse">
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-500 rounded-full blur-sm" />
@@ -1126,9 +927,9 @@ export default function HomePage() {
 
         {/* ⑤ When to Use｜多场景适配磁贴 */}
         <section className="py-32 border-t border-slate-200/60 space-y-16">
-          <div className="text-center space-y-4 px-4">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">{t('usecases.title')}</h2>
-            <p className="text-base text-slate-500 font-medium">
+          <div className="text-center space-y-3 px-4">
+            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('usecases.title')}</h2>
+            <p className="text-sm md:text-base text-slate-500 font-medium">
               {safeT('usecases.subtitle', '满足您在人生每一个重要时刻的形象需求')}
             </p>
           </div>
@@ -1153,7 +954,7 @@ export default function HomePage() {
         {/* ⑥ Why Hairnova｜核心优势勋章布局 */}
         <section className="py-32 border-t border-slate-200/60 bg-white rounded-2xl shadow-sm mx-4">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-4xl md:text-5xl font-black text-center text-slate-900 tracking-tighter mb-20">{t('why.title')}</h2>
+            <h2 className="text-2xl md:text-4xl font-black text-center text-slate-900 tracking-tighter mb-20">{t('why.title')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               {WHY_REASONS.map(reason => (
                 <div key={reason.id} className="flex flex-col items-center text-center space-y-6 group">
@@ -1188,7 +989,7 @@ export default function HomePage() {
                 {/* 装饰性渐变光圈 */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full -mr-64 -mt-64 transition-all duration-1000 group-hover:bg-indigo-500/30" />
                 <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 blur-[100px] rounded-full -ml-48 -mb-48 transition-all duration-1000 group-hover:bg-purple-500/20" />
-                
+
                 <div className="relative z-10 text-center space-y-10">
                   <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight max-w-3xl mx-auto">
                     {safeT('cta.final_title', '准备好发现真正适合您的 AI 形象了吗？')}
