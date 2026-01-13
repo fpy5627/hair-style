@@ -24,7 +24,9 @@ import {
   UserRound,
   ChevronsRight,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 import { Button3D } from '@/components/ui/Button3D';
@@ -701,37 +703,37 @@ export default function HomePage() {
                 {/* LEFT：候选库 */}
                 <div className="flex flex-col">
                   {/* tabs & filters */}
-                  <div className="w-full flex flex-col items-center gap-5 mb-6">
+                  <div className="w-full flex flex-col items-start gap-5 mb-6">
                     {/* 性别选择按钮 */}
                     <div className="flex gap-1 p-0.5 bg-slate-100/60 rounded-[8px] border border-slate-200/60 shadow-inner">
                       <button 
                         onClick={() => setSelectedGender('female')}
                         className={cn(
-                          "px-4 py-1.5 rounded-[6px] text-[10px] font-black transition-all flex items-center gap-1.5",
+                          "px-4 py-1.5 rounded-[6px] text-[11px] font-medium transition-all flex items-center gap-1.5",
                           selectedGender === 'female' 
                             ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" 
                             : "text-slate-500 hover:bg-white/40 hover:text-slate-700"
                         )}
                       >
-                        <UserRound size={12} />
+                        <UserRound size={13} />
                         {safeTc('women')}
                       </button>
                       <button 
                         onClick={() => setSelectedGender('male')}
                         className={cn(
-                          "px-4 py-1.5 rounded-[6px] text-[10px] font-black transition-all flex items-center gap-1.5",
+                          "px-4 py-1.5 rounded-[6px] text-[11px] font-medium transition-all flex items-center gap-1.5",
                           selectedGender === 'male' 
                             ? "bg-white text-indigo-600 shadow-sm border border-slate-200/60" 
                             : "text-slate-500 hover:bg-white/40 hover:text-slate-700"
                         )}
                       >
-                        <User size={12} />
+                        <User size={13} />
                         {safeTc('men')}
                       </button>
                     </div>
 
                     {/* 发型分类标签 */}
-                    <div className="scale-90 origin-center">
+                    <div className="w-full">
                       <StyleTabs 
                         categories={['Long', 'Medium', 'Short', 'Straight', 'Wavy', 'Curly', 'Round', 'Square', 'Long_face', 'Heart', 'Diamond', 'Oval']} 
                         activeCategory={activeCategory} 
@@ -801,9 +803,10 @@ export default function HomePage() {
                               <button 
                                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                                 disabled={currentPage === 1}
-                                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg border border-slate-200 text-xs md:text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                                className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-[6px] border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                                aria-label="Previous page"
                               >
-                                <span className="hidden sm:inline">上一页</span>
+                                <ChevronLeft size={16} />
                               </button>
                               
                               <div className="flex items-center gap-1 md:gap-2">
@@ -831,7 +834,7 @@ export default function HomePage() {
                                         key={`page-${p}`}
                                         onClick={() => setCurrentPage(p as number)}
                                         className={cn(
-                                          "w-7 h-7 md:w-8 md:h-8 rounded-lg text-[10px] md:text-xs font-bold transition-all",
+                                          "w-7 h-7 md:w-8 md:h-8 rounded-[6px] text-[9px] md:text-xs font-medium transition-all",
                                           currentPage === p 
                                             ? "bg-indigo-600 text-white shadow-md shadow-indigo-100" 
                                             : "text-slate-500 hover:bg-slate-100"
@@ -847,9 +850,10 @@ export default function HomePage() {
                               <button 
                                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                 disabled={currentPage === totalPages}
-                                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-lg border border-slate-200 text-xs md:text-sm font-bold text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                                className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-[6px] border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+                                aria-label="Next page"
                               >
-                                <span className="hidden sm:inline">下一页</span>
+                                <ChevronRight size={16} />
                               </button>
                             </div>
                           )}

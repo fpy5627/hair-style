@@ -99,14 +99,14 @@ export const GenerationDashboard = ({
 
                       {/* 底部文案渐变遮罩 - 仅用于图片上的名字显示 */}
                       <div className="absolute inset-x-0 bottom-0 p-3.5 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10 pointer-events-none">
-                        <p className="text-white text-[11px] font-black tracking-tight line-clamp-1">{style.name}</p>
+                        <p className="text-white text-[10px] font-medium tracking-tight line-clamp-1">{style.name}</p>
                       </div>
                     </div>
 
                     {/* 2) 标签条 - 直角，如果有标签则底部圆角 8px */}
                     {style.badge && (
                       <div className={cn(
-                        "w-full h-5 flex items-center justify-center text-[8px] font-black uppercase tracking-[0.15em] text-white shrink-0 rounded-b-[8px]",
+                        "w-full h-5 flex items-center justify-start px-2 text-[8px] font-medium uppercase tracking-[0.15em] text-white shrink-0 rounded-b-[8px]",
                         style.badge === 'BEST MATCH' && "bg-blue-500",
                         style.badge === 'RECOMMENDED' && "bg-indigo-600",
                         style.badge === 'TRENDING' && "bg-purple-600",
@@ -163,16 +163,16 @@ export const GenerationDashboard = ({
             </div>
             <p className="text-base font-bold text-slate-500">拖放图片或点击选择。</p>
             
-            <div className="flex gap-4 w-full px-4">
+            <div className="flex gap-3 w-full">
               <button 
                 onClick={onUpload}
-                className="flex-1 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-black shadow-lg shadow-indigo-100 transition-all"
+                className="flex-1 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium shadow-lg shadow-indigo-100 transition-all flex items-center justify-center gap-2 px-2"
               >
                 选择文件
               </button>
               <button 
                 onClick={onCamera}
-                className="flex-1 h-14 bg-white border border-slate-200 hover:border-indigo-200 text-slate-600 hover:text-indigo-600 rounded-lg flex items-center justify-center gap-2 text-sm font-black transition-all"
+                className="flex-1 h-12 bg-white border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 text-slate-600 hover:text-indigo-600 hover:shadow-md rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-all duration-200 ease-out px-2"
               >
                 <Camera size={18} className="text-indigo-500" />
                 拍照

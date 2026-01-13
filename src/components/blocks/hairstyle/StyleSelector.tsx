@@ -34,130 +34,25 @@ interface StyleTabsProps {
  */
 export const StyleTabs = ({ categories, activeCategory, onCategoryChange }: StyleTabsProps) => {
   const t = useTranslations('home.categories');
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(categories.length);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
 
   // 确保"全部"按钮在最前面
   const allCategories = categories.includes('All') 
     ? categories 
     : ['All', ...categories];
 
-  /**
-   * 计算一行能显示多少个按钮
-   */
-  useEffect(() => {
-    if (isExpanded) {
-      setVisibleCount(allCategories.length);
-      return;
-    }
-
-    const calculateVisibleCount = () => {
-      const container = containerRef.current;
-      if (!container) return;
-
-      const containerWidth = container.offsetWidth;
-      const gap = 6; // gap-1.5 = 6px
-      let totalWidth = 0;
-      let count = 0;
-
-      // 测量每个按钮的宽度
-      for (let i = 0; i < allCategories.length; i++) {
-        const button = buttonsRef.current[i];
-        if (!button) continue;
-
-        const buttonWidth = button.offsetWidth || button.scrollWidth;
-        const neededWidth = totalWidth + buttonWidth + (count > 0 ? gap : 0);
-
-        // 需要为"..."按钮预留空间（约 50px）
-        const ellipsisWidth = 50;
-        if (neededWidth + ellipsisWidth > containerWidth && count > 0) {
-          break;
-        }
-
-        totalWidth = neededWidth;
-        count++;
-      }
-
-      // 至少显示第一个按钮
-      setVisibleCount(Math.max(1, count));
-    };
-
-    // 延迟计算，确保 DOM 已渲染
-    const timer = setTimeout(calculateVisibleCount, 50);
-    
-    // 监听窗口大小变化
-    const handleResize = () => {
-      clearTimeout(timer);
-      setTimeout(calculateVisibleCount, 50);
-    };
-
-    window.addEventListener('resize', handleResize);
-    
-    // 使用 ResizeObserver 监听容器大小变化
-    let resizeObserver: ResizeObserver | null = null;
-    if (containerRef.current && typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(() => {
-        clearTimeout(timer);
-        setTimeout(calculateVisibleCount, 50);
-      });
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', handleResize);
-      if (resizeObserver) {
-        resizeObserver.disconnect();
-      }
-    };
-  }, [isExpanded, allCategories.length]);
-
-  const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
-
   const handleCategoryClick = (category: string) => {
     onCategoryChange(category);
   };
 
-  const shouldShowEllipsis = !isExpanded && visibleCount < allCategories.length;
-  const visibleCategories = isExpanded ? allCategories : allCategories.slice(0, visibleCount);
-
   return (
     <div className="w-full pb-2">
-      {/* 隐藏的测量容器，用于计算按钮宽度 */}
-      <div className="absolute invisible -z-10" style={{ top: '-9999px' }}>
-        <div className="flex items-center gap-1.5 md:gap-2">
-          {allCategories.map((category, index) => (
-            <button
-              key={`measure-${category}`}
-              ref={(el) => {
-                buttonsRef.current[index] = el;
-              }}
-              className="h-7 px-3 rounded-[8px] text-[11px] font-semibold border whitespace-nowrap"
-            >
-              {t.has(category.toLowerCase()) ? t(category.toLowerCase()) : category}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* 实际显示的容器 */}
-      <div 
-        ref={containerRef}
-        className={cn(
-          "flex items-center gap-1.5 md:gap-2",
-          isExpanded ? "flex-wrap" : "flex-nowrap overflow-hidden"
-        )}
-      >
-        {visibleCategories.map((category) => (
+      <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
+        {allCategories.map((category) => (
           <button
             key={category}
             onClick={() => handleCategoryClick(category)}
             className={cn(
-              "h-7 px-3 rounded-[8px] text-[11px] font-semibold transition-all border whitespace-nowrap shrink-0",
+              "h-7 px-3 rounded-[8px] text-[10px] font-medium transition-all border whitespace-nowrap shrink-0",
               activeCategory === category
                 ? "bg-slate-900 text-white border-slate-900 shadow-sm"
                 : "bg-white/70 text-slate-600 border-slate-200/70 hover:bg-white hover:text-slate-900"
@@ -166,26 +61,6 @@ export const StyleTabs = ({ categories, activeCategory, onCategoryChange }: Styl
             {t.has(category.toLowerCase()) ? t(category.toLowerCase()) : category}
           </button>
         ))}
-        
-        {shouldShowEllipsis && (
-          <button
-            onClick={handleToggleExpand}
-            className="h-7 px-3 rounded-[8px] text-[11px] font-semibold transition-all border bg-white/70 text-slate-600 border-slate-200/70 hover:bg-white hover:text-slate-900 whitespace-nowrap shrink-0 flex items-center gap-1"
-          >
-            <span>...</span>
-            <ChevronDown size={12} className="transition-transform" />
-          </button>
-        )}
-
-        {isExpanded && (
-          <button
-            onClick={handleToggleExpand}
-            className="h-7 px-3 rounded-[8px] text-[11px] font-semibold transition-all border bg-white/70 text-slate-600 border-slate-200/70 hover:bg-white hover:text-slate-900 whitespace-nowrap shrink-0 flex items-center gap-1"
-          >
-            <span>收起</span>
-            <ChevronDown size={12} className="rotate-180 transition-transform" />
-          </button>
-        )}
       </div>
     </div>
   );
@@ -263,7 +138,7 @@ export const HairstyleGrid = ({ styles, selectedStyleId, onStyleSelect }: Hairst
           {/* 2) 标签条 - 直角 */}
           {style.badge && (
             <div className={cn(
-              "w-full h-5 flex items-center justify-center text-white text-[8px] font-black uppercase tracking-widest pointer-events-none whitespace-nowrap shrink-0",
+              "w-full h-5 flex items-center justify-start px-2 text-white text-[8px] font-medium uppercase tracking-widest pointer-events-none whitespace-nowrap shrink-0",
               style.badge === 'BEST MATCH' && "bg-indigo-600",
               style.badge === 'RECOMMENDED' && "bg-blue-500",
               style.badge === 'TRENDING' && "bg-orange-500",

@@ -144,23 +144,23 @@ export const UploadCard = ({
                 {t('upload')}
               </p>
               
-              <div className="flex flex-col items-center gap-4 px-4 w-full">
+              <div className="flex flex-row items-center justify-center gap-3 w-full">
                 <button 
                   onClick={(e) => {
                     e.stopPropagation();
                     fileInputRef.current?.click();
                   }}
-                  className="w-full max-w-[240px] h-12 bg-indigo-600/80 hover:bg-indigo-700/90 text-white rounded-[10px] text-[13px] font-bold shadow-md backdrop-blur-md transition-all active:scale-95 flex items-center justify-center gap-3 border border-white/10"
+                  className="flex-1 h-12 bg-indigo-600/80 hover:bg-indigo-700/90 text-white rounded-[10px] text-[13px] font-medium shadow-md backdrop-blur-md transition-all active:scale-95 flex items-center justify-center gap-2 border border-white/10 px-2"
                 >
-                  <ImageIcon size={18} />
-                  {t('select_file')}
+                  <ImageIcon size={16} />
+                  <span className="truncate">{t('select_file')}</span>
                 </button>
                 <button 
                   onClick={handleCameraClick}
-                  className="w-full max-w-[240px] h-12 bg-white/70 border border-white/40 hover:bg-white/90 hover:border-indigo-200/60 text-slate-600 hover:text-indigo-600 rounded-[10px] flex items-center justify-center gap-3 text-[13px] font-bold shadow-sm backdrop-blur-md transition-all active:scale-95"
+                  className="flex-1 h-12 bg-white/70 border border-white/40 hover:bg-indigo-50 hover:border-indigo-200/60 hover:shadow-md text-slate-600 hover:text-indigo-600 rounded-[10px] flex items-center justify-center gap-2 text-[13px] font-medium shadow-sm backdrop-blur-md transition-all duration-200 ease-out active:scale-95 px-2"
                 >
-                  <Camera size={18} className="text-indigo-500" />
-                  {t('camera')}
+                  <Camera size={16} className="text-indigo-500" />
+                  <span className="truncate">{t('camera')}</span>
                 </button>
               </div>
 

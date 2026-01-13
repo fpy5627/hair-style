@@ -90,60 +90,16 @@ pre {
 }
 
 /* ============================================
-   分页按钮样式覆盖 - 移除胶囊形状，改为矩形小圆角
-   覆盖范围：分页区域的上一页/下一页按钮和页码按钮
-   目标 DOM：page.tsx 中第 604-660 行的分页组件
+   分页按钮样式覆盖 - 移除大圆角，改为矩形小圆角
    ============================================ */
 
 /* 覆盖分页容器内的所有按钮（上一页/下一页/页码） */
-div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button,
-div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button,
-div.flex.items-center.justify-center.gap-2 > button,
-div.flex.items-center.justify-center.gap-4 > button {
-  border-radius: 8px !important;
-}
-
-/* 覆盖上一页/下一页按钮的字体大小 */
-div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button:has(span),
-div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button:has(span),
-div.flex.items-center.justify-center.gap-2 > button:has(span),
-div.flex.items-center.justify-center.gap-4 > button:has(span) {
-  font-size: 10px !important;
-}
-
-/* 响应式：中等屏幕及以上调整上一页/下一页字体大小 */
-@media (min-width: 768px) {
-  div.flex.flex-wrap.items-center.justify-center.gap-2.pt-4 > button:has(span),
-  div.flex.flex-wrap.items-center.justify-center.gap-4.pt-4 > button:has(span),
-  div.flex.items-center.justify-center.gap-2 > button:has(span),
-  div.flex.items-center.justify-center.gap-4 > button:has(span) {
-    font-size: 11px !important;
-  }
-}
-
-/* 覆盖页码数字按钮区域 */
-div.flex.items-center.gap-1 > button,
-div.flex.items-center.gap-2 > button {
-  border-radius: 8px !important;
-}
-
-/* 覆盖包含 ArrowRight 图标的导航按钮（上一页/下一页） */
-button:has(svg[class*="lucide-arrow-right"]),
-button:has(svg[class*="ArrowRight"]) {
-  border-radius: 8px !important;
-  font-size: 10px !important;
-}
-
-/* 响应式：中等屏幕及以上调整字体大小 */
-@media (min-width: 768px) {
-  button:has(svg[class*="lucide-arrow-right"]),
-  button:has(svg[class*="ArrowRight"]) {
-    font-size: 11px !important;
-  }
-}
-
-/* 覆盖小尺寸页码按钮（w-7 h-7 或 w-8 h-8） */
+.flex.flex-wrap.items-center.justify-center.pt-8 > button,
+.flex.items-center.gap-1.md.gap-2 > button,
+.flex.items-center.justify-center.gap-3.md.gap-6 > button,
+button:has(svg[class*="lucide-chevron-left"]),
+button:has(svg[class*="lucide-chevron-right"]),
 button[class*="w-7"][class*="h-7"],
 button[class*="w-8"][class*="h-8"] {
-  border-radius: 8px !important;
+  border-radius: 6px !important;
 }
