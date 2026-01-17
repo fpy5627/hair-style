@@ -35,6 +35,7 @@ import {
 import { Button3D } from '@/components/ui/Button3D';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SafeLink } from '@/components/common/safe-link';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -514,9 +515,18 @@ export default function HomePage() {
   const [selectedHistory, setSelectedHistory] = useState<HistoryRecord | null>(null);
 
   // Color Selection States
-  const [selectedColorId, setSelectedColorId] = useState<string>(HAIR_COLORS.basic[0].id);  // 发色选择展开状态
-  const [hoveredColor, setHoveredColor] = useState<HairColor | null>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [selectedColorId, setSelectedColorId] = useState<string>('natural-black');
+  const [hoveredColor, setHoveredColor] = useState<{ id: string; rect: DOMRect; data: HairColor } | null>(null);
+
+  const handleColorEnter = (e: React.MouseEvent, color: HairColor) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoveredColor({ id: color.id, rect, data: color });
+  };
+
+  const handleColorLeave = () => {
+    setHoveredColor(null);
+  };
+
 
   // Memoized color hex for selected color
   const selectedColorHex = [
@@ -658,17 +668,7 @@ export default function HomePage() {
     }, 2000);
   };
 
-  const handleColorHover = (color: HairColor) => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    hoverTimeoutRef.current = setTimeout(() => {
-      setHoveredColor(color);
-    }, 200);
-  };
 
-  const handleColorLeave = () => {
-    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-    setHoveredColor(null);
-  };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -877,62 +877,73 @@ export default function HomePage() {
               </p>
 
               {/* Step Numbers - Compact */}
-              <div className="pt-6 pb-2 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 opacity-90 scale-95">
+              <div className="pt-6 pb-2 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 opacity-90 scale-95">
                 {/* Step 1 */}
-                <div className="flex items-center gap-2 group transition-all duration-500">
+                <div className="flex items-center gap-3 group transition-all duration-500">
                   <span className={cn(
-                    "text-2xl font-black transition-colors duration-500",
-                    activeStep === 1 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                    "text-3xl font-black transition-colors duration-500",
+                    activeStep === 1 ? "text-indigo-600" : "text-slate-200"
                   )}>01</span>
                   <div className="flex flex-col text-left">
                     <span className={cn(
-                      "text-xs font-bold transition-colors duration-500",
-                      activeStep === 1 ? "text-indigo-700" : "text-slate-800"
+                      "text-sm font-bold transition-colors duration-500 leading-tight",
+                      activeStep === 1 ? "text-indigo-900" : "text-slate-700"
                     )}>{t('howitworks.step1')}</span>
+                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">上传正脸清晰照</span>
                   </div>
                 </div>
 
-                <div className={cn(
-                  "hidden md:block transition-colors duration-500",
-                  activeStep > 1 ? "text-indigo-400" : "text-slate-200"
-                )}>
-                  <ArrowRight size={14} strokeWidth={1.5} />
+                <div className="hidden md:block text-slate-200">
+                  <ArrowRight size={16} strokeWidth={1.5} />
                 </div>
                 <div className="md:hidden h-4 w-px bg-slate-100"></div>
 
                 {/* Step 2 */}
-                <div className="flex items-center gap-2 group transition-all duration-500">
+                <div className="flex items-center gap-3 group transition-all duration-500">
                   <span className={cn(
-                    "text-2xl font-black transition-colors duration-500",
-                    activeStep === 2 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                    "text-3xl font-black transition-colors duration-500",
+                    activeStep === 2 ? "text-indigo-600" : "text-slate-200"
                   )}>02</span>
                   <div className="flex flex-col text-left">
                     <span className={cn(
-                      "text-xs font-bold transition-colors duration-500",
-                      activeStep === 2 ? "text-indigo-700" : "text-slate-800"
+                      "text-sm font-bold transition-colors duration-500 leading-tight",
+                      activeStep === 2 ? "text-indigo-900" : "text-slate-700"
                     )}>{t('howitworks.step2')}</span>
+                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">分析脸型与比例</span>
                   </div>
                 </div>
 
-                <div className={cn(
-                  "hidden md:block transition-colors duration-500",
-                  activeStep > 2 ? "text-indigo-400" : "text-slate-200"
-                )}>
-                  <ArrowRight size={14} strokeWidth={1.5} />
+                <div className="hidden md:block text-slate-200">
+                  <ArrowRight size={16} strokeWidth={1.5} />
                 </div>
                 <div className="md:hidden h-4 w-px bg-slate-100"></div>
 
                 {/* Step 3 */}
-                <div className="flex items-center gap-2 group transition-all duration-500">
+                <div className="flex items-center gap-3 group transition-all duration-500">
                   <span className={cn(
-                    "text-2xl font-black transition-colors duration-500",
-                    activeStep === 3 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                    "text-3xl font-black transition-colors duration-500",
+                    activeStep === 3 ? "text-indigo-600" : "text-slate-200"
                   )}>03</span>
                   <div className="flex flex-col text-left">
                     <span className={cn(
-                      "text-xs font-bold transition-colors duration-500",
-                      activeStep === 3 ? "text-indigo-700" : "text-slate-800"
+                      "text-sm font-bold transition-colors duration-500 leading-tight",
+                      activeStep === 3 ? "text-indigo-900" : "text-slate-700"
                     )}>{t('howitworks.step3')}</span>
+                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">生成发型 + 发色</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Page Level Title - Separated & Centered */}
+              <div className="mt-8 mb-4 flex flex-col items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom duration-700 delay-150">
+                <div className="flex items-center gap-3">
+                  <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">专属发型工作台</h3>
+                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-200/60 backdrop-blur-sm">
+                    <span className="text-[10px] md:text-xs font-black text-slate-600 uppercase tracking-widest leading-none">
+                      {analyzedFaceShape || 'OVAL'}
+                    </span>
+                    <div className="w-px h-3 bg-slate-300" />
+                    <span className="text-[10px] md:text-xs font-bold text-slate-400">定制建议</span>
                   </div>
                 </div>
               </div>
@@ -944,21 +955,6 @@ export default function HomePage() {
               <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
               <div className="w-full max-w-[1280px] mx-auto p-3 lg:px-4 relative z-10">
-
-                {/* Compact Header */}
-                <div className="mb-2 flex items-center justify-between px-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-black text-slate-900 tracking-tight">专属发型工作台</h3>
-                    <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-white/50 border border-slate-200/60 backdrop-blur-sm">
-                      <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest leading-none">
-                        {analyzedFaceShape || 'OVAL'}
-                      </span>
-                      <div className="w-px h-2.5 bg-slate-300" />
-                      <span className="text-[10px] font-bold text-slate-400">定制建议</span>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="flex flex-col lg:flex-row gap-3 items-start">
 
                   {/* Left Column: Upload Area (30%) - Compressed */}
@@ -1110,88 +1106,96 @@ export default function HomePage() {
                     </div>
 
                     {/* Integrated Control Panel (High Density) */}
-                    <div className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-xl px-3 py-2 flex items-center justify-between gap-4 shadow-sm min-h-[64px]">
-                      {/* Color Groups - Compact Grid */}
-                      <div className="flex-1 flex flex-col gap-2 overflow-x-auto no-scrollbar py-1">
-                        {/* Row 1: Basic */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 w-6 text-right">基础</span>
-                          <div className="flex items-center gap-1.5 px-1">
+                    {/* Integrated Control Panel (Grouped & Portal Tooltip) */}
+                    <div className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-xl px-4 py-4 flex items-center justify-between gap-6 shadow-sm min-h-[84px]">
+                      {/* Color Groups Container - Vertical Stack */}
+                      <div className="flex-1 flex flex-col gap-3">
+
+                        {/* Basic Colors */}
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">基础发色</span>
+                          <div className="flex items-center gap-2 flex-wrap">
                             {HAIR_COLORS.basic.map(color => (
-                              <div key={color.id} className="group relative">
-                                <button
-                                  onClick={() => setSelectedColorId(color.id)}
-                                  className={cn(
-                                    "w-6 h-8 rounded-md shadow-sm border border-white transition-all hover:-translate-y-0.5 hover:shadow-md",
-                                    selectedColorId === color.id ? "ring-2 ring-indigo-500 ring-offset-1 scale-105 z-10" : "opacity-90 hover:opacity-100"
-                                  )}
-                                  style={{ backgroundColor: color.hex }}
-                                />
-                                {/* Rich Tooltip */}
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[100px] bg-slate-800/95 backdrop-blur-md text-white text-[10px] rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-xl border border-white/10 flex flex-col gap-0.5 scale-95 group-hover:scale-100 origin-bottom">
-                                  <div className="font-bold text-white border-b border-white/10 pb-1 mb-1">{color.name}</div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-slate-400">适合:</span>
-                                    <span className="text-slate-200">{color.skinTone}</span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-slate-400">风格:</span>
-                                    <span className="text-slate-200">{color.style}</span>
-                                  </div>
-                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800/95" />
-                                </div>
-                              </div>
+                              <button
+                                key={color.id}
+                                onClick={() => setSelectedColorId(color.id)}
+                                onMouseEnter={(e) => handleColorEnter(e, color)}
+                                onMouseLeave={handleColorLeave}
+                                className={cn(
+                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
+                                  selectedColorId === color.id
+                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
+                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
+                                )}
+                                style={{ backgroundColor: color.hex }}
+                                aria-label={color.name}
+                              />
                             ))}
                           </div>
                         </div>
-                        {/* Row 2: Style + Advanced */}
-                        <div className="flex items-center gap-2">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 w-6 text-right">风格</span>
-                          <div className="flex items-center gap-1.5 px-1">
-                            {[...HAIR_COLORS.style, ...HAIR_COLORS.advanced].map(color => (
-                              <div key={color.id} className="group relative">
-                                <button
-                                  onClick={() => setSelectedColorId(color.id)}
-                                  className={cn(
-                                    "w-6 h-8 rounded-md shadow-sm border border-white transition-all hover:-translate-y-0.5 hover:shadow-md",
-                                    selectedColorId === color.id ? "ring-2 ring-indigo-500 ring-offset-1 scale-105 z-10" : "opacity-90 hover:opacity-100"
-                                  )}
-                                  style={{ backgroundColor: color.hex }}
-                                />
-                                {/* Rich Tooltip */}
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[100px] bg-slate-800/95 backdrop-blur-md text-white text-[10px] rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-xl border border-white/10 flex flex-col gap-0.5 scale-95 group-hover:scale-100 origin-bottom">
-                                  <div className="font-bold text-white border-b border-white/10 pb-1 mb-1">{color.name}</div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-slate-400">适合:</span>
-                                    <span className="text-slate-200">{color.skinTone}</span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-slate-400">风格:</span>
-                                    <span className="text-slate-200">{color.style}</span>
-                                  </div>
-                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800/95" />
-                                </div>
-                              </div>
+
+                        {/* Style Colors */}
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">风格发色</span>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {HAIR_COLORS.style.map(color => (
+                              <button
+                                key={color.id}
+                                onClick={() => setSelectedColorId(color.id)}
+                                onMouseEnter={(e) => handleColorEnter(e, color)}
+                                onMouseLeave={handleColorLeave}
+                                className={cn(
+                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
+                                  selectedColorId === color.id
+                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
+                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
+                                )}
+                                style={{ backgroundColor: color.hex }}
+                                aria-label={color.name}
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Advanced Colors */}
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">高级发色</span>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {HAIR_COLORS.advanced.map(color => (
+                              <button
+                                key={color.id}
+                                onClick={() => setSelectedColorId(color.id)}
+                                onMouseEnter={(e) => handleColorEnter(e, color)}
+                                onMouseLeave={handleColorLeave}
+                                className={cn(
+                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
+                                  selectedColorId === color.id
+                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
+                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
+                                )}
+                                style={{ backgroundColor: color.hex }}
+                                aria-label={color.name}
+                              />
                             ))}
                           </div>
                         </div>
                       </div>
 
-                      {/* Main Action Button - Right Aligned */}
-                      <div className="shrink-0 pl-4 border-l border-slate-200/50 h-full flex items-center my-auto">
-                        <div className="flex flex-col items-end gap-1">
+                      {/* Main Action Button - Right Aligned & Centered Vertically */}
+                      <div className="shrink-0 pl-6 border-l border-slate-200/60 flex items-center self-stretch bg-white/50 backdrop-blur-sm z-20">
+                        <div className="flex flex-col items-end gap-1 my-auto">
                           <Button3D
                             variant="gradient"
-                            className="h-10 px-6 rounded-lg shadow-indigo-200/50"
+                            className="h-12 px-8 rounded-lg shadow-indigo-200/50"
                             onClick={handleApplyStyle}
                             disabled={toolStatus === 'loading' || !selectedStyle || !originalImage}
                           >
                             {toolStatus === 'loading' ? (
-                              <RefreshCw className="animate-spin" size={16} />
+                              <RefreshCw className="animate-spin" size={20} />
                             ) : (
                               <div className="flex items-center gap-2">
-                                <Sparkles size={16} />
-                                <span className="text-xs font-bold whitespace-nowrap">
+                                <Sparkles size={20} />
+                                <span className="text-base font-bold whitespace-nowrap">
                                   {hasGeneratedForCurrent && hasChanges ? '应用调整' : '立即生成'}
                                 </span>
                               </div>
@@ -1368,7 +1372,86 @@ export default function HomePage() {
         open={showPhotoRequirements}
         onOpenChange={setShowPhotoRequirements}
       />
-    </div >
+      <PortalTooltip
+        data={hoveredColor?.data!}
+        rect={hoveredColor?.rect || null}
+        visible={!!hoveredColor}
+      />
+    </div>
   );
 }
 
+
+// --- Components ---
+
+function PortalTooltip({
+  data,
+  rect,
+  visible
+}: {
+  data: HairColor;
+  rect: DOMRect | null;
+  visible: boolean;
+}) {
+  if (!rect || !visible || typeof document === 'undefined') return null;
+
+  // Calculate position
+  const tooltipWidth = 140; // Approx width
+  const tooltipHeight = 80; // Approx height
+  const gap = 8; // Gap between target and tooltip
+
+  // Horizontal Center
+  let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+
+  // Boundary Check (Left/Right)
+  if (left < 10) left = 10;
+  if (left + tooltipWidth > window.innerWidth - 10) left = window.innerWidth - tooltipWidth - 10;
+
+  // Vertical Flip Logic
+  let top = rect.top - tooltipHeight - gap;
+  let isFlipped = false;
+
+  // If not enough space on top, show below? 
+  // User Requirement: "When space below is insufficient, auto flip to top". 
+  // Wait, default is usually TOP on desktop for tooltips.
+  // Let's assume default is TOP. If top < 0, flip to bottom.
+  if (top < 10) {
+    top = rect.bottom + gap;
+    isFlipped = true;
+  }
+
+  return createPortal(
+    <div
+      className="fixed z-[9999] pointer-events-none transition-all duration-200 ease-out flex flex-col items-center"
+      style={{
+        left,
+        top,
+        opacity: visible ? 1 : 0,
+        transform: visible
+          ? `translateY(0) scale(1)`
+          : `translateY(${isFlipped ? '-4px' : '4px'}) scale(0.95)`,
+      }}
+    >
+      <div className="bg-white/95 backdrop-blur-md rounded-lg shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-slate-200/60 p-3 text-left w-max min-w-[120px]">
+        <div className="text-slate-800 font-bold text-[11px] mb-2 leading-none tracking-wide">
+          {data.name}
+        </div>
+        <div className="space-y-1.5">
+          <div className="flex items-start gap-1.5 text-[10px] leading-tight text-slate-500">
+            <span className="text-slate-400 shrink-0 font-medium">适合:</span>
+            <span>{data.skinTone}</span>
+          </div>
+          <div className="flex items-start gap-1.5 text-[10px] leading-tight text-slate-500">
+            <span className="text-slate-400 shrink-0 font-medium">风格:</span>
+            <span>{data.style}</span>
+          </div>
+        </div>
+      </div>
+      {/* Arrow */}
+      {/* If isFlipped (shown below), arrow should be on TOP of tooltip (pointing up to target) */}
+      {/* If normal (shown above), arrow should be on BOTTOM of tooltip (pointing down to target) */}
+      {/* Current styles apply to tooltip container. We need absolute arrow. */}
+    </div>,
+    document.body
+  );
+}
