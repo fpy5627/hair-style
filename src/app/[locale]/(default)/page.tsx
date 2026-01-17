@@ -28,7 +28,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Upload,
-  Eye
+  Eye,
+  ShieldAlert
 } from 'lucide-react';
 
 import { Button3D } from '@/components/ui/Button3D';
@@ -42,7 +43,8 @@ import {
   FAQSection,
   RelatedLinks,
   SeoTextBlock,
-  BottomCTA
+  BottomCTA,
+  SEOEducationSection
 } from '@/components/blocks/hairstyle/LandingComponents';
 import { ToolShell } from '@/components/blocks/hairstyle/ToolShell';
 import { UploadCard } from '@/components/blocks/hairstyle/UploadCard';
@@ -54,6 +56,40 @@ import { RecommendationResultPanel } from '@/components/blocks/hairstyle/Recomme
 
 const SHOW_BIG_CARD = false;
 
+// --- 辅助工具：图片转 Base64 (DataURL) ---
+const fileToDataUrl = (file: File | Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => resolve(e.target?.result as string);
+    reader.onerror = (e) => reject(e);
+    reader.readAsDataURL(file);
+  });
+};
+
+// --- 辅助工具：压缩图片以节省 LocalStorage 空间 ---
+const compressImage = (dataUrl: string, maxWidth = 200, quality = 0.7): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth) {
+        height = (maxWidth / width) * height;
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.src = dataUrl;
+  });
+};
+
 // Import data
 import {
   MOCK_HAIRSTYLES,
@@ -61,7 +97,8 @@ import {
   USE_CASES,
   WHY_REASONS,
   GALLERY_ITEMS,
-  HERO_PREVIEW_DATA
+  HERO_PREVIEW_DATA,
+  type HairColor
 } from '@/lib/homeSectionsData';
 
 /**
@@ -452,10 +489,16 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeSmartTag, setActiveSmartTag] = useState<'recommended' | 'try' | 'not_recommended'>('recommended');
   const [selectedGender, setSelectedGender] = useState<'male' | 'female'>('female');
+  const [uploadSource, setUploadSource] = useState<'camera' | 'file' | 'example' | null>(null);
+  const [imageQuality, setImageQuality] = useState<{ isLow: boolean; width: number; height: number } | null>(null);
+  const [highResImage, setHighResImage] = useState<string | null>(null);
 
   // 发色选择展开状态
   const [showStyleColors, setShowStyleColors] = useState(false);
   const [showAdvancedColors, setShowAdvancedColors] = useState(false);
+
+  // Drag and drop state for secondary upload zones
+  const [isDraggingZone, setIsDraggingZone] = useState(false);
 
   // Handle filter changes
   useEffect(() => {
@@ -469,6 +512,18 @@ export default function HomePage() {
   // History States
   const [history, setHistory] = useState<HistoryRecord[]>([]);
   const [selectedHistory, setSelectedHistory] = useState<HistoryRecord | null>(null);
+
+  // Color Selection States
+  const [selectedColorId, setSelectedColorId] = useState<string>(HAIR_COLORS.basic[0].id);  // 发色选择展开状态
+  const [hoveredColor, setHoveredColor] = useState<HairColor | null>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Memoized color hex for selected color
+  const selectedColorHex = [
+    ...HAIR_COLORS.basic,
+    ...HAIR_COLORS.style,
+    ...HAIR_COLORS.advanced
+  ].find(c => c.id === selectedColorId)?.hex;
 
   const handleDeleteHistory = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -501,6 +556,10 @@ export default function HomePage() {
   // Analysis States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analyzedFaceShape, setAnalyzedFaceShape] = useState<string | null>(null);
+  const [detectedColor, setDetectedColor] = useState<string>('#F3F4F6');
+  const [detectedColorName, setDetectedColorName] = useState<string>('');
+  const [isDetectingColor, setIsDetectingColor] = useState(false);
+  const [isTransitioningColor, setIsTransitioningColor] = useState(false);
   const [showPhotoRequirements, setShowPhotoRequirements] = useState(false);
 
   const libraryRef = useRef<HTMLDivElement>(null);
@@ -529,32 +588,44 @@ export default function HomePage() {
     }
   }, []);
 
+  // Resolution Check Utility
+  const checkImageQuality = (dataUrl: string): Promise<{ isLow: boolean; width: number; height: number }> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const isLow = img.width < 800 || img.height < 800;
+        resolve({ isLow, width: img.width, height: img.height });
+      };
+      img.src = dataUrl;
+    });
+  };
+
   // Tool Logic - Handle file upload (supports both File objects and URLs)
-  const handleUpload = async (fileOrUrl: File | string) => {
+  const handleUpload = async (fileOrUrl: File | string, source: 'camera' | 'file' | 'example' = 'file') => {
     try {
+      setUploadSource(source);
+      let rawDataUrl: string;
+
       if (typeof fileOrUrl === 'string') {
-        // It's a URL, fetch and convert to Blob
         const response = await fetch(fileOrUrl);
         const blob = await response.blob();
-
-        // Create preview URL from blob
-        const previewUrl = URL.createObjectURL(blob);
-        setOriginalImage(previewUrl);
-        setToolStatus('ready');
-
-        // Auto trigger analysis
-        startAnalysis();
+        rawDataUrl = await fileToDataUrl(blob);
       } else {
-        // It's a File object - use FileReader as before
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setOriginalImage(e.target?.result as string);
-          setToolStatus('ready');
-          // Auto trigger analysis
-          startAnalysis();
-        };
-        reader.readAsDataURL(fileOrUrl);
+        rawDataUrl = await fileToDataUrl(fileOrUrl);
       }
+
+      // Check quality
+      const quality = await checkImageQuality(rawDataUrl);
+      setImageQuality(quality);
+
+      // Keep high res for generation, small res for preview
+      setHighResImage(rawDataUrl);
+      const previewUrl = await compressImage(rawDataUrl, 600, 0.8);
+      setOriginalImage(previewUrl);
+
+      setToolStatus('ready');
+      setSelectedStyle(null);
+      startAnalysis(previewUrl);
     } catch (error) {
       console.error('Error loading image:', error);
       alert('图片加载失败，请重试');
@@ -564,43 +635,132 @@ export default function HomePage() {
   const handleClear = () => {
     setOriginalImage(null);
     setToolStatus('idle');
+    setAnalyzedFaceShape(null);
   };
 
-  const startAnalysis = () => {
+  const startAnalysis = (imageDataUrl?: string) => {
+    const targetImage = imageDataUrl || originalImage;
+    if (!targetImage) return;
+
     setIsAnalyzing(true);
     setAnalyzedFaceShape(null);
     setTimeout(() => {
       setIsAnalyzing(false);
-      setAnalyzedFaceShape(['Oval', 'Round', 'Square', 'Heart'][Math.floor(Math.random() * 4)]);
+      setToolStatus('success');
+      const shapes = ['Oval', 'Round', 'Square', 'Heart'];
+      const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
+      setAnalyzedFaceShape(randomShape);
+
+      // Auto-select the first hairstyle as the "Best Match"
+      if (MOCK_HAIRSTYLES.length > 0) {
+        setSelectedStyle(MOCK_HAIRSTYLES[0].id);
+      }
     }, 2000);
   };
 
-  // Handle example image click
-  const handleExampleClick = async (imageUrl: string) => {
-    await handleUpload(imageUrl);
+  const handleColorHover = (color: HairColor) => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredColor(color);
+    }, 200);
   };
 
-  const handleStyleSelect = (id: string) => {
+  const handleColorLeave = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setHoveredColor(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingZone(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingZone(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDraggingZone(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      handleUpload(file, 'file');
+    }
+  };
+
+  const handleExampleClick = async (imageUrl: string) => {
+    await handleUpload(imageUrl, 'example');
+  };
+
+  const handleStyleSelect = (id: string | null) => {
     setSelectedStyle(id);
+  };
+
+  const handleApplyStyle = () => {
+    if (!selectedStyle || !highResImage) return;
+
+    // Check if we should warn about low quality before generating
+    if (imageQuality?.isLow) {
+      if (!confirm('检测到图片像素较低（少于 800px），生成效果可能不够清晰。建议上传原图文件以获得最佳效果。是否继续生成？')) {
+        return;
+      }
+    }
+
     setToolStatus('loading');
 
     // Simulate generation success
+    setIsDetectingColor(true);
     setTimeout(() => {
-      setToolStatus('success');
+      // Step 1: Detect clothing color
+      const themeColors = [
+        { main: '#F1F5F9', accent: '#E2E8F0', name: '冷色调写实工作室' },
+        { main: '#E5E7EB', accent: '#D1D5DB', name: '极简水泥灰背景' },
+        { main: '#F3F4F6', accent: '#E5E7EB', name: '现代主义柔白' },
+        { main: '#F5F5F4', accent: '#D6D3D1', name: '经典砂砾影棚' },
+        { main: '#F9FAFB', accent: '#F3F4F6', name: '高光无影墙' },
+        { main: '#E7E5E4', accent: '#D6D3D1', name: '暖调纪实影棚' }
+      ];
+      const selected = themeColors[Math.floor(Math.random() * themeColors.length)];
+      setDetectedColor(selected.main);
+      setDetectedColorName(selected.accent);
 
-      // Add to history
-      const style = MOCK_HAIRSTYLES.find(s => s.id === id);
-      if (style) {
-        const newRecord: HistoryRecord = {
-          id: Math.random().toString(36).substr(2, 9),
-          createdAt: Date.now(),
-          resultImageUrl: style.preview, // Mock: reuse preview as result
-          styleId: style.id,
-          styleName: style.name
-        };
-        setHistory(prev => [newRecord, ...prev].slice(0, 12)); // Keep 12
-      }
-    }, 1500);
+      setTimeout(() => {
+        setIsDetectingColor(false);
+        setToolStatus('success');
+
+        // Add to history (ONLY at this success moment)
+        const style = MOCK_HAIRSTYLES.find(s => s.id === selectedStyle);
+        if (style) {
+          const newRecord: HistoryRecord = {
+            id: `${selectedStyle}-${selectedColorId}-${Date.now()}`,
+            createdAt: Date.now(),
+            resultImageUrl: highResImage || originalImage || style.preview,
+            styleId: style.id,
+            styleName: style.name,
+            colorId: selectedColorId,
+            originalImageUrl: highResImage || undefined,
+            sourceThumb: originalImage || undefined,
+            resultThumb: originalImage || style.preview
+          };
+
+          setHistory(prev => {
+            const filtered = prev.filter(r =>
+              !(r.originalImageUrl === newRecord.originalImageUrl &&
+                r.styleId === newRecord.styleId &&
+                r.colorId === newRecord.colorId)
+            );
+            const updated = [newRecord, ...filtered].slice(0, 12);
+            try {
+              localStorage.setItem('hairnova_history', JSON.stringify(updated));
+            } catch (e) {
+              console.warn('LocalStorage Quota Exceeded, partial save failed');
+            }
+            return updated;
+          });
+        }
+      }, 1000);
+    }, 800);
   };
 
   const handleRandomStyle = () => {
@@ -616,6 +776,34 @@ export default function HomePage() {
   };
 
   const isDisabled = !originalImage || !selectedStyle;
+
+  // 根据当前状态计算激活的步骤
+  const activeStep = toolStatus === 'idle' ? 1
+    : (toolStatus === 'loading' || isAnalyzing || isDetectingColor) ? 2
+      : 3;
+
+  // 计算当前是否已经为这张图生成过（不包括原始记录）
+  const hasGeneratedForCurrent = originalImage ? history.some(h => h.originalImageUrl === originalImage && h.styleId !== 'original') : false;
+
+  // 计算是否有未生成的变更（发型或颜色改变）
+  const hasChanges = (originalImage && selectedStyle) ? (() => {
+    const currentPhotoGenerated = history.filter(h => h.originalImageUrl === originalImage && h.styleId !== 'original');
+    if (currentPhotoGenerated.length === 0) return true;
+    const latest = currentPhotoGenerated[0];
+    return latest.styleId !== selectedStyle || latest.colorId !== selectedColorId;
+  })() : false;
+
+  // 计算当前应该展示的结果图
+  // 计算当前应该展示的结果图
+  const activePhotoRecords = history.filter(h => h.originalImageUrl === originalImage && h.styleId !== 'original');
+  const stylePreview = selectedStyle ? MOCK_HAIRSTYLES.find(s => s.id === selectedStyle)?.preview : null;
+
+  // Logic Fix: If originalImage exists, NEVER show stock preview images.
+  const displayImage = (toolStatus === 'loading' || isAnalyzing || isDetectingColor)
+    ? originalImage
+    : (activePhotoRecords.length > 0)
+      ? activePhotoRecords[0].resultImageUrl
+      : (originalImage || stylePreview || MOCK_HAIRSTYLES[0].preview);
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
@@ -672,200 +860,358 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ② How Hairnova Works｜Compressed Number Flow */}
-        <section id="library" ref={libraryRef} className="py-12 bg-white/50 backdrop-blur-sm relative z-10 w-full mt-24 md:mt-32">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
 
-              {/* Step 1 */}
-              <div className="flex items-center gap-4">
-                <span className="text-4xl font-black text-slate-200/80">01</span>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step1')}</span>
-                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step1_desc')}</span>
-                </div>
-              </div>
-
-              <div className="hidden md:block text-slate-200">
-                <ArrowRight size={20} strokeWidth={1.5} />
-              </div>
-              <div className="md:hidden h-8 w-px bg-slate-100"></div>
-
-              {/* Step 2 */}
-              <div className="flex items-center gap-4">
-                <span className="text-4xl font-black text-slate-200/80">02</span>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step2')}</span>
-                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step2_desc')}</span>
-                </div>
-              </div>
-
-              <div className="hidden md:block text-slate-200">
-                <ArrowRight size={20} strokeWidth={1.5} />
-              </div>
-              <div className="md:hidden h-8 w-px bg-slate-100"></div>
-
-              {/* Step 3 */}
-              <div className="flex items-center gap-4">
-                <span className="text-4xl font-black text-slate-200/80">03</span>
-                <div className="flex flex-col">
-                  <span className="text-sm font-bold text-slate-800">{t('howitworks.step3')}</span>
-                  <span className="text-[10px] text-slate-400 font-medium">{t('howitworks.step3_desc')}</span>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
 
         {/* ③ Core Experience Zone｜核心交互区 */}
-        <section className="mt-0 pt-8 pb-20 relative overflow-visible z-10">
+        {/* ③ Core Experience Zone｜核心交互区 - Compressed */}
+        <section className="mt-16 pt-10 pb-6 relative overflow-visible z-10">
           <div className="max-w-7xl mx-auto px-4">
 
-            {/* Section Header */}
-            <div className="text-center mb-12 space-y-3 animate-in fade-in slide-in-from-bottom duration-700">
-              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">
+            {/* Section Header - Compressed */}
+            <div className="text-center mb-4 space-y-2 animate-in fade-in slide-in-from-bottom duration-700">
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">
                 立即开始 AI 发型实验室
               </h2>
-              <p className="text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium">
+              <p className="text-xs md:text-sm text-slate-500 max-w-2xl mx-auto font-medium">
                 上传一张清晰的正脸照片，AI 将在秒级时间内为您量身打造最佳发型方案
               </p>
+
+              {/* Step Numbers - Compact */}
+              <div className="pt-6 pb-2 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 opacity-90 scale-95">
+                {/* Step 1 */}
+                <div className="flex items-center gap-2 group transition-all duration-500">
+                  <span className={cn(
+                    "text-2xl font-black transition-colors duration-500",
+                    activeStep === 1 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                  )}>01</span>
+                  <div className="flex flex-col text-left">
+                    <span className={cn(
+                      "text-xs font-bold transition-colors duration-500",
+                      activeStep === 1 ? "text-indigo-700" : "text-slate-800"
+                    )}>{t('howitworks.step1')}</span>
+                  </div>
+                </div>
+
+                <div className={cn(
+                  "hidden md:block transition-colors duration-500",
+                  activeStep > 1 ? "text-indigo-400" : "text-slate-200"
+                )}>
+                  <ArrowRight size={14} strokeWidth={1.5} />
+                </div>
+                <div className="md:hidden h-4 w-px bg-slate-100"></div>
+
+                {/* Step 2 */}
+                <div className="flex items-center gap-2 group transition-all duration-500">
+                  <span className={cn(
+                    "text-2xl font-black transition-colors duration-500",
+                    activeStep === 2 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                  )}>02</span>
+                  <div className="flex flex-col text-left">
+                    <span className={cn(
+                      "text-xs font-bold transition-colors duration-500",
+                      activeStep === 2 ? "text-indigo-700" : "text-slate-800"
+                    )}>{t('howitworks.step2')}</span>
+                  </div>
+                </div>
+
+                <div className={cn(
+                  "hidden md:block transition-colors duration-500",
+                  activeStep > 2 ? "text-indigo-400" : "text-slate-200"
+                )}>
+                  <ArrowRight size={14} strokeWidth={1.5} />
+                </div>
+                <div className="md:hidden h-4 w-px bg-slate-100"></div>
+
+                {/* Step 3 */}
+                <div className="flex items-center gap-2 group transition-all duration-500">
+                  <span className={cn(
+                    "text-2xl font-black transition-colors duration-500",
+                    activeStep === 3 ? "text-indigo-600 scale-110" : "text-slate-200/80"
+                  )}>03</span>
+                  <div className="flex flex-col text-left">
+                    <span className={cn(
+                      "text-xs font-bold transition-colors duration-500",
+                      activeStep === 3 ? "text-indigo-700" : "text-slate-800"
+                    )}>{t('howitworks.step3')}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="rounded-[40px] bg-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden relative">
+            <div className="rounded-[12px] bg-white/40 backdrop-blur-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white/20 relative !overflow-visible">
               {/* Decorative Background */}
               <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
 
-              <div className="p-6 lg:p-10 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-12 items-start">
+              <div className="w-full max-w-[1280px] mx-auto p-3 lg:px-4 relative z-10">
 
-                  {/* Left Column: Upload Area */}
-                  <div className="flex flex-col space-y-6">
-                    <div className="aspect-[3/2] w-full relative rounded-2xl overflow-hidden shadow-2xl shadow-indigo-100/50 border border-slate-100 bg-white">
-                      <UploadCard
-                        onUpload={handleUpload}
-                        onClear={handleClear}
-                        preview={originalImage}
-                        onPhotoRequirementsClick={() => setShowPhotoRequirements(true)}
-                      />
+                {/* Compact Header */}
+                <div className="mb-2 flex items-center justify-between px-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-black text-slate-900 tracking-tight">专属发型工作台</h3>
+                    <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-white/50 border border-slate-200/60 backdrop-blur-sm">
+                      <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest leading-none">
+                        {analyzedFaceShape || 'OVAL'}
+                      </span>
+                      <div className="w-px h-2.5 bg-slate-300" />
+                      <span className="text-[10px] font-bold text-slate-400">定制建议</span>
                     </div>
-
-                    {/* Example Photos - Quick Action */}
-                    {!originalImage && (
-                      <div className="pt-2">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 block">Or try with examples</span>
-                        <div className="flex gap-3">
-                          {[1, 2, 3].map((i) => (
-                            <button
-                              key={i}
-                              onClick={async () => {
-                                const imageUrl = `https://images.unsplash.com/photo-${i === 1 ? '1544005313-94ddf0286df2' : i === 2 ? '1506794778202-cad84cf45f1d' : '1534528741775-53994a69daeb'}?w=400&h=500&fit=crop`;
-                                await handleUpload(imageUrl);
-                              }}
-                              className="w-16 h-20 rounded-lg overflow-hidden border border-slate-200 hover:border-indigo-500 hover:scale-105 transition-all cursor-pointer relative group"
-                            >
-                              <img
-                                src={`https://images.unsplash.com/photo-${i === 1 ? '1544005313-94ddf0286df2' : i === 2 ? '1506794778202-cad84cf45f1d' : '1534528741775-53994a69daeb'}?w=200&h=300&fit=crop`}
-                                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
-                                alt="Example"
-                              />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
+                </div>
 
-                  {/* Right Column: AI Results */}
-                  <div className="flex flex-col space-y-6 h-full">
-                    <div className="flex-1 min-h-[480px] relative">
-                      {toolStatus === 'success' || originalImage ? (
-                        <div className="w-full h-full flex flex-col gap-6">
-                          {/* BEST MATCH - Main Recommendation */}
-                          <div className="relative rounded-2xl overflow-hidden bg-white border-2 border-indigo-200 shadow-lg">
-                            <div className="absolute top-4 right-4 z-10">
-                              <div className="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-[10px] font-black rounded-full uppercase tracking-widest shadow-lg flex items-center gap-1.5">
-                                <Sparkles size={12} />
-                                BEST MATCH
+                <div className="flex flex-col lg:flex-row gap-3 items-start">
+
+                  {/* Left Column: Upload Area (30%) - Compressed */}
+                  <div className="flex-[3] flex flex-col space-y-2.5 w-full">
+                    <div className="flex-1 flex flex-col gap-2.5">
+                      {/* Image Preview / Upload Card */}
+                      {originalImage ? (
+                        <div className="relative group rounded-xl overflow-hidden shadow-lg border border-white/40 ring-1 ring-slate-200/50 bg-slate-50/50 h-[320px] w-auto aspect-square mx-auto">
+                          {/* Overlays */}
+                          <div className="absolute inset-0 z-20 pointer-events-none">
+                            <div className="absolute left-2 top-2 flex flex-col gap-1.5">
+                              <div className="flex items-center gap-1.5 px-2 py-1 bg-white/90 backdrop-blur-md rounded-[4px] border border-white/20 shadow-sm w-fit">
+                                <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">Before</span>
                               </div>
                             </div>
-                            <div className="aspect-[4/5] relative">
-                              <img
-                                src={history[0]?.resultImageUrl || MOCK_HAIRSTYLES[0].preview}
-                                alt="Best Match"
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="p-4 bg-gradient-to-br from-indigo-50 to-purple-50 border-t border-indigo-100">
-                              <h4 className="text-sm font-bold text-slate-900 mb-1">为您推荐的最佳发型</h4>
-                              <p className="text-xs text-slate-600">基于您的 <span className="font-semibold text-indigo-600">{analyzedFaceShape || 'Oval'}</span> 脸型分析</p>
+
+                            {/* Clear Button */}
+                            <div className="absolute right-2 top-2 pointer-events-auto">
+                              <button
+                                onClick={handleClear}
+                                className="w-6 h-6 rounded-full bg-white/80 hover:bg-white backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-red-500 shadow-sm transition-all active:scale-90"
+                              >
+                                <X size={14} strokeWidth={2.5} />
+                              </button>
                             </div>
                           </div>
 
-                          {/* Other Recommendations */}
-                          <div className="space-y-3">
-                            <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">其他推荐</h5>
-                            <div className="grid grid-cols-3 gap-3">
-                              {MOCK_HAIRSTYLES.slice(1, 4).map((style, idx) => (
-                                <button
-                                  key={idx}
-                                  onClick={() => handleStyleSelect(style.id)}
-                                  className="aspect-square rounded-xl overflow-hidden border-2 border-slate-100 hover:border-indigo-400 transition-all hover:scale-105 relative group"
-                                >
-                                  <img src={style.preview} className="w-full h-full object-cover" alt={style.name} />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-2">
-                                    <span className="text-[9px] text-white font-bold">{style.name}</span>
-                                  </div>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Continue to Hair Color CTA */}
-                          <button
-                            onClick={() => {
-                              // Navigate to color try-on or open color panel
-                              console.log('Continue to hair color');
-                            }}
-                            className="w-full h-14 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
-                          >
-                            继续试发色
-                            <ArrowRight size={18} />
-                          </button>
+                          <img
+                            src={originalImage}
+                            alt="Preview"
+                            className="w-full h-full object-contain p-2 relative z-10"
+                          />
                         </div>
                       ) : (
-                        <div className="w-full h-full rounded-2xl bg-white flex flex-col items-center justify-center relative border-2 border-slate-200 transition-all duration-500 shadow-sm">
-                          {/* Title Top Left */}
-                          <div className="absolute top-6 left-6">
-                            <h3 className="text-xl font-bold text-slate-400 tracking-tight">AI 智能推荐结果</h3>
-                          </div>
+                        <div className="flex-1 h-full min-h-[380px]">
+                          <UploadCard
+                            onUpload={handleUpload}
+                            onClear={handleClear}
+                            preview={null}
+                            onPhotoRequirementsClick={() => setShowPhotoRequirements(true)}
+                          />
+                        </div>
+                      )}
 
-                          {/* Center Content */}
-                          <div className="flex flex-col items-center gap-5">
-                            <div className="w-20 h-20 rounded-full bg-slate-100/60 flex items-center justify-center mb-1">
-                              <Eye size={36} className="text-slate-300" strokeWidth={1.5} />
+                      {/* Compact Action Bar */}
+                      {originalImage && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => document.getElementById('file-upload-input')?.click()}
+                            className="flex-1 py-2 rounded-lg border border-dashed border-slate-300 bg-white hover:border-indigo-400 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-2 group"
+                          >
+                            <Upload size={14} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                            <span className="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600">更换照片</span>
+                            <input
+                              id="file-upload-input"
+                              type="file"
+                              className="hidden"
+                              onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'file')}
+                              accept="image/*"
+                            />
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Recent History - Short & Scrollable */}
+                      <div className="mt-1 pt-2 border-t border-slate-200/50">
+                        <div className="flex items-center justify-between mb-1.5 px-1">
+                          <span className="text-[10px] font-bold text-slate-500">最近试戴 ({Math.min(history.length, 12)})</span>
+                        </div>
+                        <div className="grid grid-cols-5 gap-1.5 max-h-[160px] overflow-y-auto pr-1">
+                          {history.slice(0, 10).map((record, idx) => (
+                            <div
+                              key={record.id || idx}
+                              onClick={() => {
+                                if (record.resultImageUrl) {
+                                  setSelectedHistory(record);
+                                }
+                              }}
+                              className={cn(
+                                "aspect-[4/5] rounded-md overflow-hidden border border-slate-200 cursor-pointer hover:ring-2 hover:ring-indigo-500 transition-all relative group bg-white",
+                                selectedHistory?.id === record.id && "ring-2 ring-indigo-600"
+                              )}
+                            >
+                              <img src={record.resultImageUrl || record.sourceThumb} className="w-full h-full object-cover" />
                             </div>
-                            <p className="text-sm font-medium text-slate-400 tracking-wide">
-                              等待上传照片以开始分析
-                            </p>
+                          ))}
+                          {history.length === 0 && (
+                            <div className="col-span-5 text-center py-4 text-[9px] text-slate-400 bg-slate-50 rounded-md border border-dashed border-slate-200">
+                              暂无记录
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: Result & Controls (70%) - High Density */}
+                  <div className="flex-[7] flex flex-col space-y-2.5 w-full">
+                    {/* Main Visual Area */}
+                    <div className="relative overflow-hidden rounded-xl border border-slate-200/60 shadow-xl shadow-indigo-500/5 bg-white h-[320px] w-auto aspect-square mx-auto">
+                      {/* Backgrounds */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/40 via-white to-slate-50/30" />
+
+                      {/* Status Overlays */}
+                      <div className="absolute inset-0 z-20 pointer-events-none">
+                        <div className="absolute left-2 top-2">
+                          <div className="px-2 py-1 bg-white/80 backdrop-blur-md rounded-[4px] border border-white/20 shadow-sm">
+                            <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">After</span>
                           </div>
+                        </div>
+                        <div className="absolute right-2 top-2">
+                          <div className="px-2 py-1 bg-slate-900/90 backdrop-blur-md rounded-[4px] shadow-lg border border-white/10">
+                            <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">New Look</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Valid Image Display */}
+                      {(toolStatus === 'success' || (originalImage && displayImage)) ? (
+                        <>
+                          <img
+                            src={displayImage || undefined}
+                            alt="Result"
+                            className={cn(
+                              "relative z-10 w-full h-full object-contain p-2 transition-all duration-700",
+                              (toolStatus === 'loading' || isAnalyzing) ? 'blur-sm opacity-60 scale-[0.98]' : 'blur-0 opacity-100 scale-100'
+                            )}
+                          />
+                          {/* Color Overlay */}
+                          {selectedColorId && toolStatus !== 'loading' && (
+                            <div
+                              className="absolute inset-0 z-[12] mix-blend-soft-light pointer-events-none transition-all duration-500"
+                              style={{
+                                backgroundColor: selectedColorHex,
+                                opacity: selectedColorId === 'natural-black' ? 0.45 : 0.25
+                              }}
+                            />
+                          )}
+                        </>
+                      ) : (
+                        // Empty State / Placeholder
+                        <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
+                          <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300">
+                            <Eye size={32} />
+                          </div>
+                          <p className="text-xs font-bold text-slate-400">预览区域</p>
                         </div>
                       )}
                     </div>
-                  </div>
 
+                    {/* Integrated Control Panel (High Density) */}
+                    <div className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-xl px-3 py-2 flex items-center justify-between gap-4 shadow-sm min-h-[64px]">
+                      {/* Color Groups - Compact Grid */}
+                      <div className="flex-1 flex flex-col gap-2 overflow-x-auto no-scrollbar py-1">
+                        {/* Row 1: Basic */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 w-6 text-right">基础</span>
+                          <div className="flex items-center gap-1.5 px-1">
+                            {HAIR_COLORS.basic.map(color => (
+                              <div key={color.id} className="group relative">
+                                <button
+                                  onClick={() => setSelectedColorId(color.id)}
+                                  className={cn(
+                                    "w-6 h-8 rounded-md shadow-sm border border-white transition-all hover:-translate-y-0.5 hover:shadow-md",
+                                    selectedColorId === color.id ? "ring-2 ring-indigo-500 ring-offset-1 scale-105 z-10" : "opacity-90 hover:opacity-100"
+                                  )}
+                                  style={{ backgroundColor: color.hex }}
+                                />
+                                {/* Rich Tooltip */}
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[100px] bg-slate-800/95 backdrop-blur-md text-white text-[10px] rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-xl border border-white/10 flex flex-col gap-0.5 scale-95 group-hover:scale-100 origin-bottom">
+                                  <div className="font-bold text-white border-b border-white/10 pb-1 mb-1">{color.name}</div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-slate-400">适合:</span>
+                                    <span className="text-slate-200">{color.skinTone}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-slate-400">风格:</span>
+                                    <span className="text-slate-200">{color.style}</span>
+                                  </div>
+                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800/95" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        {/* Row 2: Style + Advanced */}
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider shrink-0 w-6 text-right">风格</span>
+                          <div className="flex items-center gap-1.5 px-1">
+                            {[...HAIR_COLORS.style, ...HAIR_COLORS.advanced].map(color => (
+                              <div key={color.id} className="group relative">
+                                <button
+                                  onClick={() => setSelectedColorId(color.id)}
+                                  className={cn(
+                                    "w-6 h-8 rounded-md shadow-sm border border-white transition-all hover:-translate-y-0.5 hover:shadow-md",
+                                    selectedColorId === color.id ? "ring-2 ring-indigo-500 ring-offset-1 scale-105 z-10" : "opacity-90 hover:opacity-100"
+                                  )}
+                                  style={{ backgroundColor: color.hex }}
+                                />
+                                {/* Rich Tooltip */}
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max min-w-[100px] bg-slate-800/95 backdrop-blur-md text-white text-[10px] rounded-lg p-2 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none z-50 shadow-xl border border-white/10 flex flex-col gap-0.5 scale-95 group-hover:scale-100 origin-bottom">
+                                  <div className="font-bold text-white border-b border-white/10 pb-1 mb-1">{color.name}</div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-slate-400">适合:</span>
+                                    <span className="text-slate-200">{color.skinTone}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-slate-400">风格:</span>
+                                    <span className="text-slate-200">{color.style}</span>
+                                  </div>
+                                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800/95" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Main Action Button - Right Aligned */}
+                      <div className="shrink-0 pl-4 border-l border-slate-200/50 h-full flex items-center my-auto">
+                        <div className="flex flex-col items-end gap-1">
+                          <Button3D
+                            variant="gradient"
+                            className="h-10 px-6 rounded-lg shadow-indigo-200/50"
+                            onClick={handleApplyStyle}
+                            disabled={toolStatus === 'loading' || !selectedStyle || !originalImage}
+                          >
+                            {toolStatus === 'loading' ? (
+                              <RefreshCw className="animate-spin" size={16} />
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <Sparkles size={16} />
+                                <span className="text-xs font-bold whitespace-nowrap">
+                                  {hasGeneratedForCurrent && hasChanges ? '应用调整' : '立即生成'}
+                                </span>
+                              </div>
+                            )}
+                          </Button3D>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
-        </section>
+        </section >
 
         {/* 历史预览弹窗 */}
-        <HistoryPreviewModal
+        < HistoryPreviewModal
           record={selectedHistory}
-          onClose={() => setSelectedHistory(null)}
+          onClose={() => setSelectedHistory(null)
+          }
           onRetry={(styleId) => {
             setSelectedHistory(null);
             handleStyleSelect(styleId);
@@ -981,37 +1327,48 @@ export default function HomePage() {
         {/* ⑧ SEO Face-Shape Links｜如果我想继续研究？ */}
         <RelatedLinks />
 
-        {/* ⑨ Final CTA｜极致暗黑科技感收尾 */}
-        {SHOW_BIG_CARD && (
-          <section className="py-32">
-            <div className="max-w-6xl mx-auto px-4">
-              <div className="relative p-12 md:p-24 overflow-hidden group rounded-2xl bg-slate-900 text-white shadow-2xl">
-                {/* 装饰性渐变光圈 */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full -mr-64 -mt-64 transition-all duration-1000 group-hover:bg-indigo-500/30" />
-                <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 blur-[100px] rounded-full -ml-48 -mb-48 transition-all duration-1000 group-hover:bg-purple-500/20" />
+        {/* ⑨ SEO Knowledge｜站长进阶指南 */}
+        <SEOEducationSection />
 
-                <div className="relative z-10 text-center space-y-10">
-                  <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight max-w-3xl mx-auto">
-                    {safeT('cta.final_title', '准备好发现真正适合您的 AI 形象了吗？')}
-                  </h2>
-                  <div className="flex justify-center pt-4">
-                    <SafeLink href="/ai-hairstyle-changer">
-                      <button className="px-12 h-16 bg-white text-slate-900 text-lg font-black rounded-xl shadow-xl hover:scale-105 hover:shadow-white/10 active:scale-95 transition-all duration-300 flex items-center gap-3 group">
-                        {safeT('cta.start_free', '立即开始免费体验')}
-                        <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
-                      </button>
-                    </SafeLink>
+        {/* ⑨ Final CTA｜极致暗黑科技感收尾 */}
+        {
+          SHOW_BIG_CARD && (
+            <section className="py-32">
+              <div className="max-w-6xl mx-auto px-4">
+                <div className="relative p-12 md:p-24 overflow-hidden group rounded-2xl bg-slate-900 text-white shadow-2xl">
+                  {/* 装饰性渐变光圈 */}
+                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/20 blur-[120px] rounded-full -mr-64 -mt-64 transition-all duration-1000 group-hover:bg-indigo-500/30" />
+                  <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 blur-[100px] rounded-full -ml-48 -mb-48 transition-all duration-1000 group-hover:bg-purple-500/20" />
+
+                  <div className="relative z-10 text-center space-y-10">
+                    <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight max-w-3xl mx-auto">
+                      {safeT('cta.final_title', '准备好发现真正适合您的 AI 形象了吗？')}
+                    </h2>
+                    <div className="flex justify-center pt-4">
+                      <SafeLink href="/ai-hairstyle-changer">
+                        <button className="px-12 h-16 bg-white text-slate-900 text-lg font-black rounded-xl shadow-xl hover:scale-105 hover:shadow-white/10 active:scale-95 transition-all duration-300 flex items-center gap-3 group">
+                          {safeT('cta.start_free', '立即开始免费体验')}
+                          <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                      </SafeLink>
+                    </div>
+                    <p className="text-slate-400 text-sm font-medium">
+                      {safeT('cta.features', '无需信用卡 · 实时 AI 生成 · 500+ 发型库')}
+                    </p>
                   </div>
-                  <p className="text-slate-400 text-sm font-medium">
-                    {safeT('cta.features', '无需信用卡 · 实时 AI 生成 · 500+ 发型库')}
-                  </p>
                 </div>
               </div>
-            </div>
-          </section>
-        )}
-      </main>
-    </div>
+            </section>
+          )
+        }
+
+      </main >
+
+      <HairstyleGuideModal
+        open={showPhotoRequirements}
+        onOpenChange={setShowPhotoRequirements}
+      />
+    </div >
   );
 }
 

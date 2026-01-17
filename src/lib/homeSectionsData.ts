@@ -3,47 +3,47 @@
  */
 
 export const HERO_PREVIEW_DATA = [
-  { 
-    id: 1, 
-    gender: 'male', 
+  {
+    id: 1,
+    gender: 'male',
     faceShape: 'Square',
-    before: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop'
   },
-  { 
-    id: 2, 
-    gender: 'male', 
+  {
+    id: 2,
+    gender: 'male',
     faceShape: 'Oval',
-    before: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1552046122-03184de85e08?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1552046122-03184de85e08?w=400&h=500&fit=crop'
   },
-  { 
-    id: 3, 
-    gender: 'male', 
+  {
+    id: 3,
+    gender: 'male',
     faceShape: 'Heart',
-    before: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1618833162733-4f2798e4f620?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1618833162733-4f2798e4f620?w=400&h=500&fit=crop'
   },
-  { 
-    id: 4, 
-    gender: 'female', 
+  {
+    id: 4,
+    gender: 'female',
     faceShape: 'Oval',
-    before: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1620331311520-246422fd82f9?w=400&h=500&fit=crop'
   },
-  { 
-    id: 5, 
-    gender: 'female', 
+  {
+    id: 5,
+    gender: 'female',
     faceShape: 'Heart',
-    before: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1605497745244-5c3456dd7ed9?w=400&h=500&fit=crop'
   },
-  { 
-    id: 6, 
-    gender: 'female', 
+  {
+    id: 6,
+    gender: 'female',
     faceShape: 'Round',
-    before: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop', 
-    after: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?w=400&h=500&fit=crop' 
+    before: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=500&fit=crop',
+    after: 'https://images.unsplash.com/photo-1605902711622-cfb43c4437b5?w=400&h=500&fit=crop'
   },
 ];
 
@@ -63,7 +63,7 @@ export const MOCK_HAIRSTYLES = [
   { id: 'f12', gender: 'female', name: 'Top Knot', preview: 'https://images.unsplash.com/photo-1584297117022-99d34104aa8a?w=400&h=500&fit=crop', category: 'Medium' },
   { id: 'f13', gender: 'female', name: 'Space Bun', preview: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?w=400&h=500&fit=crop', category: 'Medium' },
   { id: 'f14', gender: 'female', name: 'Half Up', preview: 'https://images.unsplash.com/photo-1551711713-39be0d3f82a9?w=400&h=500&fit=crop', category: 'Long' },
-  
+
   // 男性发型
   { id: 'm1', gender: 'male', name: 'Buzz Cut', preview: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=500&fit=crop', category: 'Short', badge: 'BEST MATCH' },
   { id: 'm2', gender: 'male', name: 'Side Part', preview: 'https://images.unsplash.com/photo-1590086782792-42dd2350140d?w=400&h=500&fit=crop', category: 'Short', badge: 'RECOMMENDED' },
@@ -118,30 +118,30 @@ export interface HairColor {
 export const HAIR_COLORS = {
   // 基础发色（默认展示）
   basic: [
-    { id: 'natural-black', name: '自然黑', hex: '#1a1a1a', tone: 'Neutral', skinTone: '适合所有肤色', style: '经典百搭' },
-    { id: 'dark-brown', name: '深棕色', hex: '#3d2817', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '自然稳重' },
-    { id: 'medium-brown', name: '中棕色', hex: '#6b4423', tone: 'Neutral', skinTone: '适合大多数肤色', style: '日常百搭' },
-    { id: 'light-brown', name: '浅棕色', hex: '#8b6f47', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '温柔自然' },
-    { id: 'blonde', name: '金色', hex: '#d4a574', tone: 'Warm', skinTone: '适合白皙肌肤', style: '明亮活力' },
-    { id: 'grey', name: '灰色', hex: '#808080', tone: 'Cool', skinTone: '适合冷色调肌肤', style: '成熟优雅' },
+    { id: 'natural-black', name: '自然黑', hex: '#121212', tone: 'Neutral', skinTone: '所有肤色', style: '自然经典' },
+    { id: 'dark-brown', name: '深棕色', hex: '#3d2817', tone: 'Warm', skinTone: '暖肤 / 中性肤', style: '稳重日常' },
+    { id: 'medium-brown', name: '中棕色', hex: '#6b4423', tone: 'Neutral', skinTone: '偏黄肤色', style: '自然显年轻' },
+    { id: 'light-brown', name: '浅棕色', hex: '#8b6f47', tone: 'Warm', skinTone: '白皙肤色', style: '清新' },
+    { id: 'blonde', name: '金色', hex: '#d4a574', tone: 'Warm', skinTone: '白皙 / 暖肤', style: '明亮活力' },
+    { id: 'grey', name: '灰色', hex: '#808080', tone: 'Cool', skinTone: '冷肤色', style: '个性高级' },
   ] as HairColor[],
-  
+
   // 风格发色（可展开）
   style: [
-    { id: 'cool-blonde', name: '冷金色', hex: '#f0e6d2', tone: 'Cool', skinTone: '适合冷色调肌肤', style: '清新时尚' },
-    { id: 'honey-blonde', name: '蜂蜜金', hex: '#e3b448', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '温暖甜美' },
-    { id: 'copper-red', name: '铜红色', hex: '#b87333', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '热情活力' },
-    { id: 'auburn', name: '栗棕色', hex: '#8b4513', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '复古优雅' },
-    { id: 'rose-brown', name: '玫瑰棕', hex: '#a0522d', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '浪漫温柔' },
+    { id: 'cool-blonde', name: '冷金色', hex: '#f0e6d2', tone: 'Cool', skinTone: '冷白皮', style: '高级感' },
+    { id: 'honey-blonde', name: '蜂蜜金', hex: '#e3b448', tone: 'Warm', skinTone: '暖肤', style: '显白柔和' },
+    { id: 'copper-red', name: '铜红色', hex: '#b87333', tone: 'Warm', skinTone: '白皙肤色', style: '个性时尚' },
+    { id: 'auburn', name: '栗棕色', hex: '#8b4513', tone: 'Warm', skinTone: '亚洲肤色', style: '自然显气质' },
+    { id: 'rose-brown', name: '玫瑰棕', hex: '#a0522d', tone: 'Warm', skinTone: '冷暖皆可', style: '温柔' },
   ] as HairColor[],
-  
+
   // 高级发色（Advanced）
   advanced: [
-    { id: 'ash-grey', name: '灰褐色', hex: '#c0c0c0', tone: 'Cool', skinTone: '适合冷色调肌肤', style: '高级质感' },
-    { id: 'platinum-blonde', name: '铂金色', hex: '#faf0be', tone: 'Cool', skinTone: '适合冷色调肌肤', style: '前卫时尚' },
-    { id: 'smoky-brown', name: '烟熏棕', hex: '#5c4a37', tone: 'Cool', skinTone: '适合冷色调肌肤', style: '神秘个性' },
-    { id: 'chocolate-brown', name: '巧克力棕', hex: '#4a3728', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '浓郁经典' },
-    { id: 'burgundy', name: '酒红色', hex: '#800020', tone: 'Warm', skinTone: '适合暖色调肌肤', style: '成熟魅力' },
+    { id: 'ash-grey', name: '灰褐色', hex: '#c0c0c0', tone: 'Cool', skinTone: '冷肤色', style: '克制高级' },
+    { id: 'platinum-blonde', name: '铂金色', hex: '#faf0be', tone: 'Cool', skinTone: '白皙肤色', style: '前卫' },
+    { id: 'smoky-brown', name: '烟栗棕', hex: '#5c4a37', tone: 'Cool', skinTone: '中性肤色', style: '质感高级' },
+    { id: 'chocolate-brown', name: '巧克力棕', hex: '#4a3728', tone: 'Warm', skinTone: '暖肤色', style: '柔和显白' },
+    { id: 'burgundy', name: '酒红色', hex: '#800020', tone: 'Warm', skinTone: '白皙肤色', style: '强烈个性' },
   ] as HairColor[],
 };
 

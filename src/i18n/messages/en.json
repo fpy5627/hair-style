@@ -492,6 +492,12 @@
         "p2": "No download, no registration required. Just upload a photo to start the experience.",
         "p3": ""
       },
+      "seo_knowledge": {
+        "title": "Webmaster Guide: Boosting Your AI Hairstyle Site Traffic",
+        "p1": "Note that indexing doesn't mean your site will rank. Once indexed, your site enters the database, but search engines continue to crawl content and assign weights to keywords. Ranking varies based on keywords used in searches.",
+        "p2": "Typically, unique brand terms rank high once indexed. This is beneficial as users can find you after seeing promotional content.",
+        "p3": "Another way is to actively submit your site to webmaster tools like Baidu Webmaster or Google Search Console."
+      },
       "faq": {
         "title": "Common Questions",
         "q1": "How does AI determine my face shape?",

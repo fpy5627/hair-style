@@ -22,7 +22,8 @@ import {
   MousePointer2,
   Brain,
   Upload,
-  CheckCircle2
+  CheckCircle2,
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -589,6 +590,55 @@ export const ScenariosModule = () => {
             <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
           </GlassCard>
         ))}
+      </div>
+    </section>
+  );
+};
+/**
+ * 2.11 SEO 知识教育模块 (SEOEducationSection)
+ */
+export const SEOEducationSection = () => {
+  const t = useTranslations('hairstyle.landing.seo_knowledge');
+
+  const knowledgePoints = [
+    { title: 'Indexing vs Ranking', desc: t('p1'), icon: <Target className="text-blue-500" /> },
+    { title: 'Keyword Weighting', desc: t('p2'), icon: <Brain className="text-indigo-500" /> },
+    { title: 'Webmaster Tools', desc: t('p3'), icon: <CheckCircle2 className="text-cyan-500" /> }
+  ];
+
+  return (
+    <section className="py-24 px-4 bg-slate-50/50 border-t border-slate-100">
+      <div className="max-w-6xl mx-auto space-y-16">
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100">
+            <Info size={12} />
+            Optimization Guide
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+            {t('title')}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {knowledgePoints.map((point, idx) => (
+            <div
+              key={idx}
+              className="group p-8 rounded-2xl bg-white border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-indigo-500/5 hover:-translate-y-1 transition-all duration-500"
+            >
+              <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
+                {point.icon}
+              </div>
+              <h4 className="text-lg font-bold text-slate-900 mb-3">{point.title}</h4>
+              <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                {point.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-8 text-center text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">
+          Empowering your digital presence with Hairnova AI
+        </div>
       </div>
     </section>
   );

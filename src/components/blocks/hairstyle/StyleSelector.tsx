@@ -4,11 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
-import { 
-  ChevronsDown, 
-  Camera, 
-  ArrowRight, 
-  UploadCloud, 
+import {
+  ChevronsDown,
+  Camera,
+  ArrowRight,
+  UploadCloud,
   History,
   ChevronDown,
   Check
@@ -20,6 +20,10 @@ export interface HistoryRecord {
   resultImageUrl: string;
   styleId: string;
   styleName: string;
+  colorId?: string;
+  originalImageUrl?: string;
+  sourceThumb?: string; // 原图缩略图 Base64 或持久 URL
+  resultThumb?: string; // 结果图缩略图 Base64 或持久 URL
 }
 
 interface StyleTabsProps {
@@ -36,8 +40,8 @@ export const StyleTabs = ({ categories, activeCategory, onCategoryChange }: Styl
   const t = useTranslations('home.categories');
 
   // 确保"全部"按钮在最前面
-  const allCategories = categories.includes('All') 
-    ? categories 
+  const allCategories = categories.includes('All')
+    ? categories
     : ['All', ...categories];
 
   const handleCategoryClick = (category: string) => {
@@ -127,8 +131,8 @@ export const HairstyleGrid = ({ styles, selectedStyleId, onStyleSelect }: Hairst
         >
           {/* 1) 图片区域 - 顶部圆角 8px */}
           <div className="relative w-full aspect-[4/3] max-h-[170px] min-h-[130px] rounded-t-[8px] overflow-hidden bg-slate-100">
-            <Image 
-              src={style.preview} 
+            <Image
+              src={style.preview}
               alt={style.name}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -183,10 +187,10 @@ interface StyleActionPanelProps {
 /**
  * 右侧固定操作面板
  */
-export const StyleActionPanel = ({ 
-  onUpload, 
-  onCamera, 
-  history = [], 
+export const StyleActionPanel = ({
+  onUpload,
+  onCamera,
+  history = [],
   onHistoryClick,
   onViewAllHistory,
   previewUrl
@@ -202,23 +206,23 @@ export const StyleActionPanel = ({
     ">
       {/* 装饰性背景 */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 blur-3xl rounded-full -mr-16 -mt-16 transition-colors group-hover/panel:bg-indigo-100/50 pointer-events-none" />
-      
+
       <div className="space-y-1 relative z-10 min-w-0">
         <h4 className="text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight break-words whitespace-normal line-clamp-2">{t('cta.recommend')}</h4>
         <p className="text-[10px] md:text-xs text-slate-500 font-medium break-words whitespace-normal">{t('hero.subtitle')}</p>
       </div>
-      
+
       <div className="flex flex-col gap-3 relative z-10">
         {previewUrl ? (
           <div className="upload-preview relative aspect-[4/5] max-h-[260px] overflow-hidden rounded-md border border-slate-100 bg-slate-50 flex items-center justify-center">
-            <img 
-              src={previewUrl} 
-              alt="Preview" 
+            <img
+              src={previewUrl}
+              alt="Preview"
               className="object-contain w-full h-full"
             />
           </div>
         ) : (
-          <button 
+          <button
             onClick={onCamera}
             className="flex items-center gap-3 px-4 h-14 bg-slate-50 hover:bg-white hover:shadow-md hover:border-indigo-200 rounded-md border border-slate-100 transition-all group duration-300 min-w-0"
           >
@@ -233,7 +237,7 @@ export const StyleActionPanel = ({
           </button>
         )}
 
-        <button 
+        <button
           onClick={onUpload}
           className="flex items-center gap-3 px-4 h-14 bg-indigo-50/30 hover:bg-white hover:shadow-md hover:border-indigo-200 rounded-md border border-indigo-100/30 transition-all group duration-300 min-w-0"
         >
@@ -256,7 +260,7 @@ export const StyleActionPanel = ({
               <History size={16} className="text-slate-400 shrink-0" />
               <h5 className="text-sm font-black text-slate-800 leading-tight break-words whitespace-normal line-clamp-1">{t('history_title')}</h5>
             </div>
-            <button 
+            <button
               onClick={onViewAllHistory}
               className="shrink-0 text-[10px] font-bold text-indigo-600 hover:text-indigo-700 transition-colors whitespace-nowrap"
             >
@@ -271,10 +275,10 @@ export const StyleActionPanel = ({
                 onClick={() => onHistoryClick?.(record)}
                 className="group/item relative aspect-[4/3] rounded-lg overflow-hidden bg-slate-100 border border-slate-200 hover:border-indigo-300 transition-all flex-none"
               >
-                <img 
-                  src={record.resultImageUrl} 
-                  alt={record.styleName} 
-                  className="w-full h-full object-contain transition-transform" 
+                <img
+                  src={record.resultImageUrl}
+                  alt={record.styleName}
+                  className="w-full h-full object-contain transition-transform"
                 />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/item:opacity-100 transition-opacity flex flex-col items-center justify-center">
                   <span className="text-[8px] font-black text-white bg-indigo-600/80 px-1.5 py-0.5 rounded-full backdrop-blur-sm">{t('history_view')}</span>
@@ -312,11 +316,11 @@ interface HairstyleCandidatePoolProps {
 /**
  * 整合布局：左侧候选池 + 右侧固定操作区
  */
-export const HairstyleCandidatePool = ({ 
-  styles, 
-  selectedStyleId, 
-  onStyleSelect, 
-  onUpload, 
+export const HairstyleCandidatePool = ({
+  styles,
+  selectedStyleId,
+  onStyleSelect,
+  onUpload,
   onCamera,
   history = [],
   onHistoryClick,
@@ -327,18 +331,18 @@ export const HairstyleCandidatePool = ({
     <div className="flex flex-col lg:flex-row gap-8 items-start">
       {/* 左侧：发型候选池 (7) - 确保 xl 仍保持 4 列 */}
       <div className="flex-1 min-w-0 order-2 lg:order-1 w-full">
-        <HairstyleGrid 
-          styles={styles} 
-          selectedStyleId={selectedStyleId} 
-          onStyleSelect={onStyleSelect} 
+        <HairstyleGrid
+          styles={styles}
+          selectedStyleId={selectedStyleId}
+          onStyleSelect={onStyleSelect}
         />
       </div>
 
       {/* 右侧：固定操作区 (3) - 增强宽度至 380-420px */}
       <div className="shrink-0 order-1 lg:order-2">
-        <StyleActionPanel 
-          onUpload={onUpload} 
-          onCamera={onCamera} 
+        <StyleActionPanel
+          onUpload={onUpload}
+          onCamera={onCamera}
           history={history}
           onHistoryClick={onHistoryClick}
           onViewAllHistory={onViewAllHistory}
