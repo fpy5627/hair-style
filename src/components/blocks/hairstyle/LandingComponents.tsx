@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import {
   ArrowRight,
   Sparkles,

@@ -26,7 +26,7 @@ import {
 import { Library as LibraryType } from "@/types/blocks/base";
 import Icon from "@/components/icon";
 import { usePathname } from "@/i18n/navigation";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 
 export function Library({ library }: { library: LibraryType }) {
   const { isMobile } = useSidebar();
@@ -40,11 +40,10 @@ export function Library({ library }: { library: LibraryType }) {
           <SidebarMenuItem key={index}>
             <SidebarMenuButton
               tooltip={item.title}
-              className={`${
-                item.is_active || pathname.endsWith(item.url as string)
+              className={`${item.is_active || pathname.endsWith(item.url as string)
                   ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
                   : ""
-              }`}
+                }`}
             >
               <SafeLink
                 href={(item.url || "") as any}

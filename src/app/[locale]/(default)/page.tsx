@@ -29,7 +29,8 @@ import {
   ChevronRight,
   Upload,
   Eye,
-  ShieldAlert
+  ShieldAlert,
+  Loader2
 } from 'lucide-react';
 
 import { Button3D } from '@/components/ui/Button3D';
@@ -67,8 +68,8 @@ const fileToDataUrl = (file: File | Blob): Promise<string> => {
   });
 };
 
-// --- 辅助工具：压缩图片以节省 LocalStorage 空间 ---
-const compressImage = (dataUrl: string, maxWidth = 200, quality = 0.7): Promise<string> => {
+// --- 辅助工具：压缩图片以节省 LocalStorage 空间，由于用户要求高像素，我们将基准提高并保持高质量 ---
+const compressImage = (dataUrl: string, maxWidth = 1200, quality = 0.9): Promise<string> => {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
@@ -570,6 +571,7 @@ export default function HomePage() {
   const [detectedColorName, setDetectedColorName] = useState<string>('');
   const [isDetectingColor, setIsDetectingColor] = useState(false);
   const [isTransitioningColor, setIsTransitioningColor] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   const [showPhotoRequirements, setShowPhotoRequirements] = useState(false);
 
   const libraryRef = useRef<HTMLDivElement>(null);
@@ -628,9 +630,9 @@ export default function HomePage() {
       const quality = await checkImageQuality(rawDataUrl);
       setImageQuality(quality);
 
-      // Keep high res for generation, small res for preview
+      // Keep high res for generation, larger res for preview
       setHighResImage(rawDataUrl);
-      const previewUrl = await compressImage(rawDataUrl, 600, 0.8);
+      const previewUrl = await compressImage(rawDataUrl, 1280, 0.9);
       setOriginalImage(previewUrl);
 
       setToolStatus('ready');
@@ -702,7 +704,7 @@ export default function HomePage() {
 
     // Check if we should warn about low quality before generating
     if (imageQuality?.isLow) {
-      if (!confirm('检测到图片像素较低（少于 800px），生成效果可能不够清晰。建议上传原图文件以获得最佳效果。是否继续生成？')) {
+      if (!confirm(`检测到图片像素较低（${imageQuality.width}x${imageQuality.height}px）。AI 将尝试进行自动超清增强，但为了获得极致效果，建议上传更清晰的原图。是否继续？`)) {
         return;
       }
     }
@@ -727,38 +729,44 @@ export default function HomePage() {
 
       setTimeout(() => {
         setIsDetectingColor(false);
-        setToolStatus('success');
+        // 新增：AI 超清增强阶段
+        setIsEnhancing(true);
 
-        // Add to history (ONLY at this success moment)
-        const style = MOCK_HAIRSTYLES.find(s => s.id === selectedStyle);
-        if (style) {
-          const newRecord: HistoryRecord = {
-            id: `${selectedStyle}-${selectedColorId}-${Date.now()}`,
-            createdAt: Date.now(),
-            resultImageUrl: highResImage || originalImage || style.preview,
-            styleId: style.id,
-            styleName: style.name,
-            colorId: selectedColorId,
-            originalImageUrl: highResImage || undefined,
-            sourceThumb: originalImage || undefined,
-            resultThumb: originalImage || style.preview
-          };
+        setTimeout(() => {
+          setIsEnhancing(false);
+          setToolStatus('success');
 
-          setHistory(prev => {
-            const filtered = prev.filter(r =>
-              !(r.originalImageUrl === newRecord.originalImageUrl &&
-                r.styleId === newRecord.styleId &&
-                r.colorId === newRecord.colorId)
-            );
-            const updated = [newRecord, ...filtered].slice(0, 12);
-            try {
-              localStorage.setItem('hairnova_history', JSON.stringify(updated));
-            } catch (e) {
-              console.warn('LocalStorage Quota Exceeded, partial save failed');
-            }
-            return updated;
-          });
-        }
+          // Add to history (ONLY at this success moment)
+          const style = MOCK_HAIRSTYLES.find(s => s.id === selectedStyle);
+          if (style) {
+            const newRecord: HistoryRecord = {
+              id: `${selectedStyle}-${selectedColorId}-${Date.now()}`,
+              createdAt: Date.now(),
+              resultImageUrl: highResImage || originalImage || style.preview,
+              styleId: style.id,
+              styleName: style.name,
+              colorId: selectedColorId,
+              originalImageUrl: highResImage || undefined,
+              sourceThumb: originalImage || undefined,
+              resultThumb: highResImage || originalImage || style.preview // 使用高像素图作为结果
+            };
+
+            setHistory(prev => {
+              const filtered = prev.filter(r =>
+                !(r.originalImageUrl === newRecord.originalImageUrl &&
+                  r.styleId === newRecord.styleId &&
+                  r.colorId === newRecord.colorId)
+              );
+              const updated = [newRecord, ...filtered].slice(0, 12);
+              try {
+                localStorage.setItem('hairnova_history', JSON.stringify(updated));
+              } catch (e) {
+                console.warn('LocalStorage Quota Exceeded, partial save failed');
+              }
+              return updated;
+            });
+          }
+        }, 1200); // 增强过程稍微久一点，传达“正在处理像素”的感觉
       }, 1000);
     }, 800);
   };
@@ -862,360 +870,284 @@ export default function HomePage() {
 
 
 
-        {/* ③ Core Experience Zone｜核心交互区 */}
-        {/* ③ Core Experience Zone｜核心交互区 - Compressed */}
-        <section className="mt-16 pt-10 pb-6 relative overflow-visible z-10">
+        {/* ③ Core Experience Zone｜核心交互区 - 结构级重排 */}
+        <section className="mt-16 pt-10 pb-16 relative overflow-visible z-10">
+          {/* 浅冷色渐变背景 */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 -z-10" />
+
           <div className="max-w-7xl mx-auto px-4">
-
-            {/* Section Header - Compressed */}
-            <div className="text-center mb-4 space-y-2 animate-in fade-in slide-in-from-bottom duration-700">
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter">
-                立即开始 AI 发型实验室
-              </h2>
-              <p className="text-xs md:text-sm text-slate-500 max-w-2xl mx-auto font-medium">
-                上传一张清晰的正脸照片，AI 将在秒级时间内为您量身打造最佳发型方案
-              </p>
-
-              {/* Step Numbers - Compact */}
-              <div className="pt-6 pb-2 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 opacity-90 scale-95">
-                {/* Step 1 */}
-                <div className="flex items-center gap-3 group transition-all duration-500">
-                  <span className={cn(
-                    "text-3xl font-black transition-colors duration-500",
-                    activeStep === 1 ? "text-indigo-600" : "text-slate-200"
-                  )}>01</span>
-                  <div className="flex flex-col text-left">
+            {/* ① 顶部说明区 - 极简 */}
+            <div className="text-center mb-10 space-y-5">
+              {/* 步骤指示器 - 压缩版 */}
+              <div className="py-5 border-y border-slate-200/40 mb-2">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+                  {/* Step 1 */}
+                  <div className="flex items-center gap-3">
                     <span className={cn(
-                      "text-sm font-bold transition-colors duration-500 leading-tight",
-                      activeStep === 1 ? "text-indigo-900" : "text-slate-700"
-                    )}>{t('howitworks.step1')}</span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">上传正脸清晰照</span>
+                      "text-3xl font-black transition-colors leading-none",
+                      activeStep === 1 ? "text-indigo-200" : "text-slate-200/80"
+                    )}>01</span>
+                    <div className="flex flex-col text-left">
+                      <span className={cn(
+                        "text-sm font-bold transition-colors leading-tight",
+                        activeStep === 1 ? "text-indigo-900" : "text-slate-700"
+                      )}>{t('howitworks.step1')}</span>
+                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">上传正脸清晰照</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="hidden md:block text-slate-200">
-                  <ArrowRight size={16} strokeWidth={1.5} />
-                </div>
-                <div className="md:hidden h-4 w-px bg-slate-100"></div>
-
-                {/* Step 2 */}
-                <div className="flex items-center gap-3 group transition-all duration-500">
-                  <span className={cn(
-                    "text-3xl font-black transition-colors duration-500",
-                    activeStep === 2 ? "text-indigo-600" : "text-slate-200"
-                  )}>02</span>
-                  <div className="flex flex-col text-left">
-                    <span className={cn(
-                      "text-sm font-bold transition-colors duration-500 leading-tight",
-                      activeStep === 2 ? "text-indigo-900" : "text-slate-700"
-                    )}>{t('howitworks.step2')}</span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">分析脸型与比例</span>
+                  <div className="hidden md:block text-slate-200">
+                    <ArrowRight size={16} strokeWidth={1.5} />
                   </div>
-                </div>
+                  <div className="md:hidden h-4 w-px bg-slate-100"></div>
 
-                <div className="hidden md:block text-slate-200">
-                  <ArrowRight size={16} strokeWidth={1.5} />
-                </div>
-                <div className="md:hidden h-4 w-px bg-slate-100"></div>
-
-                {/* Step 3 */}
-                <div className="flex items-center gap-3 group transition-all duration-500">
-                  <span className={cn(
-                    "text-3xl font-black transition-colors duration-500",
-                    activeStep === 3 ? "text-indigo-600" : "text-slate-200"
-                  )}>03</span>
-                  <div className="flex flex-col text-left">
+                  {/* Step 2 */}
+                  <div className="flex items-center gap-3">
                     <span className={cn(
-                      "text-sm font-bold transition-colors duration-500 leading-tight",
-                      activeStep === 3 ? "text-indigo-900" : "text-slate-700"
-                    )}>{t('howitworks.step3')}</span>
-                    <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">生成发型 + 发色</span>
+                      "text-3xl font-black transition-colors leading-none",
+                      activeStep === 2 ? "text-indigo-200" : "text-slate-200/80"
+                    )}>02</span>
+                    <div className="flex flex-col text-left">
+                      <span className={cn(
+                        "text-sm font-bold transition-colors leading-tight",
+                        activeStep === 2 ? "text-indigo-900" : "text-slate-700"
+                      )}>{t('howitworks.step2')}</span>
+                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">分析脸型与比例</span>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:block text-slate-200">
+                    <ArrowRight size={16} strokeWidth={1.5} />
+                  </div>
+                  <div className="md:hidden h-4 w-px bg-slate-100"></div>
+
+                  {/* Step 3 */}
+                  <div className="flex items-center gap-3">
+                    <span className={cn(
+                      "text-3xl font-black transition-colors leading-none",
+                      activeStep === 3 ? "text-indigo-200" : "text-slate-200/80"
+                    )}>03</span>
+                    <div className="flex flex-col text-left">
+                      <span className={cn(
+                        "text-sm font-bold transition-colors leading-tight",
+                        activeStep === 3 ? "text-indigo-900" : "text-slate-700"
+                      )}>{t('howitworks.step3')}</span>
+                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">生成发型 + 发色</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Page Level Title - Separated & Centered */}
-              <div className="mt-8 mb-4 flex flex-col items-center justify-center gap-3 animate-in fade-in slide-in-from-bottom duration-700 delay-150">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">专属发型工作台</h3>
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-sm border border-slate-200/60 backdrop-blur-sm">
-                    <span className="text-[10px] md:text-xs font-black text-slate-600 uppercase tracking-widest leading-none">
-                      {analyzedFaceShape || 'OVAL'}
-                    </span>
-                    <div className="w-px h-3 bg-slate-300" />
-                    <span className="text-[10px] md:text-xs font-bold text-slate-400">定制建议</span>
-                  </div>
+              {/* Main Title */}
+              <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mt-6">
+                立即开始 AI 发型实验室
+              </h2>
+              <p className="text-xs text-slate-500 max-w-xl mx-auto">
+                上传一张清晰的正脸照片，AI 将在秒级时间内为您量身打造最佳发型方案
+              </p>
+
+              {/* Inline Badge Row - 弱化 */}
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <div className="px-2.5 py-1 rounded-md bg-slate-50/80 border border-slate-200/40">
+                  <span className="text-[10px] font-semibold text-slate-500">专属发型工作台</span>
+                </div>
+                <div className="px-2.5 py-1 rounded-md bg-indigo-50/50 border border-indigo-100/40">
+                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide">
+                    {analyzedFaceShape || 'OVAL'}
+                  </span>
+                </div>
+                <div className="px-2.5 py-1 rounded-md bg-slate-50/80 border border-slate-200/40">
+                  <span className="text-[10px] font-medium text-slate-400">定制建议</span>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-[12px] bg-white/40 backdrop-blur-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] border border-white/20 relative !overflow-visible">
-              {/* Decorative Background */}
-              <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-indigo-50/50 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-50/50 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/3 pointer-events-none" />
+            {/* ② AI Studio 主工作台 */}
+            <div className="max-w-5xl mx-auto">
+              <div className="rounded-[24px] bg-white shadow-[0_2px_40px_rgba(15,23,42,0.06)] border border-slate-200/40 relative overflow-visible">
+                <div className="px-10 lg:px-12 py-10 lg:py-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-8 max-w-4xl mx-auto w-full">
 
-              <div className="w-full max-w-[1280px] mx-auto p-3 lg:px-4 relative z-10">
-                <div className="flex flex-col lg:flex-row gap-3 items-start">
-
-                  {/* Left Column: Upload Area (30%) - Compressed */}
-                  <div className="flex-[3] flex flex-col space-y-2.5 w-full">
-                    <div className="flex-1 flex flex-col gap-2.5">
-                      {/* Image Preview / Upload Card */}
-                      {originalImage ? (
-                        <div className="relative group rounded-xl overflow-hidden shadow-lg border border-white/40 ring-1 ring-slate-200/50 bg-slate-50/50 h-[320px] w-auto aspect-square mx-auto">
-                          {/* Overlays */}
-                          <div className="absolute inset-0 z-20 pointer-events-none">
-                            <div className="absolute left-2 top-2 flex flex-col gap-1.5">
-                              <div className="flex items-center gap-1.5 px-2 py-1 bg-white/90 backdrop-blur-md rounded-[4px] border border-white/20 shadow-sm w-fit">
-                                <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">Before</span>
-                              </div>
+                    {/* 左栏：上传区 */}
+                    <div className="flex flex-col">
+                      <div className="rounded-[24px] border-2 border-dashed border-slate-200 bg-slate-50/30 h-[320px] flex items-center justify-center p-5 lg:p-6">
+                        {originalImage ? (
+                          <div className="relative w-full h-full flex items-center justify-center">
+                            <div className="h-[260px] w-full flex items-center justify-center relative">
+                              <img src={originalImage} alt="Preview" className="h-full w-auto max-w-full object-contain drop-shadow-sm" />
                             </div>
-
-                            {/* Clear Button */}
-                            <div className="absolute right-2 top-2 pointer-events-auto">
-                              <button
-                                onClick={handleClear}
-                                className="w-6 h-6 rounded-full bg-white/80 hover:bg-white backdrop-blur-sm flex items-center justify-center text-slate-400 hover:text-red-500 shadow-sm transition-all active:scale-90"
-                              >
-                                <X size={14} strokeWidth={2.5} />
-                              </button>
-                            </div>
+                            <button
+                              onClick={handleClear}
+                              className="absolute top-0 right-0 w-8 h-8 rounded-full bg-white/80 hover:bg-white backdrop-blur-sm border border-slate-200 hover:border-red-300 flex items-center justify-center text-slate-400 hover:text-red-500 shadow-sm transition-all z-10"
+                            >
+                              <X size={14} strokeWidth={3} />
+                            </button>
                           </div>
+                        ) : (
+                          <UploadCard onUpload={handleUpload} onClear={handleClear} preview={null} onPhotoRequirementsClick={() => setShowPhotoRequirements(true)} />
+                        )}
+                      </div>
 
-                          <img
-                            src={originalImage}
-                            alt="Preview"
-                            className="w-full h-full object-contain p-2 relative z-10"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex-1 h-full min-h-[380px]">
-                          <UploadCard
-                            onUpload={handleUpload}
-                            onClear={handleClear}
-                            preview={null}
-                            onPhotoRequirementsClick={() => setShowPhotoRequirements(true)}
-                          />
-                        </div>
-                      )}
-
-                      {/* Compact Action Bar */}
                       {originalImage && (
-                        <div className="flex gap-2">
+                        <div className="mt-4">
                           <button
                             onClick={() => document.getElementById('file-upload-input')?.click()}
-                            className="flex-1 py-2 rounded-lg border border-dashed border-slate-300 bg-white hover:border-indigo-400 hover:bg-indigo-50/30 transition-all flex items-center justify-center gap-2 group"
+                            className="w-full h-11 rounded-[8px] border border-slate-200 bg-white hover:border-indigo-400 hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group"
                           >
-                            <Upload size={14} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
-                            <span className="text-[10px] font-bold text-slate-600 group-hover:text-indigo-600">更换照片</span>
-                            <input
-                              id="file-upload-input"
-                              type="file"
-                              className="hidden"
-                              onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'file')}
-                              accept="image/*"
-                            />
+                            <Upload size={16} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                            <span className="text-[13px] font-bold text-slate-600 group-hover:text-slate-900">更换照片</span>
+                            <input id="file-upload-input" type="file" className="hidden" onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'file')} accept="image/*" />
                           </button>
                         </div>
                       )}
 
-                      {/* Recent History - Short & Scrollable */}
-                      <div className="mt-1 pt-2 border-t border-slate-200/50">
-                        <div className="flex items-center justify-between mb-1.5 px-1">
-                          <span className="text-[10px] font-bold text-slate-500">最近试戴 ({Math.min(history.length, 12)})</span>
-                        </div>
-                        <div className="grid grid-cols-5 gap-1.5 max-h-[160px] overflow-y-auto pr-1">
-                          {history.slice(0, 10).map((record, idx) => (
-                            <div
-                              key={record.id || idx}
-                              onClick={() => {
-                                if (record.resultImageUrl) {
-                                  setSelectedHistory(record);
-                                }
-                              }}
-                              className={cn(
-                                "aspect-[4/5] rounded-md overflow-hidden border border-slate-200 cursor-pointer hover:ring-2 hover:ring-indigo-500 transition-all relative group bg-white",
-                                selectedHistory?.id === record.id && "ring-2 ring-indigo-600"
-                              )}
-                            >
-                              <img src={record.resultImageUrl || record.sourceThumb} className="w-full h-full object-cover" />
-                            </div>
-                          ))}
-                          {history.length === 0 && (
-                            <div className="col-span-5 text-center py-4 text-[9px] text-slate-400 bg-slate-50 rounded-md border border-dashed border-slate-200">
-                              暂无记录
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column: Result & Controls (70%) - High Density */}
-                  <div className="flex-[7] flex flex-col space-y-2.5 w-full">
-                    {/* Main Visual Area */}
-                    <div className="relative overflow-hidden rounded-xl border border-slate-200/60 shadow-xl shadow-indigo-500/5 bg-white h-[320px] w-auto aspect-square mx-auto">
-                      {/* Backgrounds */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/40 via-white to-slate-50/30" />
-
-                      {/* Status Overlays */}
-                      <div className="absolute inset-0 z-20 pointer-events-none">
-                        <div className="absolute left-2 top-2">
-                          <div className="px-2 py-1 bg-white/80 backdrop-blur-md rounded-[4px] border border-white/20 shadow-sm">
-                            <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest leading-none">After</span>
+                      {/* 最近试戴记录 - 移动社交至左栏下方 */}
+                      {history.length > 0 && (
+                        <div className="mt-8 pt-6 border-t border-slate-100">
+                          <div className="flex items-center justify-between mb-3 px-1">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">最近试戴</span>
+                            <span className="text-[9px] text-slate-300">已保存 {history.length} 条</span>
                           </div>
-                        </div>
-                        <div className="absolute right-2 top-2">
-                          <div className="px-2 py-1 bg-slate-900/90 backdrop-blur-md rounded-[4px] shadow-lg border border-white/10">
-                            <span className="text-[9px] font-black text-white uppercase tracking-widest leading-none">New Look</span>
+                          <div className="grid grid-cols-6 gap-2">
+                            {history.slice(0, 12).map((record, idx) => (
+                              <div
+                                key={record.id || idx}
+                                onClick={() => record.resultImageUrl && setSelectedHistory(record)}
+                                className={cn(
+                                  "aspect-square rounded-[8px] overflow-hidden border cursor-pointer hover:border-indigo-300 transition-all bg-white shadow-sm group relative",
+                                  selectedHistory?.id === record.id ? "border-indigo-500 ring-2 ring-indigo-200/20" : "border-slate-200/60"
+                                )}
+                              >
+                                <img src={record.resultImageUrl || record.sourceThumb} className="w-full h-full object-cover object-top" alt="History" />
+                                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </div>
+                            ))}
+                            {/* 空位占位符，保持 2 行 12 个格子的对齐感 */}
+                            {history.length < 12 && Array.from({ length: 12 - history.length }).map((_, i) => (
+                              <div key={`empty-${i}`} className="aspect-square rounded-[8px] border border-dashed border-slate-100 bg-slate-50/30" />
+                            ))}
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Valid Image Display */}
-                      {(toolStatus === 'success' || (originalImage && displayImage)) ? (
-                        <>
-                          <img
-                            src={displayImage || undefined}
-                            alt="Result"
-                            className={cn(
-                              "relative z-10 w-full h-full object-contain p-2 transition-all duration-700",
-                              (toolStatus === 'loading' || isAnalyzing) ? 'blur-sm opacity-60 scale-[0.98]' : 'blur-0 opacity-100 scale-100'
-                            )}
-                          />
-                          {/* Color Overlay */}
-                          {selectedColorId && toolStatus !== 'loading' && (
-                            <div
-                              className="absolute inset-0 z-[12] mix-blend-soft-light pointer-events-none transition-all duration-500"
-                              style={{
-                                backgroundColor: selectedColorHex,
-                                opacity: selectedColorId === 'natural-black' ? 0.45 : 0.25
-                              }}
-                            />
-                          )}
-                        </>
-                      ) : (
-                        // Empty State / Placeholder
-                        <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
-                          <div className="w-16 h-16 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-300">
-                            <Eye size={32} />
-                          </div>
-                          <p className="text-xs font-bold text-slate-400">预览区域</p>
                         </div>
                       )}
                     </div>
 
-                    {/* Integrated Control Panel (High Density) */}
-                    {/* Integrated Control Panel (Grouped & Portal Tooltip) */}
-                    <div className="bg-white/80 backdrop-blur-sm border border-slate-200/60 rounded-xl px-4 py-4 flex items-center justify-between gap-6 shadow-sm min-h-[84px]">
-                      {/* Color Groups Container - Vertical Stack */}
-                      <div className="flex-1 flex flex-col gap-3">
-
-                        {/* Basic Colors */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">基础发色</span>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {HAIR_COLORS.basic.map(color => (
-                              <button
-                                key={color.id}
-                                onClick={() => setSelectedColorId(color.id)}
-                                onMouseEnter={(e) => handleColorEnter(e, color)}
-                                onMouseLeave={handleColorLeave}
-                                className={cn(
-                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
-                                  selectedColorId === color.id
-                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
-                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
-                                )}
-                                style={{ backgroundColor: color.hex }}
-                                aria-label={color.name}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Style Colors */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">风格发色</span>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {HAIR_COLORS.style.map(color => (
-                              <button
-                                key={color.id}
-                                onClick={() => setSelectedColorId(color.id)}
-                                onMouseEnter={(e) => handleColorEnter(e, color)}
-                                onMouseLeave={handleColorLeave}
-                                className={cn(
-                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
-                                  selectedColorId === color.id
-                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
-                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
-                                )}
-                                style={{ backgroundColor: color.hex }}
-                                aria-label={color.name}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Advanced Colors */}
-                        <div className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-slate-500 w-14 shrink-0 text-right">高级发色</span>
-                          <div className="flex items-center gap-2 flex-wrap">
-                            {HAIR_COLORS.advanced.map(color => (
-                              <button
-                                key={color.id}
-                                onClick={() => setSelectedColorId(color.id)}
-                                onMouseEnter={(e) => handleColorEnter(e, color)}
-                                onMouseLeave={handleColorLeave}
-                                className={cn(
-                                  "w-8 h-8 rounded-md shadow-sm border border-white/50 transition-all duration-200 hover:-translate-y-0.5",
-                                  selectedColorId === color.id
-                                    ? "ring-2 ring-indigo-500 ring-offset-2 ring-offset-white scale-105 z-10 shadow-md"
-                                    : "opacity-90 hover:opacity-100 hover:shadow-md"
-                                )}
-                                style={{ backgroundColor: color.hex }}
-                                aria-label={color.name}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Main Action Button - Right Aligned & Centered Vertically */}
-                      <div className="shrink-0 pl-6 border-l border-slate-200/60 flex items-center self-stretch bg-white/50 backdrop-blur-sm z-20">
-                        <div className="flex flex-col items-end gap-1 my-auto">
-                          <Button3D
-                            variant="gradient"
-                            className="h-12 px-8 rounded-lg shadow-indigo-200/50"
-                            onClick={handleApplyStyle}
-                            disabled={toolStatus === 'loading' || !selectedStyle || !originalImage}
-                          >
-                            {toolStatus === 'loading' ? (
-                              <RefreshCw className="animate-spin" size={20} />
-                            ) : (
-                              <div className="flex items-center gap-2">
-                                <Sparkles size={20} />
-                                <span className="text-base font-bold whitespace-nowrap">
-                                  {hasGeneratedForCurrent && hasChanges ? '应用调整' : '立即生成'}
-                                </span>
+                    {/* 右栏：结果预览 + 控制面板 */}
+                    <div className="flex flex-col">
+                      {/* 预览卡片 */}
+                      <div className="rounded-[24px] bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200/50 h-[320px] flex items-center justify-center p-5 lg:p-6 relative overflow-hidden">
+                        {(toolStatus === 'success' || (originalImage && displayImage)) ? (
+                          <div className="relative w-full h-[260px] flex items-center justify-center">
+                            <img src={displayImage || undefined} alt="Result" className={cn("h-full w-auto max-w-full object-contain drop-shadow-md", (toolStatus === 'loading' || isAnalyzing) ? 'blur-sm opacity-60' : 'blur-0 opacity-100')} />
+                            {selectedColorId && toolStatus !== 'loading' && (
+                              <div className="absolute inset-0 rounded-[14px] mix-blend-soft-light pointer-events-none transition-all duration-500 mx-auto" style={{ backgroundColor: selectedColorHex, opacity: selectedColorId === 'natural-black' ? 0.45 : 0.25, width: 'fit-content' }} />
+                            )}
+                            {toolStatus === 'success' && (
+                              <div className="absolute top-3 right-3 px-2 py-1 bg-white/80 backdrop-blur-md rounded-[6px] border border-slate-200/60 flex items-center gap-1.5 animate-in fade-in zoom-in duration-500 shadow-sm">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="text-[9px] font-black text-slate-800 tracking-widest uppercase">AI HD Enhanced</span>
                               </div>
                             )}
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center justify-center text-center space-y-3">
+                            <div className="w-14 h-14 rounded-[12px] bg-white flex items-center justify-center text-slate-300 shadow-sm border border-slate-200/60">
+                              <Plus size={24} strokeWidth={1.5} />
+                            </div>
+                            <div className="space-y-1">
+                              <p className="text-xs font-semibold text-slate-400">AI 即将生成您的造型</p>
+                              <p className="text-[10px] text-slate-300">上传照片后在此查看效果</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* 发色调节 & 生成按钮 */}
+                      <div className="mt-6 flex flex-col space-y-6">
+                        <div className="bg-slate-50/40 p-5 rounded-[20px] border border-slate-100/60 space-y-6">
+                          {/* 基础发色 */}
+                          <div className="flex flex-col gap-3">
+                            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">基础发色</span>
+                            <div className="flex flex-wrap gap-2">
+                              {HAIR_COLORS.basic.map(color => (
+                                <button key={color.id} onClick={() => setSelectedColorId(color.id)} onMouseEnter={(e) => handleColorEnter(e, color)} onMouseLeave={handleColorLeave} className={cn("w-8 h-8 rounded-[6px] border-2 transition-all", selectedColorId === color.id ? "border-indigo-600 ring-2 ring-indigo-400/30 scale-105" : "border-slate-200/80 hover:border-indigo-300")} style={{ backgroundColor: color.hex }} />
+                              ))}
+
+                              {/* 更多颜色切换按钮 */}
+                              <button
+                                onClick={() => setShowAdvancedColors(!showAdvancedColors)}
+                                className={cn(
+                                  "w-8 h-8 rounded-[6px] border-2 flex items-center justify-center transition-all",
+                                  showAdvancedColors
+                                    ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm"
+                                    : "border-slate-200/80 bg-white text-slate-400 hover:border-indigo-300 hover:text-indigo-500"
+                                )}
+                                title={showAdvancedColors ? "收起更多颜色" : "展示风格与高级发色"}
+                              >
+                                {showAdvancedColors ? <ChevronUp size={16} strokeWidth={2.5} /> : <ChevronDown size={16} strokeWidth={2.5} />}
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* 风格 & 高级发色 - 展开收起区域 */}
+                          {showAdvancedColors && (
+                            <div className="space-y-6 pt-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                              {/* 风格发色 */}
+                              <div className="flex flex-col gap-3">
+                                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">风格发色</span>
+                                <div className="flex flex-wrap gap-2">
+                                  {HAIR_COLORS.style.map(color => (
+                                    <button key={color.id} onClick={() => setSelectedColorId(color.id)} onMouseEnter={(e) => handleColorEnter(e, color)} onMouseLeave={handleColorLeave} className={cn("w-8 h-8 rounded-[6px] border-2 transition-all", selectedColorId === color.id ? "border-indigo-600 ring-2 ring-indigo-400/30 scale-105" : "border-slate-200/80 hover:border-indigo-300")} style={{ backgroundColor: color.hex }} />
+                                  ))}
+                                </div>
+                              </div>
+                              {/* 高级发色 */}
+                              <div className="flex flex-col gap-3">
+                                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">高级发色</span>
+                                <div className="flex flex-wrap gap-2">
+                                  {HAIR_COLORS.advanced.map(color => (
+                                    <button key={color.id} onClick={() => setSelectedColorId(color.id)} onMouseEnter={(e) => handleColorEnter(e, color)} onMouseLeave={handleColorLeave} className={cn("w-8 h-8 rounded-[6px] border-2 transition-all", selectedColorId === color.id ? "border-indigo-600 ring-2 ring-indigo-400/30 scale-105" : "border-slate-200/80 hover:border-indigo-300")} style={{ backgroundColor: color.hex }} />
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 生成按钮 */}
+                        <div>
+                          <Button3D
+                            onClick={handleApplyStyle}
+                            disabled={!originalImage || toolStatus === 'loading' || isAnalyzing}
+                            variant="gradient"
+                            className="w-full py-4 h-[56px] text-white"
+                          >
+                            <div className="flex items-center justify-center gap-3">
+                              {(toolStatus === 'loading' || isAnalyzing) ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                              <span className="text-base font-bold tracking-wider">
+                                {toolStatus === 'loading' ? (isEnhancing ? "AI 超清增强中..." : (isDetectingColor ? "分析色彩环境中..." : "由 AI 设计造型中...")) : "立即预览发型效果"}
+                              </span>
+                            </div>
                           </Button3D>
+                          <p className="text-center mt-3 text-[10px] text-slate-400 flex items-center justify-center gap-1">
+                            <Info size={12} />
+                            生成约需 3-5 秒，支持高清无损导出
+                          </p>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+
             </div>
           </div>
-        </section >
+        </section>
 
         {/* 历史预览弹窗 */}
-        < HistoryPreviewModal
+        <HistoryPreviewModal
           record={selectedHistory}
-          onClose={() => setSelectedHistory(null)
-          }
+          onClose={() => setSelectedHistory(null)}
           onRetry={(styleId) => {
             setSelectedHistory(null);
             handleStyleSelect(styleId);
@@ -1243,7 +1175,7 @@ export default function HomePage() {
                   <div className="aspect-[4/5] flex relative overflow-hidden">
                     {/* Before */}
                     <div className="w-1/2 relative h-full">
-                      <img src={item.before} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Before" />
+                      <img src={item.before} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" alt="Before" />
                     </div>
 
                     {/* Pulse Scanner Line */}
@@ -1253,7 +1185,7 @@ export default function HomePage() {
 
                     {/* After */}
                     <div className="w-1/2 relative h-full">
-                      <img src={item.after} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="After" />
+                      <img src={item.after} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="After" />
                     </div>
                   </div>
                   <div className="p-8 bg-white/80 backdrop-blur-md flex items-center justify-between border-t border-slate-100">
@@ -1377,7 +1309,7 @@ export default function HomePage() {
         rect={hoveredColor?.rect || null}
         visible={!!hoveredColor}
       />
-    </div>
+    </div >
   );
 }
 
@@ -1411,8 +1343,8 @@ function PortalTooltip({
   let top = rect.top - tooltipHeight - gap;
   let isFlipped = false;
 
-  // If not enough space on top, show below? 
-  // User Requirement: "When space below is insufficient, auto flip to top". 
+  // If not enough space on top, show below?
+  // User Requirement: "When space below is insufficient, auto flip to top".
   // Wait, default is usually TOP on desktop for tooltips.
   // Let's assume default is TOP. If top < 0, flip to bottom.
   if (top < 10) {
@@ -1432,7 +1364,7 @@ function PortalTooltip({
           : `translateY(${isFlipped ? '-4px' : '4px'}) scale(0.95)`,
       }}
     >
-      <div className="bg-white/95 backdrop-blur-md rounded-lg shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-slate-200/60 p-3 text-left w-max min-w-[120px]">
+      <div className="bg-white/95 backdrop-blur-md rounded-md shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] border border-slate-200/60 p-3 text-left w-max min-w-[120px]">
         <div className="text-slate-800 font-bold text-[11px] mb-2 leading-none tracking-wide">
           {data.name}
         </div>

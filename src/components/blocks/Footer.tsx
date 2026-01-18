@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import { GlassCard } from '../ui/GlassCard';
 
 export const Footer = () => {
@@ -86,10 +86,10 @@ export const Footer = () => {
             <ul className="space-y-2">
               {FRIEND_LINKS.map((link) => (
                 <li key={link.url}>
-                  <SafeLink 
-                    href={link.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <SafeLink
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm text-slate-600 hover:text-blue-600 transition-colors"
                   >
                     {link.name}

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import { cn } from '@/lib/utils';
 import { Sparkles, ArrowRight, Upload, Palette, Scissors } from 'lucide-react';
 
@@ -18,7 +18,7 @@ export const HeroDemo = () => {
   const ts = useTranslations('hairstyle.styles');
   const tc = useTranslations('hairstyle.categories');
   const [view, setView] = useState<'before' | 'after'>('after');
-  
+
   const portrait = "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&h=1000&fit=crop";
 
   const miniStyles = [
@@ -40,19 +40,19 @@ export const HeroDemo = () => {
             <span className="text-[11px] font-bold text-slate-800 bg-slate-100/80 px-2.5 py-1 rounded-md border border-slate-200/50">{t_tool('color_btn')}</span>
           </div>
           <div className="flex gap-1 p-0.5 bg-slate-200/40 rounded-lg border border-white/20">
-            <button 
+            <button
               onClick={() => setView('before')}
               className={cn(
-                "px-3 py-1 text-[10px] font-bold rounded-md transition-all", 
+                "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
                 view === 'before' ? "bg-white text-blue-600 shadow-sm" : "text-slate-500"
               )}
             >
               {t('before')}
             </button>
-            <button 
+            <button
               onClick={() => setView('after')}
               className={cn(
-                "px-3 py-1 text-[10px] font-bold rounded-md transition-all", 
+                "px-3 py-1 text-[10px] font-bold rounded-md transition-all",
                 view === 'after' ? "bg-blue-500 text-white shadow-sm" : "text-slate-500"
               )}
             >
@@ -63,20 +63,20 @@ export const HeroDemo = () => {
 
         {/* 主图片区域 */}
         <div className="flex-1 relative overflow-hidden">
-          <img 
-            src={portrait} 
+          <img
+            src={portrait}
             className={cn(
               "absolute inset-0 w-full h-full object-cover transition-all duration-700",
               view === 'before' ? "brightness-110 saturate-100" : "brightness-105 saturate-110"
             )}
-            alt="Hero Portrait" 
+            alt="Hero Portrait"
           />
-          
+
           {/* 底部缩略图条 */}
           <div className="absolute inset-x-3 bottom-3 flex gap-2 overflow-hidden bg-white/20 backdrop-blur-md p-1.5 rounded-xl border border-white/30">
             {miniStyles.map((src, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className={cn(
                   "w-12 h-14 rounded-lg border-2 overflow-hidden flex-shrink-0 transition-all",
                   idx === 2 ? "border-white shadow-lg scale-105" : "border-white/30 opacity-80"
@@ -99,7 +99,7 @@ export const PreviewDemo = () => {
   const t = useTranslations('hairstyle.preview');
   const ts = useTranslations('hairstyle.styles');
   const t_ex = useTranslations('hairstyle.landing.preview_examples');
-  
+
   const EXAMPLES = [
     { name: ts('buzz_cut'), image: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop' },
     { name: ts('long_waves'), image: 'https://images.unsplash.com/photo-1519085185750-7407a27503ca?w=400&h=500&fit=crop' },
@@ -119,10 +119,10 @@ export const PreviewDemo = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
         {EXAMPLES.map((item, idx) => (
           <GlassCard key={idx} className="group relative aspect-[4/5] overflow-hidden hover:shadow-2xl transition-all duration-500 border-white/20">
-            <img 
-              src={item.image} 
-              alt={item.name} 
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
               <p className="text-white text-[10px] font-bold uppercase tracking-widest">{item.name}</p>

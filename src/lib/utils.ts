@@ -4,3 +4,15 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export function composeRefs<T>(...refs: (React.Ref<T> | undefined)[]) {
+  return (node: T) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(node);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T>).current = node;
+      }
+    });
+  };
+}

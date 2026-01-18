@@ -83,111 +83,103 @@ export const UploadCard = ({
     <>
       <div
         className={cn(
-          "h-full w-full flex flex-col items-center justify-center p-4 min-h-0 relative rounded-lg transition-all duration-300",
-          !preview && isDragging ? "bg-indigo-50/30" : "bg-white"
+          "h-full w-full flex flex-col items-center justify-center p-4 min-h-0 relative rounded-lg transition-all duration-300 cursor-pointer",
+          !preview && isDragging ? "bg-indigo-50/30" : "bg-transparent"
         )}
+        onClick={() => !preview && fileInputRef.current?.click()}
+        onDragOver={!preview ? onDragOver : undefined}
+        onDragLeave={!preview ? onDragLeave : undefined}
+        onDrop={!preview ? onDrop : undefined}
       >
-        <div
-          className={cn(
-            "w-full h-full cursor-pointer relative",
-            !preview && "border-2 border-dashed rounded-lg transition-colors flex items-center justify-center",
-            !preview && isDragging ? "border-indigo-500 bg-indigo-50/20" : "border-slate-300 hover:border-indigo-400/60"
-          )}
-          onClick={() => !preview && fileInputRef.current?.click()}
-          onDragOver={!preview ? onDragOver : undefined}
-          onDragLeave={!preview ? onDragLeave : undefined}
-          onDrop={!preview ? onDrop : undefined}
-        >
-          {preview ? (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-lg" onClick={(e) => e.stopPropagation()}>
-              <img
-                src={preview}
-                alt="Upload Preview"
-                className="w-full h-full rounded-lg object-contain"
-              />
-              <button
-                onClick={onClear}
-                className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur-sm rounded-full text-slate-600 hover:text-red-500 shadow-md transition-all z-10 hover:scale-110"
-              >
-                <X size={20} />
-              </button>
-            </div>
-          ) : (
-            <div
-              data-slot="upload-dropzone"
-              className={cn(
-                "w-full h-full flex flex-col items-center justify-center gap-10 transition-all duration-300 p-6 min-h-[420px]",
-              )}
+        {preview ? (
+          <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-lg" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={preview}
+              alt="Upload Preview"
+              className="w-full h-full rounded-lg object-contain"
+            />
+            <button
+              onClick={onClear}
+              className="absolute top-2 right-2 p-2 bg-white/90 backdrop-blur-sm rounded-full text-slate-600 hover:text-red-500 shadow-md transition-all z-10 hover:scale-110"
             >
-              <input
-                type="file"
-                className="hidden"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-              <input
-                type="file"
-                className="hidden"
-                ref={cameraInputRef}
-                accept="image/*"
-                capture
-                onChange={handleFileChange}
-              />
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <div
+            data-slot="upload-dropzone"
+            className={cn(
+              "w-full h-full flex flex-col items-center justify-center gap-3 transition-all duration-300 p-2",
+            )}
+          >
+            <input
+              type="file"
+              className="hidden"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+            <input
+              type="file"
+              className="hidden"
+              ref={cameraInputRef}
+              accept="image/*"
+              capture
+              onChange={handleFileChange}
+            />
 
-              {/* 中心上传 Icon */}
-              <div className={cn(
-                "p-6 rounded-full bg-indigo-50/50 text-indigo-400/90 transition-all duration-300",
-                "group-hover:bg-indigo-50/80 group-hover:text-indigo-500 group-hover:-translate-y-1",
-                isDragging && "bg-indigo-100 text-indigo-600 scale-110 -translate-y-2"
+            {/* 中心上传 Icon */}
+            <div className={cn(
+              "p-3 rounded-full bg-indigo-50/50 text-indigo-400/90 transition-all duration-300",
+              "group-hover:bg-indigo-50/80 group-hover:text-indigo-500 group-hover:-translate-y-1",
+              isDragging && "bg-indigo-100 text-indigo-600 scale-110 -translate-y-2"
+            )}>
+              <Upload size={24} className="stroke-[1.5]" />
+            </div>
+
+            <div className="text-center space-y-5 w-full max-w-[240px]">
+              <p className={cn(
+                "text-sm font-bold transition-colors duration-300 tracking-tight",
+                isDragging ? "text-indigo-600" : "text-slate-800"
               )}>
-                <Upload size={32} className="stroke-[1.5]" />
+                {t('upload')}
+              </p>
+
+              <div className="flex flex-row items-center justify-center gap-3 w-full px-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    fileInputRef.current?.click();
+                  }}
+                  className="flex-1 h-11 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-[8px] text-[13px] font-bold shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 px-4"
+                >
+                  <ImageIcon size={18} className="shrink-0" />
+                  <span className="truncate">{t('select_file')}</span>
+                </button>
+                <button
+                  onClick={handleCameraClick}
+                  className="flex-1 h-11 bg-white border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50/50 hover:text-indigo-600 text-slate-700 rounded-[8px] flex items-center justify-center gap-2 text-[13px] font-bold shadow-sm transition-all duration-200 ease-out active:scale-[0.98] active:border-indigo-600 active:text-indigo-700 px-4 group"
+                >
+                  <Camera size={18} className="text-slate-400 shrink-0 group-hover:text-indigo-500 transition-colors" />
+                  <span className="truncate">{t('camera')}</span>
+                </button>
               </div>
 
-              <div className="text-center space-y-8">
-                <p className={cn(
-                  "text-lg font-bold transition-colors duration-300 tracking-tight",
-                  isDragging ? "text-indigo-600" : "text-slate-800"
-                )}>
-                  {t('upload')}
-                </p>
-
-                <div className="flex flex-row items-center justify-center gap-4 w-full">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      fileInputRef.current?.click();
-                    }}
-                    className="flex-1 h-14 bg-indigo-600/80 hover:bg-indigo-700/90 text-white rounded-[12px] text-[14px] font-bold shadow-md backdrop-blur-md transition-all active:scale-95 flex items-center justify-center gap-2 border border-white/10 px-2"
-                  >
-                    <ImageIcon size={16} />
-                    <span className="truncate">{t('select_file')}</span>
-                  </button>
-                  <button
-                    onClick={handleCameraClick}
-                    className="flex-1 h-14 bg-white/70 border border-white/40 hover:bg-indigo-50 hover:border-indigo-200/60 hover:shadow-md text-slate-600 hover:text-indigo-600 rounded-[12px] flex items-center justify-center gap-2 text-[14px] font-bold shadow-sm backdrop-blur-md transition-all duration-200 ease-out active:scale-95 px-2"
-                  >
-                    <Camera size={16} className="text-indigo-500" />
-                    <span className="truncate">{t('camera')}</span>
-                  </button>
-                </div>
-
-                <div className="flex flex-col items-center gap-4 pt-4">
-                  <p className="text-[12px] text-slate-400/80 font-medium">{t('upload_tip')}</p>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPhotoRequirementsClick?.();
-                    }}
-                    className="text-[12px] font-bold text-indigo-500 hover:text-indigo-600 underline underline-offset-8 decoration-indigo-500/20 transition-all"
-                  >
-                    照片要求 / 拍照小贴士
-                  </button>
-                </div>
+              <div className="flex flex-col items-center gap-1 pt-1">
+                <p className="text-[10px] text-slate-400/80 font-medium scale-90 origin-center">{t('upload_tip')}</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onPhotoRequirementsClick?.();
+                  }}
+                  className="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 underline underline-offset-4 decoration-indigo-500/20 transition-all scale-90 origin-center"
+                >
+                  照片要求 / 拍照小贴士
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       <CameraModal

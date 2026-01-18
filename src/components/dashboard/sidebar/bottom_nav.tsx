@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Nav } from "@/types/blocks/base";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import Icon from "@/components/icon";
 
 export function BottomNav({

@@ -1,7 +1,7 @@
 "use client";
 
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { NavItem } from "@/types/blocks/base";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

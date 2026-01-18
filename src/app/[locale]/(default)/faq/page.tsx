@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { HelpCircle, ArrowLeft } from 'lucide-react';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import { Button3D } from '@/components/ui/Button3D';
 
 /**
@@ -12,7 +12,7 @@ import { Button3D } from '@/components/ui/Button3D';
  */
 export default function FAQPage() {
   const t = useTranslations('hairstyle.landing.faq');
-  
+
   const faqs = [
     { q: t('q1'), a: t('a1') },
     { q: t('q2'), a: t('a2') },
@@ -32,7 +32,7 @@ export default function FAQPage() {
             <ArrowLeft size={18} />
             <span className="font-bold text-sm">返回首页</span>
           </SafeLink>
-          
+
           <div className="flex flex-col items-center gap-4 text-center">
             <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-3xl flex items-center justify-center shadow-sm">
               <HelpCircle size={32} />

@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 import Image from "next/image";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { Section as SectionType } from "@/types/blocks/section";
 
 export default function Showcase({ section }: { section: SectionType }) {

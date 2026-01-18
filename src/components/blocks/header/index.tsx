@@ -26,7 +26,7 @@ import {
 
 import { Header as HeaderType } from "@/types/blocks/header";
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import LocaleToggle from "@/components/locale/toggle";
 import { Menu } from "lucide-react";
 import SignToggle from "@/components/sign/toggle";
@@ -122,30 +122,30 @@ export default function Header({ header }: { header: HeaderType }) {
                         );
                       }
 
-                    return (
-                      <NavigationMenuItem key={i}>
-                        <SafeLink
-                          className={cn(
-                            "text-muted-foreground",
-                            navigationMenuTriggerStyle,
-                            buttonVariants({
-                              variant: "ghost",
-                            })
-                          )}
-                          href={item.url as any}
-                          target={item.target}
-                        >
-                          {item.icon && (
-                            <Icon
-                              name={item.icon}
-                              className="size-4 shrink-0 mr-0"
-                            />
-                          )}
-                          {item.title}
-                        </SafeLink>
-                      </NavigationMenuItem>
-                    );
-                  })}
+                      return (
+                        <NavigationMenuItem key={i}>
+                          <SafeLink
+                            className={cn(
+                              "text-muted-foreground",
+                              navigationMenuTriggerStyle,
+                              buttonVariants({
+                                variant: "ghost",
+                              })
+                            )}
+                            href={item.url as any}
+                            target={item.target}
+                          >
+                            {item.icon && (
+                              <Icon
+                                name={item.icon}
+                                className="size-4 shrink-0 mr-0"
+                              />
+                            )}
+                            {item.title}
+                          </SafeLink>
+                        </NavigationMenuItem>
+                      );
+                    })}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>

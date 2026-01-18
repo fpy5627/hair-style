@@ -5,9 +5,9 @@ import { useTranslations } from 'next-intl';
 import { HairstyleHeader } from '@/components/blocks/hairstyle/HairstyleHeader';
 import { Footer } from '@/components/blocks/Footer';
 import { Button3D } from '@/components/ui/Button3D';
-import { 
-  QuickStartSteps, 
-  FAQSection, 
+import {
+  QuickStartSteps,
+  FAQSection,
   RelatedLinks,
   ExplainerModule,
   CanDoModule,
@@ -20,7 +20,7 @@ import {
   SeoTextBlock
 } from '@/components/blocks/hairstyle/LandingComponents';
 import { PreviewDemo, HeroDemo } from '@/components/blocks/hairstyle/PreviewDemo';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import { Sparkles, Check } from 'lucide-react';
 
 /**
@@ -39,7 +39,7 @@ export default function HairstyleHubPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f8fafc] via-[#f1f5f9] to-[#eef2ff]">
       <HairstyleHeader />
-      
+
       <main className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <section className="min-h-[calc(100vh-80px)] grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center px-6 pt-8 md:pt-12 pb-12">
@@ -52,12 +52,12 @@ export default function HairstyleHubPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
                 {t('hero.title')}
               </h1>
-              
+
               <p className="text-base md:text-lg text-slate-600 max-w-xl font-medium">
                 {t('hero.subtitle')}
               </p>
             </div>
-            
+
             <div className="space-y-10 w-full">
               <div className="flex flex-wrap gap-5 w-full">
                 <SafeLink href="/ai-hairstyle-changer">

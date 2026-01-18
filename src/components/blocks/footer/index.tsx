@@ -1,6 +1,6 @@
 import { Footer as FooterType } from "@/types/blocks/footer";
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 
 export default function Footer({ footer }: { footer: FooterType }) {
   if (footer.disabled) {

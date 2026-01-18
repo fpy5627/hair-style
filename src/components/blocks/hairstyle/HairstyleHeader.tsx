@@ -3,12 +3,12 @@
 import React from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from '@/i18n/navigation';
-import { SafeLink } from '@/components/common/safe-link';
+import SafeLink from '@/components/common/safe-link';
 import { LocaleSwitcher } from '@/components/ui/LocaleSwitcher';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -28,16 +28,16 @@ const navControlBase =
 const navControlTertiary = cn(
   navControlBase,
   "h-10 px-4 rounded-[10px] " +
-    "bg-white/70 border border-slate-200/80 " +
-    "text-slate-600 text-sm font-medium shadow-sm",
+  "bg-white/70 border border-slate-200/80 " +
+  "text-slate-600 text-sm font-medium shadow-sm",
   "hover:bg-white hover:border-indigo-200 hover:text-indigo-600 hover:-translate-y-0.5 active:translate-y-0"
 );
 
 const navControlSecondary = cn(
   navControlBase,
   "h-10 px-4 rounded-[10px] " +
-    "bg-indigo-50 border border-indigo-200/60 " +
-    "text-indigo-600 text-sm font-medium",
+  "bg-indigo-50 border border-indigo-200/60 " +
+  "text-indigo-600 text-sm font-medium",
   "hover:bg-indigo-100 hover:border-indigo-300/50 hover:text-indigo-700 hover:-translate-y-0.5 active:translate-y-0"
 );
 
@@ -104,8 +104,8 @@ export const HairstyleHeader = () => {
         {/* Logo - 规范化字体 */}
         <SafeLink href="/" className="flex items-center gap-2.5 group shrink-0 relative z-30">
           <div className="w-8 h-8 relative group-hover:scale-105 transition-all duration-300 overflow-hidden rounded-lg">
-            <Image 
-              src="/logo.png" 
+            <Image
+              src="/logo.png"
               alt={t('title')}
               fill
               className="object-contain"
@@ -122,9 +122,9 @@ export const HairstyleHeader = () => {
             {mainLinks
               ?.filter((link) => link.href && link.href.trim() !== "")
               .map((link) => (
-                <SafeLink 
-                  key={link.href} 
-                  href={link.href} 
+                <SafeLink
+                  key={link.href}
+                  href={link.href}
                   className={cn(
                     "relative text-sm font-medium px-4 h-10 flex items-center transition-colors duration-200 tracking-tight",
                     isActive(link.href)
@@ -158,7 +158,7 @@ export const HairstyleHeader = () => {
                   ?.filter((link) => link.href && link.href.trim() !== "")
                   .map((link) => (
                     <DropdownMenuItem key={link.href} asChild>
-                      <SafeLink 
+                      <SafeLink
                         href={link.href}
                         className={cn(
                           "flex items-center gap-2.5 w-full px-3 py-2 text-sm rounded-lg transition-colors cursor-pointer",
@@ -173,8 +173,8 @@ export const HairstyleHeader = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <SafeLink 
-              href={pricingLink.href} 
+            <SafeLink
+              href={pricingLink.href}
               className={cn(
                 "relative text-sm font-medium px-4 h-10 flex items-center transition-colors duration-200 tracking-tight",
                 isActive(pricingLink.href)
@@ -194,14 +194,14 @@ export const HairstyleHeader = () => {
         <div className="flex items-center gap-3 relative z-30 ml-4">
           <div className="hidden md:flex items-center gap-3">
             <LocaleSwitcher buttonClassName={navControlTertiary} />
-            
+
             <SafeLink href="/auth/signin" className={navControlSecondary}>
               {t("nav.signin_register")}
             </SafeLink>
 
             <SafeLink href="/ai-hairstyle-changer-free" className="relative">
               <Button variant="cta" className="h-10 px-5 rounded-[10px] text-sm font-semibold relative">
-                <span 
+                <span
                   className="pointer-events-none absolute inset-0 rounded-[10px]"
                   style={{
                     background: 'radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.2) 0%, rgba(255,255,255,0) 60%)'
@@ -214,8 +214,8 @@ export const HairstyleHeader = () => {
 
           <div className="flex items-center gap-2 md:hidden">
             <LocaleSwitcher buttonClassName={mobileNavControlTertiary} />
-            
-            <button 
+
+            <button
               className={cn(mobileNavControlTertiary, "p-0 w-11")}
               onClick={() => setIsOpen(!isOpen)}
             >
@@ -231,31 +231,31 @@ export const HairstyleHeader = () => {
           {[...mainLinks, pricingLink, ...exploreLinks]
             ?.filter((link) => link.href && link.href.trim() !== "")
             .map((link) => (
-              <SafeLink 
-                key={link.href} 
-                href={link.href} 
+              <SafeLink
+                key={link.href}
+                href={link.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
                   "flex items-center justify-between px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200",
-                  isActive(link.href) 
-                    ? "bg-indigo-50 text-indigo-600 border border-indigo-100/50" 
+                  isActive(link.href)
+                    ? "bg-indigo-50 text-indigo-600 border border-indigo-100/50"
                     : "text-slate-600 hover:bg-slate-50"
                 )}
               >
                 <div className="flex items-center gap-3">
-                  {('icon' in link) && link.icon}
+                  {'icon' in link && (link.icon as React.ReactNode)}
                   {link.label}
                 </div>
               </SafeLink>
             ))}
           <div className="pt-4 border-t border-slate-100 mt-2 space-y-3">
-            <SafeLink 
-              href="/ai-hairstyle-changer-free" 
+            <SafeLink
+              href="/ai-hairstyle-changer-free"
               className="relative"
               onClick={() => setIsOpen(false)}
             >
               <Button variant="cta" className="h-11 w-full rounded-[12px] text-sm font-semibold relative">
-                <span 
+                <span
                   className="pointer-events-none absolute inset-0 rounded-[12px]"
                   style={{
                     background: 'radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,.2) 0%, rgba(255,255,255,0) 60%)'

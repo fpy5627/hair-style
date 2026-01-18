@@ -4,7 +4,7 @@ import HappyUsers from "./happy-users";
 import HeroBg from "./bg";
 import { Hero as HeroType } from "@/types/blocks/hero";
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 
 export default function Hero({ hero }: { hero: HeroType }) {
   if (hero.disabled) {

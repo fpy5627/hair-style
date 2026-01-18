@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { User } from "@/types/user";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";

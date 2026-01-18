@@ -7,7 +7,7 @@ import { Table as TableSlotType } from "@/types/slots/table";
 import { getTranslations } from "next-intl/server";
 import moment from "moment";
 import { redirect } from "next/navigation";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { getStripeBilling } from "@/services/order";
 
 export default async function () {
@@ -34,8 +34,7 @@ export default async function () {
       name: "amount",
       title: t("my_orders.table.amount"),
       callback: (item: any) =>
-        `${item.currency.toUpperCase() === "CNY" ? "¥" : "$"} ${
-          item.amount / 100
+        `${item.currency.toUpperCase() === "CNY" ? "¥" : "$"} ${item.amount / 100
         }`,
     },
     {

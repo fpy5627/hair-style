@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { NavItem } from "@/types/blocks/base";
 
 export default function Crumb({ items }: { items: NavItem[] }) {
@@ -11,9 +11,8 @@ export default function Crumb({ items }: { items: NavItem[] }) {
           <div key={index} className="flex items-center">
             <SafeLink
               href={item.url || ""}
-              className={`hover:text-foreground transition-colors ${
-                isActive ? "text-primary font-medium hover:text-primary" : ""
-              }`}
+              className={`hover:text-foreground transition-colors ${isActive ? "text-primary font-medium hover:text-primary" : ""
+                }`}
             >
               {item.title}
             </SafeLink>

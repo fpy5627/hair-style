@@ -141,10 +141,10 @@ export const RecommendationResultPanel = ({
                                     key={color.id}
                                     onClick={() => onColorChange(color.id)}
                                     className={cn(
-                                        "w-8 h-8 rounded-full border-2 transition-all mx-auto",
+                                        "!w-8 !h-7 !rounded-[8px] border transition-all mx-auto",
                                         selectedColor === color.id
-                                            ? "border-indigo-500 scale-110 shadow-md ring-2 ring-indigo-100 ring-offset-1"
-                                            : "border-transparent hover:scale-105 hover:border-slate-200"
+                                            ? "!border-2 !border-indigo-600 ring-2 ring-indigo-400/30"
+                                            : "border-slate-200 hover:border-slate-300"
                                     )}
                                     style={{ backgroundColor: color.hex }}
                                     aria-label={color.name}

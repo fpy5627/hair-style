@@ -3,7 +3,7 @@
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { Social as SocialType } from "@/types/blocks/base";
 import ThemeToggle from "@/components/theme/toggle";
 import { Separator } from "@/components/ui/separator";

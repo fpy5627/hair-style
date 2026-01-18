@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Nav as NavType } from "@/types/blocks/base";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import Icon from "@/components/icon";
 import { usePathname } from "next/navigation";
 
@@ -25,11 +25,10 @@ export default function Nav({ nav }: { nav: NavType }) {
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className={`${
-                    item.is_active || pathname.endsWith(item.url as string)
+                  className={`${item.is_active || pathname.endsWith(item.url as string)
                       ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
                       : ""
-                  }`}
+                    }`}
                 >
                   <SafeLink
                     href={item.url as any}

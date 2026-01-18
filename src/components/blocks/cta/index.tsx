@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/icon";
-import { SafeLink } from "@/components/common/safe-link";
+import SafeLink from "@/components/common/safe-link";
 import { Section as SectionType } from "@/types/blocks/section";
 
 export default function CTA({ section }: { section: SectionType }) {
