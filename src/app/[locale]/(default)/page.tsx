@@ -39,6 +39,7 @@ import { SafeLink } from '@/components/common/safe-link';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { safeSetHistoryToLocalStorage, safeGetHistoryFromLocalStorage } from '@/lib/safeStorage';
 
 // Reuse existing components
 import {
@@ -543,28 +544,27 @@ export default function HomePage() {
     e.stopPropagation();
     const newHistory = history.filter(item => item.id !== id);
     setHistory(newHistory);
-    localStorage.setItem('hairnova_history', JSON.stringify(newHistory));
+    safeSetHistoryToLocalStorage(newHistory);
   };
 
   // Persistence
   useEffect(() => {
-    const saved = localStorage.getItem('hairnova_history');
-    if (saved) {
-      try {
-        setHistory(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse history', e);
-      }
-    }
+    const loaded = safeGetHistoryFromLocalStorage();
+    setHistory(loaded);
   }, []);
 
   useEffect(() => {
     // 只有在 history 状态被初始化后才同步到本地存储
     // 避免初次加载时 history 为空（还未从 localStorage 读取）导致覆盖本地数据
-    const saved = localStorage.getItem('hairnova_history');
-    if (saved || history.length > 0) {
-      localStorage.setItem('hairnova_history', JSON.stringify(history));
-    }
+    // 使用防抖避免频繁写入
+    const timer = setTimeout(() => {
+      const saved = localStorage.getItem('hairnova_history');
+      if (saved || history.length > 0) {
+        safeSetHistoryToLocalStorage(history);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [history]);
 
   // Analysis States
@@ -617,6 +617,107 @@ export default function HomePage() {
   };
 
   // Tool Logic - Handle file upload (supports both File objects and URLs)
+  // 人像检测（增强版）
+  const detectPortrait = (dataUrl: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          // 创建 canvas 进行基础分析
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) {
+            resolve(false); // 无法检测时不通过
+            return;
+          }
+
+          // 缩小图片以加快检测（提高分辨率到300px）
+          const scale = Math.min(300 / img.width, 300 / img.height);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // 检查图片宽高比（人像通常是竖向或接近方形）
+          const aspectRatio = img.width / img.height;
+
+          // 如果是超宽的横向照片（风景照常见特征），直接判定为非人像
+          if (aspectRatio > 1.8 || aspectRatio < 0.4) {
+            console.log('[Portrait Detection] Failed: Invalid aspect ratio', aspectRatio);
+            resolve(false);
+            return;
+          }
+
+          // 获取多个区域的像素数据进行综合判断（头部、脸部、肩膀）
+          const regions = [
+            { x: 0.4, y: 0.3, w: 0.2, h: 0.3, weight: 3 },  // 中心（脸部）
+            { x: 0.35, y: 0.2, w: 0.3, h: 0.2, weight: 2 }, // 上中（头部）
+            { x: 0.3, y: 0.5, w: 0.4, h: 0.2, weight: 1 },  // 中下（肩膀）
+          ];
+
+          let totalSkinScore = 0;
+          let totalWeight = 0;
+
+          for (const region of regions) {
+            const x = canvas.width * region.x;
+            const y = canvas.height * region.y;
+            const w = canvas.width * region.w;
+            const h = canvas.height * region.h;
+
+            const imageData = ctx.getImageData(x, y, w, h);
+            const pixels = imageData.data;
+            let skinToneCount = 0;
+            let totalPixels = pixels.length / 4;
+
+            // 改进的肤色检测算法（更严格）
+            for (let i = 0; i < pixels.length; i += 4) {
+              const r = pixels[i];
+              const g = pixels[i + 1];
+              const b = pixels[i + 2];
+
+              // 更严格的肤色检测条件
+              const isSkinTone = (
+                r > 60 && g > 40 && b > 20 &&
+                r < 255 && g < 230 && b < 200 &&
+                r > g && r > b &&
+                (r - g) > 10 && (r - g) < 80 &&
+                (r - b) > 15 && (r - b) < 120 &&
+                Math.abs(g - b) < 60
+              );
+
+              if (isSkinTone) {
+                skinToneCount++;
+              }
+            }
+
+            const skinRatio = skinToneCount / totalPixels;
+            totalSkinScore += skinRatio * region.weight;
+            totalWeight += region.weight;
+          }
+
+          const averageSkinScore = totalSkinScore / totalWeight;
+
+          // 更严格的判断标准：加权平均肤色占比需要 > 25%
+          const isPortrait = averageSkinScore > 0.25;
+
+          console.log('[Portrait Detection]', {
+            aspectRatio,
+            averageSkinScore: (averageSkinScore * 100).toFixed(2) + '%',
+            isPortrait
+          });
+
+          resolve(isPortrait);
+        } catch (error) {
+          console.warn('[Portrait Detection] Error:', error);
+          resolve(false); // 检测失败时不通过（更安全）
+        }
+      };
+
+      img.onerror = () => resolve(false);
+      img.src = dataUrl;
+    });
+  };
+
   const handleUpload = async (fileOrUrl: File | string, source: 'camera' | 'file' | 'example' = 'file') => {
     try {
       setUploadSource(source);
@@ -628,6 +729,16 @@ export default function HomePage() {
         rawDataUrl = await fileToDataUrl(blob);
       } else {
         rawDataUrl = await fileToDataUrl(fileOrUrl);
+      }
+
+      // 人像检测（只对用户上传的图片检测，示例图片跳过）
+      if (source !== 'example') {
+        const isPortrait = await detectPortrait(rawDataUrl);
+
+        if (!isPortrait) {
+          alert('❌ 检测失败：未能识别到人像\n\n请上传包含清晰人脸的照片，以便 AI 为您推荐合适的发型。\n\n建议：\n• 使用正面或侧面人像照片\n• 确保面部清晰可见\n• 避免使用风景、物品等非人像照片');
+          return; // 阻止继续处理
+        }
       }
 
       // Check quality
@@ -762,11 +873,7 @@ export default function HomePage() {
                   r.colorId === newRecord.colorId)
               );
               const updated = [newRecord, ...filtered].slice(0, 12);
-              try {
-                localStorage.setItem('hairnova_history', JSON.stringify(updated));
-              } catch (e) {
-                console.warn('LocalStorage Quota Exceeded, partial save failed');
-              }
+              safeSetHistoryToLocalStorage(updated);
               return updated;
             });
           }
