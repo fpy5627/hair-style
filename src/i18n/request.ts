@@ -21,6 +21,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     return {
       locale: locale,
       messages: messages,
+      timeZone: 'Asia/Shanghai',
       onError(error) {
         if (error.code === 'MISSING_MESSAGE') {
           // 缺失 key 时显示 key，而不是另一种语言
