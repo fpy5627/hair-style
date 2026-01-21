@@ -55,6 +55,9 @@ import { GenerationDashboard } from '@/components/blocks/hairstyle/GenerationDas
 import { ResultCard } from '@/components/blocks/hairstyle/ResultCard';
 import { HairstyleGuideModal } from '@/components/ai-hairstyle/HairstyleGuideModal';
 import { RecommendationResultPanel } from '@/components/blocks/hairstyle/RecommendationResultPanel';
+import { HeroCarousel } from '@/components/blocks/hairstyle/HeroCarousel';
+
+import { HomeHairstyleShowcase } from '@/components/blocks/hairstyle/HomeHairstyleShowcase';
 
 const SHOW_BIG_CARD = false;
 
@@ -573,6 +576,7 @@ export default function HomePage() {
   const [isTransitioningColor, setIsTransitioningColor] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [showPhotoRequirements, setShowPhotoRequirements] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const libraryRef = useRef<HTMLDivElement>(null);
 
@@ -817,164 +821,117 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-x-hidden">
       <main className="max-w-7xl mx-auto px-4 sm:px-6">
 
-        {/* ① Hero｜你是做什么的？为什么值得我现在试？ */}
-        <section className="pt-6 md:pt-10 pb-4 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 lg:gap-8 items-center">
-          <div className="space-y-5 md:space-y-7 animate-in fade-in slide-in-from-left duration-700">
-            <div className="space-y-3 md:space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white shadow-sm text-indigo-600 rounded-[6px] text-[9px] md:text-[10px] font-normal uppercase tracking-widest border border-indigo-100 w-fit">
-                <Sparkles size={12} className="text-purple-500" />
-                <span>{t('hero.tagline')}</span>
-              </div>
-              <h1 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tighter leading-[1.2] text-slate-900">
-                {safeT('hero.title_part1')}<br />
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-sky-500">
-                  {safeT('hero.title_part2')}
-                </span>
-              </h1>
-              <p className="text-xs md:text-sm lg:text-base text-slate-700 max-w-xl font-medium leading-relaxed">
-                {t('hero.subtitle')}
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2 md:gap-3">
-              {[1, 3, 4].map((i) => (
-                <div key={i} className="flex items-center gap-3 text-[10px] md:text-[11px] font-medium text-slate-800">
-                  <div className="w-3.5 h-3.5 bg-emerald-50 border border-emerald-500/60 rounded-[3px] flex items-center justify-center shrink-0">
-                    <Check size={9} className="text-emerald-500 stroke-[3px]" />
-                  </div>
-                  {t(`hero.trust${i}`)}
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-6 md:pt-8">
-              <Button3D
-                variant="gradient"
-                radius="xl"
-                className="w-full sm:w-auto px-8 md:px-10 h-12 md:h-14 font-black"
-                onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <span className="!text-sm md:!text-base whitespace-nowrap leading-[1.1] font-semibold">
-                  {t('hero.ctaStart')}
-                </span>
-                <ArrowRight size={20} className="ml-2 shrink-0" />
-              </Button3D>
-            </div>
+        {/* SECTION 1: Hero 首屏 */}
+        <section className="relative min-h-[75vh] md:min-h-[85vh] flex items-center py-16 md:py-20 overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-indigo-50/30" />
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-30" />
           </div>
 
-          <div className="relative group animate-in fade-in slide-in-from-right duration-700 w-full max-w-[480px] mx-auto lg:mx-0">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100/50 to-purple-100/50 blur-3xl opacity-50" />
-            <HeroPreviewPanel />
+          <div className="relative w-full max-w-screen-xl mx-auto px-4 md:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center z-10">
+            <div className="text-center lg:text-left space-y-6 animate-in fade-in slide-in-from-left duration-700 max-w-2xl mx-auto lg:mx-0">
+              <div className="space-y-4">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-none">
+                  Hairstyles for Men
+                  <span className="block mt-2 md:mt-3 text-2xl sm:text-3xl md:text-4xl font-bold text-slate-600">
+                    男士发型库 + AI 脸型匹配推荐
+                  </span>
+                </h1>
+                <p className="text-sm md:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed tracking-tight">
+                  Upload your photo — AI recommends men's haircuts that fit your face shape.
+                  <span className="block mt-1 text-slate-500 text-sm">
+                    上传照片，AI 根据脸型推荐最适合你的男士发型
+                  </span>
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-3 text-sm text-slate-700">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-200 rounded flex items-center justify-center shrink-0">
+                    <Check size={12} className="text-emerald-600" />
+                  </div>
+                  <span>AI 识别脸型与比例，推荐更适合的男士发型</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-slate-700">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-200 rounded flex items-center justify-center shrink-0">
+                    <Check size={12} className="text-emerald-600" />
+                  </div>
+                  <span>不改变五官，只更换发型与发色（真实可信）</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-slate-700">
+                  <div className="w-5 h-5 bg-emerald-50 border border-emerald-200 rounded flex items-center justify-center shrink-0">
+                    <Check size={12} className="text-emerald-600" />
+                  </div>
+                  <span>覆盖 500+ 男士发型：寸头/渐变/背头/侧分/卷发等</span>
+                </div>
+              </div>
+
+              <div className="pt-4 flex flex-col items-center sm:items-start gap-3">
+                <Button3D
+                  variant="gradient"
+                  className="w-full sm:w-auto px-8 h-14 font-bold text-base"
+                  onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  立即上传照片，开始男士发型推荐
+                  <ArrowRight size={20} className="ml-2" />
+                </Button3D>
+                <button
+                  onClick={() => {
+                    const hairstylesSection = document.getElementById('men-hairstyles-library');
+                    hairstylesSection?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-sm text-slate-600 hover:text-indigo-600 font-medium transition-colors underline-offset-4 hover:underline"
+                >
+                  或浏览男士发型库
+                </button>
+                <p className="text-xs text-slate-400 text-center sm:text-left">
+                  无需注册 · 不改变五官 · 几秒即可生成效果
+                </p>
+              </div>
+            </div>
+
+            <div className="relative group animate-in fade-in slide-in-from-right duration-700 w-full max-w-[480px] mx-auto lg:mx-0">
+              <div className="absolute -inset-4 bg-gradient-to-tr from-blue-100/50 to-purple-100/50 blur-3xl opacity-50" />
+              <HeroCarousel />
+            </div>
           </div>
         </section>
 
 
 
-        {/* ③ Core Experience Zone｜核心交互区 - 结构级重排 */}
-        <section className="mt-16 pt-10 pb-16 relative overflow-visible z-10">
-          {/* 浅冷色渐变背景 */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 -z-10" />
+        {/* SECTION 2: 核心交互区 - AI 工作台（上移至此处） */}
+        <section id="try-now" className="py-20 relative overflow-visible z-10 border-t border-slate-100">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30 -z-10" />
 
           <div className="max-w-7xl mx-auto px-4">
-            {/* ① 顶部说明区 - 极简 */}
-            <div className="text-center mb-10 space-y-5">
-              {/* 步骤指示器 - 压缩版 */}
-              <div className="py-5 border-y border-slate-200/40 mb-2">
-                <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-                  {/* Step 1 */}
-                  <div className="flex items-center gap-3">
-                    <span className={cn(
-                      "text-3xl font-black transition-colors leading-none",
-                      activeStep === 1 ? "text-indigo-200" : "text-slate-200/80"
-                    )}>01</span>
-                    <div className="flex flex-col text-left">
-                      <span className={cn(
-                        "text-sm font-bold transition-colors leading-tight",
-                        activeStep === 1 ? "text-indigo-900" : "text-slate-700"
-                      )}>{t('howitworks.step1')}</span>
-                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">上传正脸清晰照</span>
-                    </div>
-                  </div>
-
-                  <div className="hidden md:block text-slate-200">
-                    <ArrowRight size={16} strokeWidth={1.5} />
-                  </div>
-                  <div className="md:hidden h-4 w-px bg-slate-100"></div>
-
-                  {/* Step 2 */}
-                  <div className="flex items-center gap-3">
-                    <span className={cn(
-                      "text-3xl font-black transition-colors leading-none",
-                      activeStep === 2 ? "text-indigo-200" : "text-slate-200/80"
-                    )}>02</span>
-                    <div className="flex flex-col text-left">
-                      <span className={cn(
-                        "text-sm font-bold transition-colors leading-tight",
-                        activeStep === 2 ? "text-indigo-900" : "text-slate-700"
-                      )}>{t('howitworks.step2')}</span>
-                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">分析脸型与比例</span>
-                    </div>
-                  </div>
-
-                  <div className="hidden md:block text-slate-200">
-                    <ArrowRight size={16} strokeWidth={1.5} />
-                  </div>
-                  <div className="md:hidden h-4 w-px bg-slate-100"></div>
-
-                  {/* Step 3 */}
-                  <div className="flex items-center gap-3">
-                    <span className={cn(
-                      "text-3xl font-black transition-colors leading-none",
-                      activeStep === 3 ? "text-indigo-200" : "text-slate-200/80"
-                    )}>03</span>
-                    <div className="flex flex-col text-left">
-                      <span className={cn(
-                        "text-sm font-bold transition-colors leading-tight",
-                        activeStep === 3 ? "text-indigo-900" : "text-slate-700"
-                      )}>{t('howitworks.step3')}</span>
-                      <span className="text-[10px] text-slate-400 font-medium leading-none mt-1">生成发型 + 发色</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Title */}
-              <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mt-6">
-                立即开始 AI 发型实验室
+            <div className="text-center mb-12 space-y-4">
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">
+                在线体验 AI 男士发型推荐
               </h2>
-              <p className="text-xs text-slate-500 max-w-xl mx-auto">
-                上传一张清晰的正脸照片，AI 将在秒级时间内为您量身打造最佳发型方案
-              </p>
-
-              {/* Inline Badge Row - 弱化 */}
-              <div className="flex items-center justify-center gap-2 pt-1">
-                <div className="px-2.5 py-1 rounded-md bg-slate-50/80 border border-slate-200/40">
-                  <span className="text-[10px] font-semibold text-slate-500">专属发型工作台</span>
-                </div>
-                <div className="px-2.5 py-1 rounded-md bg-indigo-50/50 border border-indigo-100/40">
-                  <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wide">
-                    {analyzedFaceShape || 'OVAL'}
-                  </span>
-                </div>
-                <div className="px-2.5 py-1 rounded-md bg-slate-50/80 border border-slate-200/40">
-                  <span className="text-[10px] font-medium text-slate-400">定制建议</span>
-                </div>
+              <div className="space-y-2">
+                <p className="text-sm md:text-base text-slate-600 font-bold">
+                  上传照片后即可实时预览适合你的男士发型与发色
+                </p>
+                <p className="text-xs text-slate-400 max-w-lg mx-auto leading-relaxed">
+                  Hairnova AI 仅模拟发型和发色，不会修改你的五官或面部结构
+                </p>
               </div>
             </div>
 
-            {/* ② AI Studio 主工作台 */}
-            <div className="max-w-5xl mx-auto">
+            {/* AI Studio 主工作台 */}
+            <div className="max-w-7xl mx-auto">
               <div className="rounded-[24px] bg-white shadow-[0_2px_40px_rgba(15,23,42,0.06)] border border-slate-200/40 relative overflow-visible">
                 <div className="px-10 lg:px-12 py-10 lg:py-12">
-                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-8 max-w-4xl mx-auto w-full">
+                  <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 lg:gap-8 max-w-6xl mx-auto w-full">
 
                     {/* 左栏：上传区 */}
                     <div className="flex flex-col">
                       <div className="rounded-[24px] border-2 border-dashed border-slate-200 bg-slate-50/30 h-[320px] flex items-center justify-center p-5 lg:p-6">
                         {originalImage ? (
                           <div className="relative w-full h-full flex items-center justify-center">
-                            <div className="h-[260px] w-full flex items-center justify-center relative">
-                              <img src={originalImage} alt="Preview" className="h-full w-auto max-w-full object-contain drop-shadow-sm" />
+                            <div className="h-[275px] w-full flex items-center justify-center relative">
+                              <img src={originalImage} alt="Preview" className="h-full w-auto max-w-full object-contain object-top drop-shadow-sm" />
                             </div>
                             <button
                               onClick={handleClear}
@@ -992,16 +949,20 @@ export default function HomePage() {
                         <div className="mt-4">
                           <button
                             onClick={() => document.getElementById('file-upload-input')?.click()}
-                            className="w-full h-11 rounded-[8px] border border-slate-200 bg-white hover:border-indigo-400 hover:bg-slate-50 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group"
+                            className={cn(
+                              "w-full h-11 rounded-[8px] border border-slate-200 bg-white flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.96] group",
+                              "hover:bg-indigo-50/80 hover:border-indigo-400/60 hover:shadow-sm hover:shadow-indigo-100/50",
+                              "active:bg-indigo-100/80 active:border-indigo-500/80"
+                            )}
                           >
-                            <Upload size={16} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
-                            <span className="text-[13px] font-bold text-slate-600 group-hover:text-slate-900">更换照片</span>
+                            <Upload size={18} className="text-slate-400 group-hover:text-indigo-600 transition-colors shrink-0" />
                             <input id="file-upload-input" type="file" className="hidden" onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'file')} accept="image/*" />
+                            <span className="text-[13px] font-bold text-slate-600 group-hover:text-indigo-600">更换照片</span>
                           </button>
                         </div>
                       )}
 
-                      {/* 最近试戴记录 - 移动社交至左栏下方 */}
+                      {/* 最近试戴记录 */}
                       {history.length > 0 && (
                         <div className="mt-8 pt-6 border-t border-slate-100">
                           <div className="flex items-center justify-between mb-3 px-1">
@@ -1022,7 +983,6 @@ export default function HomePage() {
                                 <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                               </div>
                             ))}
-                            {/* 空位占位符，保持 2 行 12 个格子的对齐感 */}
                             {history.length < 12 && Array.from({ length: 12 - history.length }).map((_, i) => (
                               <div key={`empty-${i}`} className="aspect-square rounded-[8px] border border-dashed border-slate-100 bg-slate-50/30" />
                             ))}
@@ -1033,11 +993,10 @@ export default function HomePage() {
 
                     {/* 右栏：结果预览 + 控制面板 */}
                     <div className="flex flex-col">
-                      {/* 预览卡片 */}
-                      <div className="rounded-[24px] bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200/50 h-[320px] flex items-center justify-center p-5 lg:p-6 relative overflow-hidden">
+                      <div className="rounded-[24px] bg-gradient-to-br from-slate-50 to-slate-100/50 border border-slate-200/50 h-[320px] flex items-center justify-center px-5 lg:px-6 py-2 relative overflow-hidden">
                         {(toolStatus === 'success' || (originalImage && displayImage)) ? (
-                          <div className="relative w-full h-[260px] flex items-center justify-center">
-                            <img src={displayImage || undefined} alt="Result" className={cn("h-full w-auto max-w-full object-contain drop-shadow-md", (toolStatus === 'loading' || isAnalyzing) ? 'blur-sm opacity-60' : 'blur-0 opacity-100')} />
+                          <div className="relative w-full h-[285px] flex items-center justify-center">
+                            <img src={displayImage || undefined} alt="Result" className={cn("h-full w-auto max-w-full object-contain object-top drop-shadow-md", (toolStatus === 'loading' || isAnalyzing) ? 'blur-sm opacity-60' : 'blur-0 opacity-100')} />
                             {selectedColorId && toolStatus !== 'loading' && (
                               <div className="absolute inset-0 rounded-[14px] mix-blend-soft-light pointer-events-none transition-all duration-500 mx-auto" style={{ backgroundColor: selectedColorHex, opacity: selectedColorId === 'natural-black' ? 0.45 : 0.25, width: 'fit-content' }} />
                             )}
@@ -1061,25 +1020,19 @@ export default function HomePage() {
                         )}
                       </div>
 
-                      {/* 发色调节 & 生成按钮 */}
                       <div className="mt-6 flex flex-col space-y-6">
                         <div className="bg-slate-50/40 p-5 rounded-[20px] border border-slate-100/60 space-y-6">
-                          {/* 基础发色 */}
                           <div className="flex flex-col gap-3">
                             <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">基础发色</span>
                             <div className="flex flex-wrap gap-2">
                               {HAIR_COLORS.basic.map(color => (
                                 <button key={color.id} onClick={() => setSelectedColorId(color.id)} onMouseEnter={(e) => handleColorEnter(e, color)} onMouseLeave={handleColorLeave} className={cn("w-8 h-8 rounded-[6px] border-2 transition-all", selectedColorId === color.id ? "border-indigo-600 ring-2 ring-indigo-400/30 scale-105" : "border-slate-200/80 hover:border-indigo-300")} style={{ backgroundColor: color.hex }} />
                               ))}
-
-                              {/* 更多颜色切换按钮 */}
                               <button
                                 onClick={() => setShowAdvancedColors(!showAdvancedColors)}
                                 className={cn(
                                   "w-8 h-8 rounded-[6px] border-2 flex items-center justify-center transition-all",
-                                  showAdvancedColors
-                                    ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm"
-                                    : "border-slate-200/80 bg-white text-slate-400 hover:border-indigo-300 hover:text-indigo-500"
+                                  showAdvancedColors ? "border-indigo-600 bg-indigo-50 text-indigo-600 shadow-sm" : "border-slate-200/80 bg-white text-slate-400 hover:border-indigo-300 hover:text-indigo-500"
                                 )}
                                 title={showAdvancedColors ? "收起更多颜色" : "展示风格与高级发色"}
                               >
@@ -1088,10 +1041,8 @@ export default function HomePage() {
                             </div>
                           </div>
 
-                          {/* 风格 & 高级发色 - 展开收起区域 */}
                           {showAdvancedColors && (
                             <div className="space-y-6 pt-2 animate-in fade-in slide-in-from-top-1 duration-300">
-                              {/* 风格发色 */}
                               <div className="flex flex-col gap-3">
                                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">风格发色</span>
                                 <div className="flex flex-wrap gap-2">
@@ -1100,7 +1051,6 @@ export default function HomePage() {
                                   ))}
                                 </div>
                               </div>
-                              {/* 高级发色 */}
                               <div className="flex flex-col gap-3">
                                 <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">高级发色</span>
                                 <div className="flex flex-wrap gap-2">
@@ -1113,7 +1063,6 @@ export default function HomePage() {
                           )}
                         </div>
 
-                        {/* 生成按钮 */}
                         <div>
                           <Button3D
                             onClick={handleApplyStyle}
@@ -1128,128 +1077,221 @@ export default function HomePage() {
                               </span>
                             </div>
                           </Button3D>
-                          <p className="text-center mt-3 text-[10px] text-slate-400 flex items-center justify-center gap-1">
-                            <Info size={12} />
-                            生成约需 3-5 秒，支持高清无损导出
+
+                          <p className="text-center mt-3 text-[10px] text-slate-400 flex flex-col items-center gap-1">
+                            {toolStatus === 'loading' && (
+                              <span className="flex items-center gap-1 animate-pulse">
+                                <Info size={12} /> 生成约需 3-5 秒，请稍候...
+                              </span>
+                            )}
+                            <span className="opacity-80">生成效果可用于发型参考，与发型师沟通更高效</span>
                           </p>
+
+                          {/* 辅助操作区 */}
+                          {(toolStatus === 'success' || (toolStatus === 'loading' && displayImage)) && (
+                            <div className="flex flex-col gap-4 mt-6 animate-in fade-in slide-in-from-top-2 duration-500">
+                              <div className="flex items-center gap-3">
+                                <div className="flex-1 flex flex-col gap-2">
+                                  <button
+                                    disabled={toolStatus === 'loading' || isDownloading}
+                                    onClick={() => {
+                                      if (displayImage) {
+                                        setIsDownloading(true);
+                                        setTimeout(() => {
+                                          const link = document.createElement('a');
+                                          link.href = displayImage;
+                                          link.download = `hairnova-style-${Date.now()}.png`;
+                                          link.click();
+                                          setIsDownloading(false);
+                                        }, 1000);
+                                      }
+                                    }}
+                                    className={cn(
+                                      "w-full h-9 flex items-center justify-center gap-2 rounded-[6px] border transition-all duration-200 text-[11px] font-bold group",
+                                      isDownloading || toolStatus === 'loading' ? "bg-slate-50 border-slate-200 text-slate-300 cursor-not-allowed" : "bg-white border-slate-200/60 text-slate-500 hover:bg-indigo-50/80 hover:border-indigo-400/60 hover:text-indigo-600 active:bg-indigo-100/80 active:border-indigo-500/80 active:scale-[0.96]"
+                                    )}
+                                  >
+                                    {isDownloading ? <Loader2 size={13} className="animate-spin text-indigo-500" /> : <Download size={13} className={cn("transition-colors", (isDownloading || toolStatus === 'loading') ? "text-slate-200" : "text-slate-400 group-hover:text-indigo-600")} />}
+                                    <span>{isDownloading ? '正在准备下载...' : '下载图片'}</span>
+                                  </button>
+                                  <span className="text-[9px] text-slate-400 flex items-center justify-center gap-1 opacity-80 pl-1">
+                                    <Check size={9} className="text-emerald-500" /> 支持高清无损导出
+                                  </span>
+                                </div>
+
+                                <button
+                                  disabled={toolStatus === 'loading' || isDownloading}
+                                  onClick={handleApplyStyle}
+                                  className={cn(
+                                    "flex-1 h-9 self-start flex items-center justify-center gap-2 rounded-[6px] transition-all duration-200 text-[11px] font-bold group",
+                                    toolStatus === 'loading' ? "bg-blue-50/50 text-blue-400 cursor-not-allowed" : isDownloading ? "bg-slate-100 text-slate-300 cursor-not-allowed" : "bg-slate-100/60 text-slate-500 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 active:scale-[0.97]"
+                                  )}
+                                >
+                                  {toolStatus === 'loading' ? <RotateCcw size={13} className="animate-spin text-blue-400" /> : <RotateCcw size={13} className={cn("transition-colors", isDownloading ? "text-slate-200" : "text-slate-400 group-hover:text-blue-500")} />}
+                                  <span>{toolStatus === 'loading' ? '正在生成中...' : '重新生成'}</span>
+                                </button>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-
             </div>
           </div>
         </section>
 
-        {/* 历史预览弹窗 */}
-        <HistoryPreviewModal
-          record={selectedHistory}
-          onClose={() => setSelectedHistory(null)}
-          onRetry={(styleId) => {
-            setSelectedHistory(null);
-            handleStyleSelect(styleId);
-            libraryRef.current?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        {/* 首页展示发型推荐 (完全重写) */}
+        <HomeHairstyleShowcase ref={libraryRef} />
 
-        {/* 照片要求指南弹窗 */}
-        <HairstyleGuideModal
-          open={showPhotoRequirements}
-          onOpenChange={setShowPhotoRequirements}
-        />
-
-        {/* ④ Real Results｜三列扫描对比网格 */}
-        <section className="py-32 border-t border-slate-200/60 bg-white">
-          <div className="space-y-16 max-w-7xl mx-auto px-4">
-            <div className="text-center space-y-3">
-              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('gallery.title')}</h2>
-              <p className="text-sm md:text-base text-slate-500 font-medium">真实用户生成的 AI 发型转换效果</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-              {GALLERY_ITEMS.slice(0, 3).map(item => (
-                <div key={item.id} className="group relative overflow-hidden flex flex-col rounded-xl bg-slate-50 border border-slate-100 transition-all duration-700 hover:shadow-2xl hover:-translate-y-2">
-                  <div className="aspect-[4/5] flex relative overflow-hidden">
-                    {/* Before */}
-                    <div className="w-1/2 relative h-full">
-                      <img src={item.before} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105" alt="Before" />
-                    </div>
-
-                    {/* Pulse Scanner Line */}
-                    <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gradient-to-b from-transparent via-indigo-500 to-transparent z-10 animate-pulse">
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-500 rounded-full blur-sm" />
-                    </div>
-
-                    {/* After */}
-                    <div className="w-1/2 relative h-full">
-                      <img src={item.after} className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110" alt="After" />
-                    </div>
-                  </div>
-                  <div className="p-8 bg-white/80 backdrop-blur-md flex items-center justify-between border-t border-slate-100">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1 rounded-full border border-indigo-100">
-                        {safeT('gallery.face_shape', undefined, { shape: safeTc(`face_shapes.${item.faceShape.toLowerCase()}`) || item.faceShape })}
-                      </span>
-                      <p className="text-sm font-bold text-slate-900 mt-2">
-                        {safeT('gallery.recommended_style', undefined, { tag: item.tag || '自然蓬松' })}
-                      </p>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500 cursor-pointer">
-                      <Sparkles size={18} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ⑤ When to Use｜多场景适配磁贴 */}
-        <section className="py-32 border-t border-slate-200/60 space-y-16">
-          <div className="text-center space-y-3 px-4">
-            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('usecases.title')}</h2>
-            <p className="text-sm md:text-base text-slate-500 font-medium">
-              {safeT('usecases.subtitle', '满足您在人生每一个重要时刻的形象需求')}
+        {/* SECTION 3: How It Works 使用流程（位置下移） */}
+        <section className="py-32 border-t border-slate-200/60">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter text-center mb-4">
+              AI 男士发型推荐只需 3 步
+            </h2>
+            <p className="text-sm text-slate-500 text-center mb-20">
+              无需任何设计经验，上传照片即可开始体验
             </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto px-4">
-            {USE_CASES.map(uc => (
-              <div key={uc.id} className="p-10 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-500 group">
-                <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-indigo-600 group-hover:text-white group-hover:rotate-6 transition-all duration-500">
-                  {uc.icon === 'Scissors' && <Scissors size={32} />}
-                  {uc.icon === 'Camera' && <Camera size={32} />}
-                  {uc.icon === 'Palette' && <Palette size={32} />}
-                  {uc.icon === 'Target' && <Target size={32} />}
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+              <div className="bg-white rounded-xl border border-slate-100 p-8 shadow-sm">
+                <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <span className="text-2xl font-black">01</span>
                 </div>
-                <h4 className="mt-8 font-black text-xl text-slate-900 tracking-tight">{t(`usecases.${uc.id}`)}</h4>
-                <p className="mt-4 text-sm text-slate-500 font-medium leading-relaxed">
-                  {safeT('usecases.desc', '基于 AI 的深度定制化方案，确保效果自然逼真。')}
+                <h3 className="text-lg font-bold text-slate-900 mb-3">上传你的照片</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  上传一张清晰正脸照片，支持 JPG / PNG 格式。
                 </p>
               </div>
-            ))}
+
+              <div className="bg-white rounded-xl border border-slate-100 p-8 shadow-sm">
+                <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <span className="text-2xl font-black">02</span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">AI 识别脸型与比例</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  系统自动分析额头、下颌线、发际线等男士关键特征，作为发型推荐依据。
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-100 p-8 shadow-sm">
+                <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <span className="text-2xl font-black">03</span>
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">推荐更适合的男士发型 + 支持试发色</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  基于分析结果推荐发型和发色，并生成真实可参考的效果预览。
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ⑥ Why Hairnova｜核心优势勋章布局 */}
-        <section className="py-32 border-t border-slate-200/60 bg-white rounded-2xl shadow-sm mx-4">
+        {/* SECTION 4: AI 核心功能矩阵（位置下移） */}
+        <section className="py-32 bg-slate-50 border-y border-slate-200/60">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-2xl md:text-4xl font-black text-center text-slate-900 tracking-tighter mb-20">{t('why.title')}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              {WHY_REASONS.map(reason => (
-                <div key={reason.id} className="flex flex-col items-center text-center space-y-6 group">
-                  <div className="w-20 h-20 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-700 shadow-lg shadow-indigo-100">
-                    {reason.icon === 'Sparkles' && <Sparkles size={36} />}
-                    {reason.icon === 'Zap' && <Zap size={36} />}
-                    {reason.icon === 'ShieldCheck' && <ShieldCheck size={36} />}
+            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter text-center mb-20">
+              Hairnova AI 可以为你做什么（AI 换发型与发型分析）
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-xl border border-slate-100 p-8 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+                  <Target size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">AI 脸型分析（Face Shape Analyzer）</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  自动识别你的脸型（圆脸、方脸、长脸等），并作为 AI 发型推荐的核心依据，帮助你避免不适合自己的发型。
+                </p>
+                <button
+                  onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-bold text-indigo-600 hover:text-indigo-700"
+                >
+                  体验脸型分析 →
+                </button>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-100 p-8 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <Scissors size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">AI 换发型（AI Hairstyle Changer）</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  在不改变五官的前提下，在线试戴不同发型，直观看到剪发前后的效果差异。
+                </p>
+                <button
+                  onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-bold text-indigo-600 hover:text-indigo-700"
+                >
+                  在上方直接体验 →
+                </button>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-100 p-8 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600 mb-6">
+                  <Palette size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">AI 发色试戴（Hair Color Try-On）</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  尝试不同发色效果，提前预览染发后的真实外观，降低实际染发风险。
+                </p>
+                <button
+                  onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-bold text-indigo-600 hover:text-indigo-700"
+                >
+                  试试发色 →
+                </button>
+              </div>
+
+              <div className="bg-white rounded-xl border border-slate-100 p-8 hover:shadow-lg transition-shadow">
+                <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-6">
+                  <User size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">男士 / 女士发型推荐</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  根据性别与脸型特征，推荐更符合审美与风格的发型方案。
+                </p>
+                <button
+                  onClick={() => libraryRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                  className="text-sm font-bold text-indigo-600 hover:text-indigo-700"
+                >
+                  查看发型库 →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 5: 真实效果展示 */}
+        <section className="py-32 border-t border-slate-200/60 bg-white">
+          <div className="space-y-12 max-w-7xl mx-auto px-4">
+            <div className="text-center">
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter mb-20">真实用户生成的 AI 发型效果展示</h2>
+              <p className="text-sm text-slate-500 mt-3">以下效果均由真实用户上传照片并通过 AI 生成</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {GALLERY_ITEMS.slice(0, 3).map(item => (
+                <div key={item.id} className="group relative overflow-hidden flex flex-col rounded-xl bg-slate-50 border border-slate-100 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+                  <div className="aspect-[4/5] flex relative overflow-hidden">
+                    <div className="w-1/2 relative h-full">
+                      <img src={item.before} className="w-full h-full object-cover object-top" alt="换发型前" />
+                    </div>
+                    <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gradient-to-b from-transparent via-indigo-500 to-transparent z-10" />
+                    <div className="w-1/2 relative h-full">
+                      <img src={item.after} className="w-full h-full object-cover object-top" alt="换发型后" />
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    <h4 className="text-2xl font-black text-slate-900 tracking-tight">{t(`why.${reason.id}`)}</h4>
-                    <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-[280px]">
-                      {safeT('why.desc', '采用行业领先的生成算法，为您提供专业级造型建议。')}
-                    </p>
+                  <div className="p-6 bg-white flex items-center justify-between border-t border-slate-100">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2 py-0.5 rounded">
+                        {item.faceShape}
+                      </span>
+                      <p className="text-sm font-bold text-slate-900">{item.tag || '推荐发型'}</p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -1257,14 +1299,372 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ⑦ FAQ｜我还有哪些关键疑问？ */}
-        <FAQSection />
+        {/* SECTION 6: 使用场景 */}
+        <section className="py-32 border-t border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">
+                这些场景下，AI 男士发型推荐特别有用
+              </h2>
+            </div>
 
-        {/* ⑧ SEO Face-Shape Links｜如果我想继续研究？ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="p-8 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <User size={28} />
+                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-3">面试 / 商务形象</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  在面试或重要商务场合前，选择更专业、得体的男士发型提升形象。
+                </p>
+              </div>
+
+              <div className="p-8 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+                  <Camera size={28} />
+                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-3">约会 / 社交头像</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  在约会或更换社交头像时，快速找到更有魅力、更适合自己的发型风格。
+                </p>
+              </div>
+
+              <div className="p-8 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600 mb-6">
+                  <Scissors size={28} />
+                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-3">理发前确认（避免翻车）</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  在理发前提前预览效果，避免剪完后悔，降低发型决策风险。
+                </p>
+              </div>
+
+              <div className="p-8 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-lg transition-shadow">
+                <div className="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-6">
+                  <Target size={28} />
+                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-3">发际线 / 头型修饰</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  针对发际线高、头型偏平等男士常见问题，找到视觉修饰效果最好的发型。
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 7: 为什么选择 Hairnova AI */}
+        <section className="py-24 border-t border-slate-200/60 bg-white">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-2xl md:text-4xl font-black text-center text-slate-900 tracking-tighter mb-16">
+              为什么选择 Hairnova AI
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="flex flex-col items-center text-center p-8">
+                <div className="w-16 h-16 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 mb-6">
+                  <Target size={32} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">基于脸型推荐</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  基于脸型推荐，而非随机生成
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center text-center p-8">
+                <div className="w-16 h-16 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 mb-6">
+                  <ShieldCheck size={32} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">效果真实可信</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  不改变五官，效果真实可信
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center text-center p-8">
+                <div className="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 mb-6">
+                  <Zap size={32} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-3">减少试错成本</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  减少试错成本，避免剪完后悔
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 8: FAQ 常见问题 */}
+        <section className="py-24 border-t border-slate-200/60">
+          <div className="max-w-4xl mx-auto px-4">
+            <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter text-center mb-12">
+              常见问题
+            </h2>
+
+            <div className="space-y-4">
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">Hairstyles for men 怎么选最适合我的？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  上传你的照片后，AI 会自动分析你的脸型（如圆脸、方脸、长脸等）和面部比例，然后根据这些特征推荐最适合你的男士发型，包括寸头、渐变、背头、侧分、卷发等多种风格。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">AI 会改变我的脸吗？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  不会。Hairnova AI 仅对发型和发色进行模拟，绝不会改变你的五官或面部结构。生成的效果真实可信，让你能准确预判理发后的样子。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">适合发际线高/圆脸/方脸的男士发型有哪些？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  • 发际线高：建议尝试刘海覆盖或侧分发型来视觉修饰<br />
+                  • 圆脸：适合有层次感的侧分、渐变发型来拉长脸型<br />
+                  • 方脸：推荐柔和的卷发或蓬松的背头来柔化轮廓<br />
+                  上传照片后，AI 会自动为你筛选最合适的选项。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">支持哪些男士发型？是否支持寸头/渐变/背头？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  支持 500+ 男士发型，包括但不限于：Buzz Cut（寸头）、Fade（渐变）、Taper Fade、Crew Cut、Undercut、Side Part（侧分）、Quiff、Pompadour（背头）、Curly Hair、Long Hair 等多种风格，持续更新中。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">上传照片安全吗？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  绝对安全。你的照片仅用于生成发型效果，不会被公开、分享或用于其他用途。我们重视用户隐私保护。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-xl border border-slate-100 overflow-hidden">
+                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-slate-50 transition-colors">
+                  <span className="font-bold text-slate-900">AI 换发型适合男生还是女生？</span>
+                  <ChevronDown size={20} className="text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="px-6 pb-6 text-sm text-slate-600 leading-relaxed">
+                  Hairnova AI 同时支持男士和女士发型推荐，会根据性别和脸型提供不同的发型方案。
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 9: SEO 内链区 - 男士发型关键词集群 */}
+        <section className="py-20 border-t border-slate-200/60 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <div className="mb-12">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 text-center">
+                热门男士发型搜索
+              </h3>
+              <p className="text-sm text-slate-500 text-center">
+                Popular men hairstyles - 点击快速浏览
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-16">
+              {[
+                { name: 'Buzz Cut', slug: 'buzz-cut', hasPage: true },
+                { name: 'Fade', slug: 'fade', hasPage: true },
+                { name: 'Taper Fade', slug: 'taper-fade', hasPage: false },
+                { name: 'Crew Cut', slug: 'crew-cut', hasPage: false },
+                { name: 'Undercut', slug: 'undercut', hasPage: true },
+                { name: 'Side Part', slug: 'side-part', hasPage: true },
+                { name: 'Quiff', slug: 'quiff', hasPage: false },
+                { name: 'Pompadour', slug: 'pompadour', hasPage: true },
+                { name: 'Curly Hair Men', slug: 'curly-hair-men', hasPage: false },
+                { name: 'Long Hair Men', slug: 'long-hair-men', hasPage: false },
+                { name: 'Mullet', slug: 'mullet', hasPage: false },
+                { name: 'Textured Crop', slug: 'textured-crop', hasPage: false },
+                { name: 'Ivy League', slug: 'ivy-league', hasPage: false },
+                { name: 'Caesar Cut', slug: 'caesar-cut', hasPage: false },
+                { name: 'Slick Back', slug: 'slick-back', hasPage: false }
+              ].map((item) =>
+                item.hasPage ? (
+                  <SafeLink key={item.slug} href={`/hairstyles-for-men/${item.slug}`}>
+                    <button className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-[8px] hover:border-purple-600 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200">
+                      {item.name}
+                    </button>
+                  </SafeLink>
+                ) : (
+                  <button
+                    key={item.slug}
+                    onClick={() => {
+                      const section = document.getElementById('men-hairstyles-library');
+                      section?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-[8px] hover:border-purple-600 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200"
+                  >
+                    {item.name}
+                  </button>
+                )
+              )}
+            </div>
+
+            <div className="border-t border-slate-200 pt-12">
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-6 text-center">
+                按脸型查找男士发型
+              </h3>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  'Men hairstyles for oval face',
+                  'Men hairstyles for round face',
+                  'Men hairstyles for square face',
+                  'Men hairstyles for long face',
+                  'Men hairstyles for heart face',
+                  'Men hairstyles for diamond face'
+                ].map((keyword) => (
+                  <button
+                    key={keyword}
+                    onClick={() => {
+                      const section = document.getElementById('try-now');
+                      section?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 text-indigo-700 text-sm font-bold rounded-[10px] hover:from-indigo-100 hover:to-purple-100 hover:border-indigo-300 hover:shadow-md transition-all duration-200"
+                  >
+                    {keyword}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SECTION 9B: SEO Hub - 3个新增区块 */}
+        <section className="py-20 border-t border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-4">
+
+            {/* 区块 1: Popular Men's Hairstyles - 指向分类页 */}
+            <div className="mb-16">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 text-center">
+                Popular Men's Hairstyles
+              </h3>
+              <p className="text-sm text-slate-500 text-center mb-8">
+                Browse by hairstyle category - Each page includes AI try-on tool
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  { name: 'Medium Length', filter: 'Medium', category: true },
+                  { name: 'Curly Hairstyles', filter: 'Curly', category: true },
+                  { name: 'Black Men', filter: 'all', category: true },
+                  { name: 'Low Maintenance', filter: 'Short', category: true },
+                  { name: 'Buzz Cut', slug: 'buzz-cut', category: false },
+                  { name: 'Fade', slug: 'fade', category: false },
+                  { name: 'Taper Fade', slug: 'taper-fade', category: false },
+                  { name: 'Long Hair Men', slug: 'long-hair-men', category: false }
+                ].map((item) =>
+                  item.category ? (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        const section = document.getElementById('men-hairstyles-library');
+                        section?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-medium rounded-[8px] hover:shadow-lg hover:scale-105 transition-all duration-200"
+                    >
+                      {item.name}
+                    </button>
+                  ) : (
+                    <SafeLink
+                      key={item.slug}
+                      href={`/hairstyles-for-men/${item.slug}`}
+                    >
+                      <button className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-[8px] hover:border-purple-600 hover:text-purple-600 hover:bg-purple-50 transition-all duration-200">
+                        {item.name}
+                      </button>
+                    </SafeLink>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* 区块 2: Hairstyles by Face Shape */}
+            <div className="mb-16 border-t border-slate-200 pt-12">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 text-center">
+                Hairstyles by Face Shape
+              </h3>
+              <p className="text-sm text-slate-500 text-center mb-8">
+                AI recommends hairstyles that match your face shape
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  'Oval Face',
+                  'Round Face',
+                  'Square Face',
+                  'Long Face',
+                  'Heart Face',
+                  'Diamond Face'
+                ].map((shape) => (
+                  <button
+                    key={shape}
+                    onClick={() => {
+                      const section = document.getElementById('try-now');
+                      section?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center px-5 py-2.5 bg-white border-2 border-indigo-200 text-indigo-700 text-sm font-bold rounded-[10px] hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-md transition-all duration-200"
+                  >
+                    {shape}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 区块 3: Hairstyles by Hair Type */}
+            <div className="border-t border-slate-200 pt-12">
+              <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-2 text-center">
+                Hairstyles by Hair Type
+              </h3>
+              <p className="text-sm text-slate-500 text-center mb-8">
+                Find styles that work with your natural hair texture
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {[
+                  { name: 'Curly Hair', slug: 'curly' },
+                  { name: 'Straight Hair', slug: 'straight' },
+                  { name: 'Wavy Hair', slug: 'wavy' },
+                  { name: 'Thick Hair', slug: 'thick' },
+                  { name: 'Thin Hair', slug: 'thin' }
+                ].map((type) => (
+                  <button
+                    key={type.slug}
+                    onClick={() => {
+                      // 跳转到工具区，并带上发质筛选
+                      const section = document.getElementById('men-hairstyles-library');
+                      section?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center px-4 py-2 bg-slate-100 border border-slate-300 text-slate-700 text-sm font-medium rounded-[8px] hover:bg-white hover:border-purple-600 hover:text-purple-600 transition-all duration-200"
+                  >
+                    {type.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* SECTION 10: 底部内容 */}
         <RelatedLinks />
-
-        {/* ⑨ SEO Knowledge｜站长进阶指南 */}
-        <SEOEducationSection />
 
         {/* ⑨ Final CTA｜极致暗黑科技感收尾 */}
         {
@@ -1298,7 +1698,7 @@ export default function HomePage() {
           )
         }
 
-      </main >
+      </main>
 
       <HairstyleGuideModal
         open={showPhotoRequirements}
@@ -1309,7 +1709,7 @@ export default function HomePage() {
         rect={hoveredColor?.rect || null}
         visible={!!hoveredColor}
       />
-    </div >
+    </div>
   );
 }
 

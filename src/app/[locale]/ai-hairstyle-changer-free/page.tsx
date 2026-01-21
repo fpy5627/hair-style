@@ -7,7 +7,7 @@ import { Footer } from '@/components/blocks/Footer';
 import { ToolShell } from '@/components/blocks/hairstyle/ToolShell';
 import { UploadCard } from '@/components/blocks/hairstyle/UploadCard';
 import { ResultCard } from '@/components/blocks/hairstyle/ResultCard';
-import { StyleSelector, HairstyleGrid, StyleTabs } from '@/components/blocks/hairstyle/StyleSelector';
+import { HairstyleGrid, StyleTabs } from '@/components/blocks/hairstyle/StyleSelector';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
 import { Sparkles, Info, Gift } from 'lucide-react';
@@ -61,10 +61,10 @@ export default function HairstyleChangerFreePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f5f3ff] to-[#faf5ff]">
       <HairstyleHeader />
-      
+
       <main className="max-w-7xl mx-auto px-4 pb-20">
-        <ToolShell 
-          title={`${t('nav.free')} - ${t('hero.title')}`} 
+        <ToolShell
+          title={`${t('nav.free')} - ${t('hero.title')}`}
           subtitle={t('nav.free_subtitle')}
         >
           {/* 工具部分 */}
@@ -77,31 +77,31 @@ export default function HairstyleChangerFreePage() {
             </GlassCard>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-              <UploadCard 
-                preview={preview} 
-                onUpload={handleUpload} 
-                onClear={() => { setPreview(null); setStatus('idle'); }} 
+              <UploadCard
+                preview={preview}
+                onUpload={handleUpload}
+                onClear={() => { setPreview(null); setStatus('idle'); }}
               />
-              
+
               <GlassCard className="p-6 flex flex-col space-y-4">
                 <h3 className="font-bold text-slate-900">{t('tool.styles')}</h3>
-                <StyleTabs 
-                  categories={STYLE_CATEGORIES.map(c => CATEGORY_MAP[c])} 
-                  activeCategory={CATEGORY_MAP[activeCategory]} 
+                <StyleTabs
+                  categories={STYLE_CATEGORIES.map(c => CATEGORY_MAP[c])}
+                  activeCategory={CATEGORY_MAP[activeCategory]}
                   onCategoryChange={(translated) => {
                     const original = STYLE_CATEGORIES.find(c => CATEGORY_MAP[c] === translated);
                     if (original) setActiveCategory(original);
-                  }} 
+                  }}
                 />
                 <div className="flex-1 overflow-y-auto min-h-[200px]">
-                  <HairstyleGrid 
-                    styles={MOCK_STYLES} 
-                    selectedStyleId={selectedStyle} 
-                    onStyleSelect={setSelectedStyle} 
+                  <HairstyleGrid
+                    styles={MOCK_STYLES}
+                    selectedStyleId={selectedStyle}
+                    onStyleSelect={setSelectedStyle}
                   />
                 </div>
-                <Button3D 
-                  variant="primary" 
+                <Button3D
+                  variant="primary"
                   className="w-full"
                   disabled={status === 'loading' || !preview || !selectedStyle}
                   onClick={handleGenerate}
@@ -114,10 +114,10 @@ export default function HairstyleChangerFreePage() {
           </div>
 
           <div className="lg:col-span-5">
-            <ResultCard 
-              status={status} 
-              originalImage={preview} 
-              resultImage={result} 
+            <ResultCard
+              status={status}
+              originalImage={preview}
+              resultImage={result}
               onReset={() => { setStatus('ready'); setResult(null); }}
             />
           </div>

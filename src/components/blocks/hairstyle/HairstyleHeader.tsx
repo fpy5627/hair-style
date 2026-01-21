@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ChevronDown, User } from 'lucide-react';
+import { Menu, X, ChevronDown, User, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -87,16 +87,55 @@ export const HairstyleHeader = () => {
     { href: '/what-hairstyle-suits-me', label: t('nav.suits_me') },
   ];
 
-  // 下拉菜单入口：男士、女士
-  const exploreLinks = [
-    { href: '/ai-hairstyle-male', label: t('nav.male'), icon: <User size={14} /> },
-    { href: '/ai-hairstyle-female', label: t('nav.female'), icon: <User size={14} /> },
-  ];
+  // 发型库下拉菜单 - SEO Hub 结构
+  const hairstyleLibraryMenu = {
+    mensHairstyles: {
+      title: t('nav.hub.men_title'),
+      groups: [
+        {
+          title: t('nav.hub.by_length'),
+          links: [
+            { href: '/hairstyles-for-men/short', label: t('nav.hub.short') },
+            { href: '/hairstyles-for-men/medium', label: t('nav.hub.medium') },
+            { href: '/hairstyles-for-men/long', label: t('nav.hub.long') },
+          ]
+        },
+        {
+          title: t('nav.hub.by_hair_type'),
+          links: [
+            { href: '/hairstyles-for-men/curly', label: t('nav.hub.curly') },
+            { href: '/hairstyles-for-men/straight', label: t('nav.hub.straight') },
+            { href: '/hairstyles-for-men/wavy', label: t('nav.hub.wavy') },
+          ]
+        },
+        {
+          title: t('nav.hub.by_style'),
+          links: [
+            { href: '/hairstyles-for-men/wavy', label: t('nav.hub.low_maintenance') },
+            { href: '/hairstyles-for-men/fade', label: t('nav.hub.fade') },
+            { href: '/hairstyles-for-men/buzz-cut', label: t('nav.hub.buzz_cut') },
+            { href: '/hairstyles-for-men/braids', label: t('nav.hub.braids') },
+          ]
+        }
+      ]
+    },
+    womensHairstyles: {
+      title: t('nav.hub.women_title'),
+      links: [
+        { href: '/ai-hairstyle-female', label: t('nav.hub.women_styles'), icon: <User size={14} /> }
+      ]
+    }
+  };
 
   const pricingLink = { href: '/pricing', label: t('nav.pricing') };
 
-  // 检查是否激活
-  const isActive = (href: string) => pathname === href;
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  // 检查是否激活 - 增强版逻辑
+  const isActive = (href: string, label?: string) => {
+    if (activeId === label || activeId === href) return true;
+    return pathname === href;
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-slate-200/60">
@@ -139,37 +178,142 @@ export const HairstyleHeader = () => {
                 </SafeLink>
               ))}
 
-            {/* Explore Dropdown */}
+
+            {/* Hairstyle Library Dropdown - SEO Hub */}
             <DropdownMenu>
               <DropdownMenuTrigger className={cn(
-                "relative flex items-center gap-1 text-sm font-medium px-4 h-10 outline-none transition-colors duration-200 tracking-tight",
-                exploreLinks.some(l => isActive(l.href))
-                  ? "text-indigo-600"
-                  : "text-slate-700 hover:text-indigo-600"
+                "relative flex items-center gap-1 text-sm font-medium px-4 h-10 outline-none transition-colors duration-200 tracking-tight text-slate-700 hover:text-indigo-600"
               )}>
                 {t('nav.explore')}
                 <ChevronDown size={14} className="opacity-40" />
-                {exploreLinks.some(l => isActive(l.href)) && (
-                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-600 rounded-full" />
-                )}
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-48 bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-xl p-1 shadow-xl relative z-50">
-                {exploreLinks
-                  ?.filter((link) => link.href && link.href.trim() !== "")
-                  .map((link) => (
-                    <DropdownMenuItem key={link.href} asChild>
-                      <SafeLink
-                        href={link.href}
-                        className={cn(
-                          "flex items-center gap-2.5 w-full px-3 py-2 text-sm rounded-lg transition-colors cursor-pointer",
-                          isActive(link.href) ? "bg-indigo-50 text-indigo-600 font-semibold" : "text-slate-700 hover:bg-slate-50 hover:text-indigo-600"
-                        )}
-                      >
-                        {link.icon}
-                        {link.label}
-                      </SafeLink>
-                    </DropdownMenuItem>
-                  ))}
+              <DropdownMenuContent
+                align="center"
+                className="w-[560px] bg-white/75 backdrop-blur-[18px] border border-white/40 rounded-[14px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.1)] relative z-50 overflow-hidden"
+              >
+                <div className="relative z-10">
+                  {/* Section Title: Men's Hairstyles */}
+                  <div className="flex items-center gap-3 mb-5 px-1">
+                    <span className="text-[14px] font-semibold text-slate-800 tracking-tight">
+                      {hairstyleLibraryMenu.mensHairstyles.title}
+                    </span>
+                    <div className="h-[1px] flex-1 bg-slate-200/50" />
+                  </div>
+
+                  {/* Men's Grouped Content Block */}
+                  <div className="grid grid-cols-3 gap-8 bg-white/30 border border-white/20 rounded-[10px] p-4 mb-6 relative">
+                    {hairstyleLibraryMenu.mensHairstyles.groups.map((group) => (
+                      <div key={group.title} className="space-y-3">
+                        {/* Group Category Title */}
+                        <div className="px-1 text-[10px] font-medium text-slate-400 uppercase tracking-[0.08em]">
+                          {group.title}
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          {group.links.map((link) => {
+                            const isSelected = isActive(link.href, link.label);
+                            return (
+                              <DropdownMenuItem
+                                key={link.label}
+                                asChild
+                                className="p-0 focus:bg-transparent"
+                              >
+                                <SafeLink
+                                  href={link.href}
+                                  onClick={(e) => {
+                                    if (link.href.startsWith('#')) {
+                                      e.preventDefault();
+                                    }
+                                    setActiveId(link.label);
+                                  }}
+                                  data-selected={isSelected}
+                                  className={cn(
+                                    "group relative flex items-center w-full min-h-[38px] px-3 py-1.5 text-[13px] rounded-[6px] border border-transparent transition-all duration-150 ease-out cursor-pointer pointer-events-auto z-20",
+                                    "active:scale-[0.98] outline-hidden",
+                                    // Default State
+                                    "text-slate-600",
+                                    // Hover state synchronized with selected state
+                                    "hover:bg-indigo-600/5 hover:border-indigo-600/10 hover:text-indigo-600",
+                                    // Premium Selected State
+                                    "data-[selected=true]:bg-indigo-600/5 data-[selected=true]:border-indigo-600/10 data-[selected=true]:text-indigo-600 data-[selected=true]:font-medium data-[selected=true]:shadow-none"
+                                  )}
+                                >
+                                  {/* Left selection indicator bar - visible on hover or selected */}
+                                  <div className={cn(
+                                    "absolute left-0 w-[2px] h-[14px] bg-indigo-500/60 rounded-full transition-all duration-300 opacity-0 scale-y-0",
+                                    "group-hover:opacity-100 group-hover:scale-y-100",
+                                    isSelected && "opacity-100 scale-y-100"
+                                  )} />
+                                  <span className={cn(
+                                    "transition-transform duration-200",
+                                    isSelected ? "translate-x-2" : "group-hover:translate-x-2"
+                                  )}>
+                                    {link.label}
+                                  </span>
+                                </SafeLink>
+                              </DropdownMenuItem>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Section Title: Women's Hairstyles */}
+                  <div className="flex items-center gap-3 mb-4 px-1">
+                    <span className="text-[14px] font-semibold text-slate-800 tracking-tight">
+                      {hairstyleLibraryMenu.womensHairstyles.title}
+                    </span>
+                    <div className="h-[1px] flex-1 bg-slate-200/50" />
+                  </div>
+
+                  <div className="grid grid-cols-1">
+                    {hairstyleLibraryMenu.womensHairstyles.links.map((link) => {
+                      const isSelected = isActive(link.href, link.label);
+                      return (
+                        <DropdownMenuItem key={link.href} asChild className="p-0 focus:bg-transparent">
+                          <SafeLink
+                            href={link.href}
+                            onClick={() => setActiveId(link.label)}
+                            data-selected={isSelected}
+                            className={cn(
+                              // Base Card Style: Rectangle with micro-rounded corners
+                              "group flex items-center gap-4 w-full min-h-[52px] px-4 py-3 rounded-[12px] border transition-all duration-300 ease-out active:scale-[0.98] z-20 pointer-events-auto cursor-pointer",
+                              // Default State: Sandblasted/Frosted background
+                              "bg-white/40 border-slate-200/40 text-slate-600 shadow-sm",
+                              // Hover State: Subtle brightness & text color shift
+                              "hover:bg-white/60 hover:border-indigo-200/50 hover:text-indigo-600 hover:shadow-md hover:shadow-indigo-500/5",
+                              // Active/Selected State: Refined highlight (No vertical bar)
+                              "data-[selected=true]:bg-indigo-50/50 data-[selected=true]:border-indigo-200/60 data-[selected=true]:text-indigo-600 data-[selected=true]:font-semibold data-[selected=true]:shadow-none"
+                            )}
+                          >
+                            <div className={cn(
+                              "flex items-center justify-center w-8 h-8 rounded-[8px] transition-all duration-300",
+                              isSelected
+                                ? "bg-gradient-to-br from-indigo-500 via-purple-400 to-cyan-300 text-white shadow-lg shadow-indigo-500/20"
+                                : "bg-white/80 border border-slate-100 text-slate-400 group-hover:bg-gradient-to-br group-hover:from-indigo-500/80 group-hover:to-purple-400/80 group-hover:text-white group-hover:border-transparent"
+                            )}>
+                              {link.icon}
+                            </div>
+
+                            <span className="text-[14px] tracking-tight">{link.label}</span>
+
+                            <div className="ml-auto flex items-center justify-center">
+                              <ArrowRight
+                                size={15}
+                                className={cn(
+                                  "transition-all duration-300 ease-out",
+                                  isSelected
+                                    ? "text-indigo-600 translate-x-0 opacity-100"
+                                    : "text-slate-300 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-indigo-400"
+                                )}
+                              />
+                            </div>
+                          </SafeLink>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </div>
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -228,7 +372,8 @@ export const HairstyleHeader = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-white/98 backdrop-blur-2xl border-b border-slate-200/60 p-4 space-y-1.5 animate-in slide-in-from-top-2 duration-300 origin-top relative z-40">
-          {[...mainLinks, pricingLink, ...exploreLinks]
+          {/* 主导航 */}
+          {[...mainLinks, pricingLink, { href: '/#men-hairstyles-library', label: t('nav.hub.men_title') }, { href: '/ai-hairstyle-female', label: t('nav.hub.women_styles') }]
             ?.filter((link) => link.href && link.href.trim() !== "")
             .map((link) => (
               <SafeLink

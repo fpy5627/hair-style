@@ -146,8 +146,7 @@ export const HairstyleGrid = ({ styles, selectedStyleId, onStyleSelect }: Hairst
               style.badge === 'BEST MATCH' && "bg-indigo-600",
               style.badge === 'RECOMMENDED' && "bg-blue-500",
               style.badge === 'TRENDING' && "bg-orange-500",
-              style.badge === 'NEW' && "bg-emerald-500",
-              style.badge === 'HOT' && "bg-rose-500"
+              style.badge === 'NEW' && "bg-emerald-500"
             )}>
               {style.badge}
             </div>

@@ -7,7 +7,7 @@ import { Check, Download, RotateCcw, Image as ImageIcon } from 'lucide-react';
 import { Button3D } from '@/components/ui/Button3D';
 
 interface ResultCardProps {
-  status: 'idle' | 'loading' | 'success' | 'error';
+  status: 'idle' | 'ready' | 'loading' | 'success' | 'error';
   originalImage: string | null;
   resultImage: string | null;
   onReset: () => void;
@@ -60,16 +60,16 @@ export const ResultCard = ({ status, originalImage, resultImage, onReset }: Resu
 
       {status === 'success' && (
         <div className="flex gap-4">
-          <Button3D 
-            variant="outline" 
+          <Button3D
+            variant="outline"
             className="flex-1"
             onClick={onReset}
           >
             <RotateCcw size={18} />
             <span className="text-sm">{t('try_another')}</span>
           </Button3D>
-          <Button3D 
-            variant="primary" 
+          <Button3D
+            variant="primary"
             className="flex-1"
             onClick={() => window.open(resultImage || '', '_blank')}
           >

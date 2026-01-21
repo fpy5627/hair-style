@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ComparisonSection } from './ComparisonSection';
+import { useTranslations } from 'next-intl';
 
 interface HairstyleGuideModalProps {
   open: boolean;
@@ -27,12 +28,28 @@ interface HairstyleGuideModalProps {
  * 采用现代轻量化设计，具有高度限制和内部滚动机制
  */
 export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalProps) => {
+  const t = useTranslations('hairstyle.guide');
+
+  const correctRules = [
+    t('correct_1'),
+    t('correct_2'),
+    t('correct_3'),
+    t('correct_4')
+  ];
+
+  const avoidRules = [
+    t('avoid_1'),
+    t('avoid_2'),
+    t('avoid_3'),
+    t('avoid_4')
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[800px] max-h-[85vh] p-0 overflow-hidden border-[#F1F5F9] bg-[#FCFDFF] shadow-[0_40px_40px_-15px_rgba(0,0,0,0.05)] rounded-[32px] sm:rounded-[32px] flex flex-col focus:outline-none">
         {/* 无障碍标题 */}
         <VisuallyHidden>
-          <DialogTitle>AI 发型拍照指南</DialogTitle>
+          <DialogTitle>{t('modal_title')}</DialogTitle>
         </VisuallyHidden>
 
         {/* 滚动内容区 */}
@@ -41,10 +58,10 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
           <div className="text-center space-y-2 sticky top-0 bg-[#FCFDFF]/90 backdrop-blur-md z-10 -mt-2 pt-2 pb-6 border-b border-transparent transition-all duration-300">
             <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-2">
               <Camera className="w-6 h-6 text-[#5B49F9]" />
-              AI 发型拍照指南
+              {t('modal_title')}
             </h2>
             <p className="text-[13px] text-slate-500 font-medium">
-              清晰正脸 + 光线均匀，会让发型效果更逼真
+              {t('modal_subtitle')}
             </p>
           </div>
 
@@ -54,7 +71,7 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
               <div className="w-8 h-8 rounded-[10px] bg-amber-50 flex items-center justify-center border border-amber-100/50">
                 <Lightbulb className="w-4 h-4 text-amber-500 fill-amber-500/10" />
               </div>
-              <h3 className="text-[15px] font-bold text-slate-800 tracking-tight">更容易识别的照片规则</h3>
+              <h3 className="text-[15px] font-bold text-slate-800 tracking-tight">{t('rules_title')}</h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -65,16 +82,11 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
                     <CheckCircle className="w-5 h-5 text-emerald-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[15px] font-bold text-emerald-800 tracking-tight leading-none">正确拍法</span>
+                    <span className="text-[15px] font-bold text-emerald-800 tracking-tight leading-none">{t('correct_title')}</span>
                   </div>
                 </div>
                 <ul className="space-y-3 pl-1">
-                  {[
-                    "**正脸** + 光线好",
-                    "**自然清晰**，五官分明",
-                    "**背景简洁**，无杂乱干扰",
-                    "**虚拟/动漫人物**亦可识别"
-                  ].map((item, i) => (
+                  {correctRules.map((item, i) => (
                     <li key={i} className="text-[12px] text-slate-500 leading-relaxed flex items-start gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/30 shrink-0 mt-[6px]" />
                       <span className="flex-1" dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>') }} />
@@ -90,16 +102,11 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
                     <AlertCircle className="w-5 h-5 text-amber-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[15px] font-bold text-amber-800 tracking-tight leading-none">需避免</span>
+                    <span className="text-[15px] font-bold text-amber-800 tracking-tight leading-none">{t('avoid_title')}</span>
                   </div>
                 </div>
                 <ul className="space-y-3 pl-1">
-                  {[
-                    "画面**过于模糊**",
-                    "**光线过暗/过亮**",
-                    "拍摄**视角偏差**过大",
-                    "面部有**明显遮挡**"
-                  ].map((item, i) => (
+                  {avoidRules.map((item, i) => (
                     <li key={i} className="text-[12px] text-slate-500 leading-relaxed flex items-start gap-3">
                       <div className="w-1.5 h-1.5 rounded-full bg-amber-500/30 shrink-0 mt-[6px]" />
                       <span className="flex-1" dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>') }} />
@@ -117,7 +124,7 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
             </div>
             <div className="flex-1 space-y-1">
               <p className="text-[13px] leading-relaxed text-slate-600">
-                <span className="font-bold text-indigo-700">专业小提示：</span> 建议露出发际线与耳朵附近轮廓。这能让 AI 更精准地为您匹配发型比例，生成的衔接感更自然。
+                <span className="font-bold text-indigo-700">{t('tip_title')}</span> {t('tip_content')}
               </p>
             </div>
           </div>
@@ -126,7 +133,7 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
           <div className="space-y-6 max-w-[600px] mx-auto w-full">
             <div className="flex items-center gap-3">
               <div className="h-5 w-1.5 bg-[#5B49F9] rounded-full shadow-[0_0_10px_rgba(91,73,249,0.3)]" />
-              <h3 className="text-[16px] font-black text-slate-900">效果对比示例</h3>
+              <h3 className="text-[16px] font-black text-slate-900">{t('comparison_title')}</h3>
             </div>
             <ComparisonSection />
           </div>
@@ -138,7 +145,7 @@ export const HairstyleGuideModal = ({ open, onOpenChange }: HairstyleGuideModalP
             onClick={() => onOpenChange(false)}
             className="w-full max-w-md h-14 bg-[#5B49F9] hover:bg-[#4A39D9] text-white rounded-[12px] font-black text-[16px] shadow-[0_12px_24px_-8px_rgba(91,73,249,0.4)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] ring-offset-2 hover:ring-2 hover:ring-[#5B49F9]/20"
           >
-            知道了，去上传
+            {t('close_button')}
           </Button>
         </div>
       </DialogContent>

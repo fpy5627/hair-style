@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "几小时内构建任何 AI SaaS 创业项目 | ShipAny",
-    "description": "ShipAny 是一个用于构建 AI SaaS 创业项目的 NextJS 模板，提供各种模板和组件，帮助您快速启动。",
-    "keywords": "ShipAny, AI SaaS 模板, NextJS 模板"
+    "title": "Hairstyles for Men - AI 推荐男士发型 | Hairnova AI",
+    "description": "Hairstyles for Men - 上传照片，AI 根据脸型推荐最适合的男士发型。覆盖 500+ 男士发型：寸头 Buzz Cut、渐变 Fade、背头 Pompadour、侧分 Side Part、卷发等。不改变五官，真实可信。",
+    "keywords": "hairstyles for men, men hairstyles, buzz cut, fade, taper fade, crew cut, undercut, side part, quiff, pompadour, men haircuts, AI hairstyle, 男士发型推荐, 发型脸型匹配"
   },
   "user": {
     "sign_in": "登录",
@@ -275,10 +275,6 @@
   "hairstyle": {
     "title": "Hairnova AI",
     "description": "专业的 Hairnova AI 换发型工具与发型师",
-    "library": {
-      "title": "500+ 发型候选库",
-      "subtitle": "AI 已经根据脸型筛选出最适合您的候选风格"
-    },
     "nav": {
       "changer": "开始试发型",
       "suits_me": "脸型测发型",
@@ -289,7 +285,25 @@
       "female": "女士发型",
       "free": "免费试用",
       "free_pill": "FREE",
-      "free_trial_tip": "快速入口"
+      "free_trial_tip": "快速入口",
+      "hub": {
+        "men_title": "男士发型",
+        "women_title": "女士发型",
+        "by_length": "按长度",
+        "by_hair_type": "按发质",
+        "by_style": "按风格",
+        "short": "短发",
+        "medium": "中发",
+        "long": "长发",
+        "curly": "卷发",
+        "straight": "直发",
+        "wavy": "微卷",
+        "low_maintenance": "易打理",
+        "fade": "渐变 (Fade)",
+        "buzz_cut": "寸头 (Buzz Cut)",
+        "braids": "脏辫 (Braids)",
+        "women_styles": "女士发型库"
+      }
     },
     "hero": {
       "tagline": "最真实的 Hairnova AI 发型师",
@@ -353,6 +367,7 @@
       "use_photo": "确认使用",
       "retry_connect": "重新连接",
       "upload_tip": "支持JPG、JPEG、PNG或WebP 格式(20MB)。",
+      "photo_requirements": "照片要求 / 拍照小贴士",
       "styles": "选择风格",
       "generate": "立即生成",
       "processing": "AI 正在为你换装...",
@@ -405,6 +420,7 @@
         "description": "无需真正染发，即可在线预览数百种发色效果，包括自然色、时尚浅色及潮流彩色。",
         "cta": "尝试发色",
         "disclaimer": "* 预览仅供参考，实际效果可能因人而异。",
+        "badge": "热门功能",
         "colors": {
           "black": "自然黑",
           "brown": "深棕色",
@@ -444,21 +460,37 @@
         "t_title": "流行趋势",
         "t_desc": "紧跟 2026 全球最新潮流发型",
         "tag_new": "新款",
-        "tag_hot": "热门"
+        "tag_hot": "热门",
+        "cta_text": "尝试该类别"
       },
       "seo_block": {
-        "p1": "Hairnova AI 会自动识别你的脸型与比例，并基于脸型结构推荐更适合你的发型和发色，帮你在真正改变之前，提前看到结果。",
-        "p2": "无需下载，无需注册，上传照片即可开始体验。",
-        "p3": ""
+        "p1": "Hairnova AI 会自动识别你的脸型与比例，",
+        "p2": "并基于脸型结构推荐更适合你的发型和发色，",
+        "p3": "帮你在真正改变之前，提前看到结果。",
+        "subtitle1": "无需下载 · 无需注册",
+        "subtitle2": "上传照片即可开始体验",
+        "trust_accuracy": "精准度",
+        "trust_privacy": "隐私保护",
+        "trust_global": "全球风格"
       },
       "seo_knowledge": {
         "title": "站长必读：如何让你的 AI 发型网站获得更多流量",
+        "badge": "优化指南",
+        "card1_title": "收录与排名的区别",
+        "card2_title": "关键词权重",
+        "card3_title": "站长工具",
         "p1": "这里要特别指出的是，收录并不意味着你的网站就会被排名。收录之后，你的网站只是进入了搜索引擎的网址库。搜索引擎会继续爬取你网站的页面内容，分析页面的关键词，并为每一个关键词赋予不同的权重。所以，当用户在搜索时输入不同的关键词，你的网站在结果页面上的排名可能会有所不同。",
         "p2": "通常情况下，如果是你的品牌词——即那些独特且不会与他人冲突的词汇——只要被收录，你就可以通过搜索你的品牌词找到它。被找到的好处是什么呢？如果我们发布产品宣传稿件，用户看到了去搜索引擎查找，就能找到我们。",
-        "p3": "同时还有另一种方法，那就是我们可以主动提交网站到搜索引擎的站长工具，如百度站长工具和谷歌的Search Console。"
+        "p3": "同时还有另一种方法，那就是我们可以主动提交网站到搜索引擎的站长工具，如百度站长工具和谷歌的Search Console。",
+        "footer_text": "Hairnova AI 助力你的数字形象提升"
       },
       "faq": {
         "title": "常见问题",
+        "subtitle": "关于 AI 发型顾问的常见疑问解答",
+        "q0": "男士什么发型适合我的脸型？",
+        "a0": "您的脸型在决定最佳发型时起着关键作用。我们的 AI 会分析您的面部结构，推荐能够平衡您面部特征的风格。上传照片试试 AI。",
+        "q_alt": "男士如何选择最适合的发型？",
+        "a_alt": "最佳发型取决于您的脸型、发质和生活方式。AI 会综合考虑所有因素，提供个性化建议。上传照片试试 AI。",
         "q1": "AI 是如何判断我的脸型的？",
         "a1": "我们的 AI 通过检测您照片中的下颌线弧度、额头宽度、面部纵横比例等关键面部特征，精准识别出您的脸型（如圆脸、长脸、心形脸等），并据此计算最适合的头发比例。",
         "q2": "圆脸适合什么发型？",
@@ -501,12 +533,16 @@
         "title": "什么时候适合使用 Hairnova AI？",
         "s1_title": "理发前确认效果",
         "s1_desc": "理发前，想确认新发型是否适合自己",
+        "s1_sub": "更适合通勤与商务场景的男士发型选择",
         "s2_title": "尝试新发色",
         "s2_desc": "想尝试新发色，但担心效果不理想",
+        "s2_sub": "换头像前先试戴，减少试错",
         "s3_title": "更新社交头像",
         "s3_desc": "想更换头像、证件照或形象照",
+        "s3_sub": "理发前给理发师更明确的参考",
         "s4_title": "脸型匹配推荐",
-        "s4_desc": "想找到更适合自己脸型的发型"
+        "s4_desc": "想找到更适合自己脸型的发型",
+        "s4_sub": "根据脸型找到更协调的风格"
       },
       "why_us": {
         "title": "为什么选择 Hairnova AI 顾问？",
@@ -578,6 +614,88 @@
         "f6_pro": "有"
       }
     },
+    "library": {
+      "filter_gender": "性别：",
+      "filter_length": "长度：",
+      "filter_type": "发质：",
+      "gender_all": "全部",
+      "gender_male": "男士",
+      "gender_female": "女士",
+      "length_all": "全部",
+      "length_short": "短发",
+      "length_medium": "中发",
+      "length_long": "长发",
+      "type_all": "全部",
+      "type_straight": "直发",
+      "type_wavy": "微卷",
+      "type_curly": "卷发",
+      "try_now": "立即尝试",
+      "badge_hot": "热门",
+      "pagination_previous": "上一页",
+      "pagination_next": "下一页",
+      "pagination_page": "第 {current} 页 / 共 {total} 页"
+    },
+    "dashboard": {
+      "generate_button": "立即生成 AI 新发型",
+      "upload_title": "拖放图片或点击选择。",
+      "select_file": "选择文件",
+      "take_photo": "拍照",
+      "file_tip": "支持 JPG、JPEG、PNG 或 WebP<br />格式 (20MB)",
+      "history_title": "最近试戴",
+      "photo_requirements": "照片要求",
+      "result_placeholder": "结果 {index}"
+    },
+    "guide": {
+      "modal_title": "AI 发型拍照指南",
+      "modal_subtitle": "清晰正脸 + 光线均匀，会让发型效果更逼真",
+      "rules_title": "更容易识别的照片规则",
+      "correct_title": "正确拍法",
+      "correct_1": "**正脸** + 光线好",
+      "correct_2": "**自然清晰**，五官分明",
+      "correct_3": "**背景简洁**，无杂乱干扰",
+      "correct_4": "**虚拟/动漫人物**亦可识别",
+      "avoid_title": "需避免",
+      "avoid_1": "画面**过于模糊**",
+      "avoid_2": "**光线过暗/过亮**",
+      "avoid_3": "拍摄**视角偏差**过大",
+      "avoid_4": "面部有**明显遮挡**",
+      "tip_title": "专业小提示：",
+      "tip_content": "建议露出发际线与耳朵附近轮廓。这能让 AI 更精准地为您匹配发型比例，生成的衔接感更自然。",
+      "comparison_title": "效果对比示例",
+      "close_button": "知道了，去上传"
+    },
+    "view_all_filterable": "进入发型库 (可筛选)",
+    "home_showcase": {
+      "title": "探索 500+ 发型灵感专题",
+      "subtitle": "从热门与推荐中挑选几款潮流灵感，上传照片即可 AI 实时试戴",
+      "view_all": "查看全部发型 (500+)",
+      "try_now": "立即试戴"
+    },
+    "category_header": {
+      "badge": "AI 智能推荐",
+      "virtual_tryon": "虚拟试发主页",
+      "styles_available": "500+ 发型可选",
+      "tryon_experience": "试发体验",
+      "ai_analyzing": "AI 分析中...",
+      "analysis_ready": "分析就绪",
+      "scanning_face": "正在扫描面部轮廓",
+      "ready_for": "已为 {category} 准备就绪！",
+      "analyzed_for": "已成功分析您的特征以匹配 {segment} 发型。",
+      "see_results": "在实验室中查看结果",
+      "privacy_notice": "隐私安全。照片仅在本地处理，绝不存储。",
+      "discover_best": "探索最佳 {label} 发型",
+      "hand_picked": "精心挑选的 {label} 风格，由我们的 AI 科学匹配，适合各种脸型。"
+    },
+    "quick_categories": {
+      "title": "快速浏览热门男士发型分类",
+      "medium_length": "中等长度",
+      "curly": "卷发风格",
+      "low_maintenance": "低打理",
+      "black_men": "黑人发型",
+      "buzz_cut": "寸头"
+    },
+    "steps_intro": "不知道什么发型适合你？上传照片，AI 会根据你的脸型推荐更适合的男士发型。",
+    "preview_trust": "真实 AI 生成效果展示：不改变五官结构，仅替换发型与发色。",
     "styles": {
       "buzz_cut": "寸头",
       "long_waves": "长波浪",

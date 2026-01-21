@@ -91,6 +91,42 @@ export default function HairstyleHubPage() {
           </div>
         </section>
 
+        {/* ① 增强点 1: 快捷分类入口条 (Hero 与 ColorTryOnCard 之间) */}
+        <section className="px-6 py-8">
+          <div className="max-w-7xl mx-auto">
+            <h3 className="text-xs md:text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 text-center">
+              {t('quick_categories.title')}
+            </h3>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <SafeLink href="/hairstyles-for-men/medium">
+                <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-[8px] text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+                  {t('quick_categories.medium_length')}
+                </button>
+              </SafeLink>
+              <SafeLink href="/hairstyles-for-men/curly">
+                <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-[8px] text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+                  {t('quick_categories.curly')}
+                </button>
+              </SafeLink>
+              <SafeLink href="/hairstyles-for-men/low-maintenance">
+                <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-[8px] text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+                  {t('quick_categories.low_maintenance')}
+                </button>
+              </SafeLink>
+              <SafeLink href="/hairstyles-for-men/black-men">
+                <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-[8px] text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+                  {t('quick_categories.black_men')}
+                </button>
+              </SafeLink>
+              <SafeLink href="/hairstyles-for-men/buzz-cut">
+                <button className="px-5 py-2.5 bg-white border border-slate-200 rounded-[8px] text-sm font-medium text-slate-700 hover:bg-indigo-50 hover:border-indigo-500 hover:text-indigo-600 transition-all shadow-sm hover:shadow-md">
+                  {t('quick_categories.buzz_cut')}
+                </button>
+              </SafeLink>
+            </div>
+          </div>
+        </section>
+
         {/* 2.1 发色试戴功能入口 (新增) */}
         <ColorTryOnCard />
 
@@ -115,8 +151,26 @@ export default function HairstyleHubPage() {
         {/* 8) 示例展示 */}
         <PreviewDemo />
 
+        {/* ③ 增强点 3: 在 PreviewDemo 下补一行可信说明 */}
+        <div className="px-6 pb-4">
+          <div className="max-w-4xl mx-auto">
+            <p className="text-xs md:text-sm text-slate-500 text-center font-medium">
+              {t('preview_trust')}
+            </p>
+          </div>
+        </div>
+
         {/* 2.4 更丰富的 SEO 解释文本 (新增) */}
         <SeoTextBlock />
+
+        {/* ② 增强点 2: 在三步之前新增承接文案 */}
+        <div className="px-6 pb-6">
+          <div className="max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-slate-600 text-center font-medium leading-relaxed">
+              {t('steps_intro')}
+            </p>
+          </div>
+        </div>
 
         {/* 10) 简单 3 步 */}
         <QuickStartSteps />

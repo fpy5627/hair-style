@@ -7,7 +7,7 @@ import { Footer } from '@/components/blocks/Footer';
 import { ToolShell } from '@/components/blocks/hairstyle/ToolShell';
 import { UploadCard } from '@/components/blocks/hairstyle/UploadCard';
 import { ResultCard } from '@/components/blocks/hairstyle/ResultCard';
-import { StyleSelector, HairstyleGrid, StyleTabs } from '@/components/blocks/hairstyle/StyleSelector';
+import { HairstyleGrid, StyleTabs } from '@/components/blocks/hairstyle/StyleSelector';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Button3D } from '@/components/ui/Button3D';
 import { Sparkles, Info } from 'lucide-react';
@@ -56,7 +56,7 @@ export default function HairstyleChangerPage() {
   const handleGenerate = () => {
     if (!preview || !selectedStyle) return;
     setStatus('loading');
-    
+
     // 模拟 AI 处理过程
     setTimeout(() => {
       setResult(preview); // Mock: 结果暂时设为原图
@@ -64,52 +64,52 @@ export default function HairstyleChangerPage() {
     }, 3000);
   };
 
-  const filteredStyles = activeCategory === 'All' 
-    ? MOCK_STYLES 
+  const filteredStyles = activeCategory === 'All'
+    ? MOCK_STYLES
     : MOCK_STYLES.filter(s => s.category === activeCategory);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] via-[#f5f3ff] to-[#faf5ff]">
       <HairstyleHeader />
-      
+
       <main className="max-w-7xl mx-auto px-4 pb-20">
-        <ToolShell 
-          title={t('hero.title')} 
+        <ToolShell
+          title={t('hero.title')}
           subtitle={t('hero.subtitle')}
         >
           {/* 左侧：上传与样式选择 */}
           <div className="lg:col-span-7 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-              <UploadCard 
-                preview={preview} 
-                onUpload={handleUpload} 
-                onClear={() => { setPreview(null); setStatus('idle'); }} 
+              <UploadCard
+                preview={preview}
+                onUpload={handleUpload}
+                onClear={() => { setPreview(null); setStatus('idle'); }}
               />
-              
+
               <GlassCard className="p-6 flex flex-col space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-slate-900">{t('tool.styles')}</h3>
                 </div>
-                
-                <StyleTabs 
-                  categories={STYLE_CATEGORIES.map(c => CATEGORY_MAP[c])} 
-                  activeCategory={CATEGORY_MAP[activeCategory]} 
+
+                <StyleTabs
+                  categories={STYLE_CATEGORIES.map(c => CATEGORY_MAP[c])}
+                  activeCategory={CATEGORY_MAP[activeCategory]}
                   onCategoryChange={(translated) => {
                     const original = STYLE_CATEGORIES.find(c => CATEGORY_MAP[c] === translated);
                     if (original) setActiveCategory(original);
-                  }} 
+                  }}
                 />
-                
+
                 <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-[200px]">
-                  <HairstyleGrid 
-                    styles={filteredStyles} 
-                    selectedStyleId={selectedStyle} 
-                    onStyleSelect={setSelectedStyle} 
+                  <HairstyleGrid
+                    styles={filteredStyles}
+                    selectedStyleId={selectedStyle}
+                    onStyleSelect={setSelectedStyle}
                   />
                 </div>
 
-                <Button3D 
-                  variant="primary" 
+                <Button3D
+                  variant="primary"
                   className="w-full py-4 mt-2"
                   disabled={status === 'loading' || !preview || !selectedStyle}
                   onClick={handleGenerate}
@@ -123,10 +123,10 @@ export default function HairstyleChangerPage() {
 
           {/* 右侧：结果展示 */}
           <div className="lg:col-span-5">
-            <ResultCard 
-              status={status} 
-              originalImage={preview} 
-              resultImage={result} 
+            <ResultCard
+              status={status}
+              originalImage={preview}
+              resultImage={result}
               onReset={() => { setStatus('ready'); setResult(null); }}
             />
           </div>

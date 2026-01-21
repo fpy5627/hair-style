@@ -50,7 +50,7 @@ export const ColorTryOnCard = () => {
           <div className="p-8 md:p-12 flex flex-col justify-center space-y-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest w-fit border border-indigo-100">
               <Palette size={12} />
-              Hot Feature
+              {t('badge')}
             </div>
             <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
               {t('title')}
@@ -214,7 +214,7 @@ export const PopularStylesGrid = () => {
                   <h4 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{c.title}</h4>
                   <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{c.desc}</p>
                   <div className="pt-2 flex items-center text-[10px] font-black text-blue-500 uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                    Try This Category <MousePointer2 size={10} className="ml-1" />
+                    {t('cta_text')} <MousePointer2 size={10} className="ml-1" />
                   </div>
                 </div>
               </GlassCard>
@@ -237,29 +237,29 @@ export const SeoTextBlock = () => {
       <div className="max-w-4xl mx-auto space-y-10 text-center">
         <div className="space-y-3">
           <p className="text-base md:text-lg text-slate-900 leading-relaxed font-black tracking-tight">
-            Hairnova AI 会自动识别你的脸型与比例，
+            {t('p1')}
           </p>
           <p className="text-base md:text-lg text-indigo-600 leading-relaxed font-black tracking-tight">
-            并基于脸型结构推荐更适合你的发型和发色，
+            {t('p2')}
           </p>
           <p className="text-base md:text-lg text-slate-900 leading-relaxed font-black tracking-tight">
-            帮你在真正改变之前，提前看到结果。
+            {t('p3')}
           </p>
         </div>
 
         <div className="space-y-4 pt-2">
           <p className="text-xs md:text-sm text-slate-400 font-bold uppercase tracking-widest">
-            无需下载 · 无需注册
+            {t('subtitle1')}
           </p>
           <p className="text-xs md:text-sm text-indigo-400/80 font-bold tracking-wide">
-            上传照片即可开始体验
+            {t('subtitle2')}
           </p>
         </div>
 
         <div className="flex justify-center gap-8 opacity-20 grayscale contrast-200 h-6 pt-6">
-          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">Accuracy</div>
-          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">Privacy</div>
-          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">Global Styles</div>
+          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">{t('trust_accuracy')}</div>
+          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">{t('trust_privacy')}</div>
+          <div className="font-black text-[10px] md:text-xs uppercase tracking-widest text-slate-900">{t('trust_global')}</div>
         </div>
       </div>
     </section>
@@ -274,6 +274,8 @@ export const FAQSection = () => {
   const [openIndex, setOpenIndex] = React.useState<number | null>(0);
 
   const faqs = [
+    { q: t('q0'), a: t('a0') },
+    { q: t('q_alt'), a: t('a_alt') },
     { q: t('q1'), a: t('a1') },
     { q: t('q4'), a: t('a4') },
     { q: t('q5'), a: t('a5') },
@@ -285,7 +287,7 @@ export const FAQSection = () => {
     <div className="py-32 max-w-4xl mx-auto px-4">
       <div className="text-center space-y-3 mb-12">
         <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter">{t('title')}</h2>
-        <p className="text-sm md:text-base text-slate-500 font-medium">关于 AI 发型顾问的常见疑问解答</p>
+        <p className="text-sm md:text-base text-slate-500 font-medium">{t('subtitle')}</p>
       </div>
       <div className="space-y-4">
         {faqs.map((faq, idx) => (
@@ -379,9 +381,9 @@ export const BottomCTA = () => {
           <div className="relative z-10 space-y-6">
             <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">{tl('title')}</h2>
             <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto font-medium">{tl('subtitle')}</p>
-            <div className="pt-4">
+            <div className="flex justify-center pt-4">
               <SafeLink href="/ai-hairstyle-changer">
-                <Button3D variant="primary" radius="xl" className="px-12 h-16 text-lg mx-auto">
+                <Button3D variant="primary" radius="xl" className="px-12 h-16 text-lg">
                   {tl('button')} <ArrowRight size={20} />
                 </Button3D>
               </SafeLink>
@@ -569,10 +571,10 @@ export const CanDoModule = () => {
 export const ScenariosModule = () => {
   const tl = useTranslations('hairstyle.landing.scenarios');
   const scenarios = [
-    { title: tl('s1_title'), desc: tl('s1_desc'), icon: <Target className="text-red-500" /> },
-    { title: tl('s2_title'), desc: tl('s2_desc'), icon: <Camera className="text-purple-500" /> },
-    { title: tl('s3_title'), desc: tl('s3_desc'), icon: <Heart className="text-pink-500" /> },
-    { title: tl('s4_title'), desc: tl('s4_desc'), icon: <Palette className="text-indigo-500" /> },
+    { title: tl('s1_title'), desc: tl('s1_desc'), sub: tl('s1_sub'), icon: <Target className="text-red-500" /> },
+    { title: tl('s2_title'), desc: tl('s2_desc'), sub: tl('s2_sub'), icon: <Camera className="text-purple-500" /> },
+    { title: tl('s3_title'), desc: tl('s3_desc'), sub: tl('s3_sub'), icon: <Heart className="text-pink-500" /> },
+    { title: tl('s4_title'), desc: tl('s4_desc'), sub: tl('s4_sub'), icon: <Palette className="text-indigo-500" /> },
   ];
 
   return (
@@ -588,6 +590,8 @@ export const ScenariosModule = () => {
             </div>
             <h4 className="font-bold text-slate-900">{s.title}</h4>
             <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
+            {/* ④ 增强点 4: 副描述 */}
+            <p className="text-xs text-slate-400 leading-tight">{s.sub}</p>
           </GlassCard>
         ))}
       </div>
@@ -601,9 +605,9 @@ export const SEOEducationSection = () => {
   const t = useTranslations('hairstyle.landing.seo_knowledge');
 
   const knowledgePoints = [
-    { title: 'Indexing vs Ranking', desc: t('p1'), icon: <Target className="text-blue-500" /> },
-    { title: 'Keyword Weighting', desc: t('p2'), icon: <Brain className="text-indigo-500" /> },
-    { title: 'Webmaster Tools', desc: t('p3'), icon: <CheckCircle2 className="text-cyan-500" /> }
+    { title: t('card1_title'), desc: t('p1'), icon: <Target className="text-blue-500" /> },
+    { title: t('card2_title'), desc: t('p2'), icon: <Brain className="text-indigo-500" /> },
+    { title: t('card3_title'), desc: t('p3'), icon: <CheckCircle2 className="text-cyan-500" /> }
   ];
 
   return (
@@ -612,7 +616,7 @@ export const SEOEducationSection = () => {
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-100">
             <Info size={12} />
-            Optimization Guide
+            {t('badge')}
           </div>
           <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
             {t('title')}
@@ -637,7 +641,7 @@ export const SEOEducationSection = () => {
         </div>
 
         <div className="pt-8 text-center text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">
-          Empowering your digital presence with Hairnova AI
+          {t('footer_text')}
         </div>
       </div>
     </section>

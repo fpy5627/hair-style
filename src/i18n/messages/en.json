@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "Ship Any AI SaaS Startups in hours | ShipAny",
-    "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups, Ship Fast with a variety of templates and components.",
-    "keywords": "ShipAny, AI SaaS Boilerplate, NextJS Boilerplate"
+    "title": "Hairstyles for Men - AI Recommendations | Hairnova AI",
+    "description": "Hairstyles for Men - Upload your photo, AI recommends best men's haircuts that fit your face shape. 500+ hairstyles: Buzz Cut, Fade, Pompadour, Side Part, Curly Hair & more. Real results, no facial changes.",
+    "keywords": "hairstyles for men, men hairstyles, buzz cut, fade, taper fade, crew cut, undercut, side part, quiff, pompadour, men haircuts, AI hairstyle recommendations, face shape analysis"
   },
   "user": {
     "sign_in": "Sign In",
@@ -316,10 +316,6 @@
   "hairstyle": {
     "title": "Hairnova AI",
     "description": "Professional Hairnova AI Changer & Stylist",
-    "library": {
-      "title": "500+ Hairstyle Candidate Pool",
-      "subtitle": "AI has filtered the most suitable candidate styles based on your face shape"
-    },
     "nav": {
       "changer": "Changer",
       "suits_me": "Hairstyle Finder",
@@ -330,7 +326,25 @@
       "female": "For Female",
       "free": "Free Plan",
       "free_pill": "FREE",
-      "free_trial_tip": "Quick Access"
+      "free_trial_tip": "Quick Access",
+      "hub": {
+        "men_title": "Men's Hairstyles",
+        "women_title": "Women's Hairstyles",
+        "by_length": "By Length",
+        "by_hair_type": "By Hair Type",
+        "by_style": "By Style",
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long",
+        "curly": "Curly",
+        "straight": "Straight",
+        "wavy": "Wavy",
+        "low_maintenance": "Low Maintenance",
+        "fade": "Fade",
+        "buzz_cut": "Buzz Cut",
+        "braids": "Braids",
+        "women_styles": "Women's Styles"
+      }
     },
     "hero": {
       "tagline": "Most Realistic Hairnova AI Stylist",
@@ -394,6 +408,7 @@
       "use_photo": "Use Photo",
       "retry_connect": "Retry",
       "upload_tip": "JPG, JPEG, PNG or WebP format (20MB)",
+      "photo_requirements": "Photo Requirements / Tips",
       "styles": "Select Style",
       "generate": "Generate Now",
       "processing": "AI magic in progress...",
@@ -446,6 +461,7 @@
         "description": "Preview your look with various hair colors including natural, light, and vibrant colorful tones without touching your hair.",
         "cta": "Try Hair Colors",
         "disclaimer": "* For preview only. Actual results may vary.",
+        "badge": "Hot Feature",
         "colors": {
           "black": "Black",
           "brown": "Brown",
@@ -485,21 +501,37 @@
         "t_title": "Trending Now",
         "t_desc": "Stay ahead with latest fashion styles",
         "tag_new": "NEW",
-        "tag_hot": "HOT"
+        "tag_hot": "HOT",
+        "cta_text": "Try This Category"
       },
       "seo_block": {
-        "p1": "Hairnova AI automatically recognizes your face shape and proportions, recommending hairstyles and colors that better suit your facial structure, helping you see the results before making a real change.",
-        "p2": "No download, no registration required. Just upload a photo to start the experience.",
-        "p3": ""
+        "p1": "Hairnova AI automatically recognizes your face shape and proportions,",
+        "p2": "recommending hairstyles and colors that better suit your facial structure,",
+        "p3": "helping you see the results before making a real change.",
+        "subtitle1": "No download · No registration",
+        "subtitle2": "Upload a photo to start",
+        "trust_accuracy": "Accuracy",
+        "trust_privacy": "Privacy",
+        "trust_global": "Global Styles"
       },
       "seo_knowledge": {
         "title": "Webmaster Guide: Boosting Your AI Hairstyle Site Traffic",
+        "badge": "Optimization Guide",
+        "card1_title": "Indexing vs Ranking",
+        "card2_title": "Keyword Weighting",
+        "card3_title": "Webmaster Tools",
         "p1": "Note that indexing doesn't mean your site will rank. Once indexed, your site enters the database, but search engines continue to crawl content and assign weights to keywords. Ranking varies based on keywords used in searches.",
         "p2": "Typically, unique brand terms rank high once indexed. This is beneficial as users can find you after seeing promotional content.",
-        "p3": "Another way is to actively submit your site to webmaster tools like Baidu Webmaster or Google Search Console."
+        "p3": "Another way is to actively submit your site to webmaster tools like Baidu Webmaster or Google Search Console.",
+        "footer_text": "Empowering your digital presence with Hairnova AI"
       },
       "faq": {
         "title": "Common Questions",
+        "subtitle": "Frequently asked questions about AI Hairstyle Advisor",
+        "q0": "What hairstyles suit my face shape (men)?",
+        "a0": "Your face shape plays a key role in determining the best hairstyle. Our AI analyzes your facial structure to recommend styles that balance your features. Upload a photo to try with AI.",
+        "q_alt": "How to choose the best hairstyle for men?",
+        "a_alt": "The best hairstyle depends on your face shape, hair type, and lifestyle. AI takes all factors into account and provides personalized recommendations. Upload a photo to try with AI.",
         "q1": "How does AI determine my face shape?",
         "a1": "Our AI analyzes 68 key facial landmarks including jawline curvature, forehead width, and facial proportions to accurately identify your face shape (Oval, Round, Square, etc.) and calculate the best hairstyle ratios.",
         "q2": "What hairstyles suit a round face?",
@@ -542,12 +574,16 @@
         "title": "When Should You Use Hairnova AI?",
         "s1_title": "Before a Haircut",
         "s1_desc": "Preview the result before your salon visit",
+        "s1_sub": "Pick a style that fits daily & professional looks",
         "s2_title": "New Hair Color",
         "s2_desc": "When considering a new hair color",
+        "s2_sub": "Try before updating your profile photo",
         "s3_title": "Profile Photos",
         "s3_desc": "For profile photos or professional headshots",
+        "s3_sub": "Show a clearer reference to your barber",
         "s4_title": "Face Shape Match",
-        "s4_desc": "To find hairstyles that match your face shape"
+        "s4_desc": "To find hairstyles that match your face shape",
+        "s4_sub": "Find styles that match your face shape"
       },
       "why_us": {
         "title": "Why Choose Hairnova AI Advisor?",
@@ -619,6 +655,88 @@
         "f6_pro": "Yes"
       }
     },
+    "library": {
+      "filter_gender": "Gender:",
+      "filter_length": "Length:",
+      "filter_type": "Type:",
+      "gender_all": "All",
+      "gender_male": "Male",
+      "gender_female": "Female",
+      "length_all": "All",
+      "length_short": "Short",
+      "length_medium": "Medium",
+      "length_long": "Long",
+      "type_all": "All",
+      "type_straight": "Straight",
+      "type_wavy": "Wavy",
+      "type_curly": "Curly",
+      "try_now": "Try It Now",
+      "badge_hot": "HOT",
+      "pagination_previous": "Previous",
+      "pagination_next": "Next",
+      "pagination_page": "Page {current} of {total}"
+    },
+    "dashboard": {
+      "generate_button": "Generate AI Hairstyle Now",
+      "upload_title": "Drag and drop image or click to select.",
+      "select_file": "Select File",
+      "take_photo": "Take Photo",
+      "file_tip": "Supports JPG, JPEG, PNG or WebP<br />Format (20MB)",
+      "history_title": "Recent Try-ons",
+      "photo_requirements": "Photo Requirements",
+      "result_placeholder": "Result {index}"
+    },
+    "guide": {
+      "modal_title": "AI Hairstyle Photo Guide",
+      "modal_subtitle": "Clear front-facing photo + even lighting makes hairstyle effects more realistic",
+      "rules_title": "Easier-to-Recognize Photo Rules",
+      "correct_title": "Correct Method",
+      "correct_1": "**Front-facing** + good lighting",
+      "correct_2": "**Natural and clear**, distinct features",
+      "correct_3": "**Simple background**, no clutter",
+      "correct_4": "**Virtual/Anime characters** can also be recognized",
+      "avoid_title": "Avoid",
+      "avoid_1": "Image is **too blurry**",
+      "avoid_2": "**Lighting too dark/bright**",
+      "avoid_3": "Shooting **angle deviation** is too large",
+      "avoid_4": "Face has **obvious obstruction**",
+      "tip_title": "Professional Tip:",
+      "tip_content": "It is recommended to expose the hairline and contour near the ears. This allows AI to more accurately match hairstyle proportions for you, and the generated connection effect is more natural.",
+      "comparison_title": "Effect Comparison Examples",
+      "close_button": "Got it, go upload"
+    },
+    "view_all_filterable": "Explore Library (Filterable)",
+    "home_showcase": {
+      "title": "Explore 500+ Hairstyle Inspirations",
+      "subtitle": "Discover top trending and recommended styles, upload your photo to try them on instantly with AI",
+      "view_all": "View All Hairstyles (500+)",
+      "try_now": "Try It On"
+    },
+    "category_header": {
+      "badge": "AI Recommendation",
+      "virtual_tryon": "Virtual Try-on Home",
+      "styles_available": "500+ Styles Available",
+      "tryon_experience": "Try-on Experience",
+      "ai_analyzing": "AI Analyzing...",
+      "analysis_ready": "Analysis Ready",
+      "scanning_face": "Scanning face profile",
+      "ready_for": "Ready for {category}!",
+      "analyzed_for": "Successfully analyzed your features for {segment} hairstyles.",
+      "see_results": "See results in Lab",
+      "privacy_notice": "Privacy secured. Photos are processed locally and never stored.",
+      "discover_best": "Discover Best {label} Hairstyles",
+      "hand_picked": "Hand-picked {label} styles scientifically matched by our AI to suit various face shapes."
+    },
+    "quick_categories": {
+      "title": "Quick Browse Popular Men's Hairstyle Categories",
+      "medium_length": "Medium Length",
+      "curly": "Curly Hairstyles",
+      "low_maintenance": "Low Maintenance",
+      "black_men": "Black Men",
+      "buzz_cut": "Buzz Cut"
+    },
+    "steps_intro": "Not sure which hairstyle suits you? Upload your photo—AI recommends men's hairstyles based on your face shape.",
+    "preview_trust": "Real AI-generated results: no face reshaping—only hairstyle & hair color changes.",
     "styles": {
       "buzz_cut": "Buzz Cut",
       "long_waves": "Long Waves",

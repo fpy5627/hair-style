@@ -174,7 +174,7 @@ export const UploadCard = ({
                   }}
                   className="text-[10px] font-bold text-indigo-500 hover:text-indigo-600 underline underline-offset-4 decoration-indigo-500/20 transition-all scale-90 origin-center"
                 >
-                  照片要求 / 拍照小贴士
+                  {t('photo_requirements')}
                 </button>
               </div>
             </div>
