@@ -30,8 +30,7 @@ import {
   Upload,
   Eye,
   ShieldAlert,
-  Loader2,
-  AlertCircle
+  Loader2
 } from 'lucide-react';
 
 import { Button3D } from '@/components/ui/Button3D';
@@ -48,7 +47,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { toast } from 'sonner';
 
 // Reuse existing components
 import {
@@ -767,7 +765,7 @@ export default function HomePage() {
       startAnalysis(previewUrl);
     } catch (error) {
       console.error('Error loading image:', error);
-      toast.error('图片加载失败，请重试');
+      alert('图片加载失败，请重试');
     }
   };
 
@@ -1829,86 +1827,69 @@ export default function HomePage() {
       visible={!!hoveredColor}
     />
 
-    {/* 检测失败弹窗 - 优化后的界面设计 */}
+    {/* 检测失败弹窗 - 磨砂样式，屏幕居中显示 */}
     <Dialog open={showDetectionFailed} onOpenChange={setShowDetectionFailed}>
       <DialogContent 
-        overlayClassName="!bg-black/40 !z-[1000]"
+        overlayClassName="!bg-black/60 !backdrop-blur-[10px]"
         overlayStyle={{
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1000,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
         }}
-        className="!fixed !left-[64%] sm:!left-[69%] !top-[75%] sm:!top-[80%] !-translate-x-1/2 !-translate-y-[40%] !w-[90%] sm:!w-[80%] !max-w-[600px] !min-h-[500px] !max-h-[85vh] !bg-white !border-none !shadow-[0_4px_10px_rgba(0,0,0,0.2)] !p-5 sm:!p-8 focus:outline-none overflow-y-auto !m-0 !z-[1001] !text-center"
+        className="!w-[80%] !max-w-[400px] !bg-white/80 !backdrop-blur-[10px] !border !border-white/80 !rounded-xl !shadow-lg !p-5 focus:outline-none overflow-y-auto"
         style={{
-          position: 'relative',
-          top: '75%',
-          left: '64%',
-          transform: 'translate(-50%, -40%)',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           width: '80%',
-          maxWidth: '600px',
-          minHeight: '500px',
-          maxHeight: '85vh',
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+          maxWidth: '400px',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          borderRadius: '12px',
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
           padding: '20px',
-          margin: 0,
-          overflow: 'auto',
-          zIndex: 1001,
-          textAlign: 'center',
+          zIndex: 9999,
         }}
       >
         <DialogHeader className="space-y-0">
-          {/* 错误提示框头部 - 图标在文字上方，所有内容居中 */}
-          <div className="flex flex-col items-center text-center mb-8">
-            {/* 警告图标 - 红色圆形标志带"！"，放在文字上方 */}
-            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 mb-6">
-              <AlertCircle className="h-8 w-8 text-red-600" strokeWidth={2.5} />
+          <div className="flex items-start gap-3 mb-3">
+            <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <X className="h-5 w-5 text-red-500" />
             </div>
-            <div className="flex-1 w-full">
-              {/* 标题 - 放大文字，24-28px 加粗，居中 */}
-              <DialogTitle className="text-[28px] sm:text-[24px] font-bold text-slate-900 leading-tight mb-6 text-center">
+            <div className="flex-1">
+              <DialogTitle className="text-[18px] font-bold text-[#333] leading-tight mb-2.5">
                 检测失败：无法识别到人像
               </DialogTitle>
-              {/* 错误信息 - 16-18px，深灰色，居中 */}
-              <DialogDescription className="text-[18px] sm:text-[16px] text-slate-700 leading-relaxed text-center">
-                请上传包含清晰正面或侧面的人像照片，以便 AI 为您推荐合适的发型。
+              <DialogDescription className="text-sm text-[#666] leading-relaxed">
+                请上传包含清晰人脸的照片，确保图片包含正面或侧面的脸部。
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
-        
-        {/* 建议信息 - 25px 间距，14-16px 字体，居中 */}
-        <div className="border-t border-slate-200/60" style={{ marginTop: '30px', paddingTop: '30px' }}>
-          <p className="text-[16px] sm:text-[14px] text-slate-800 leading-relaxed text-center">
-            <span className="font-semibold text-slate-900">建议：</span>
-            <span className="text-blue-600 ml-2">
-              使用正面或侧面人像照片；确保面部部位清晰可见；避免使用风景、物品等非人像照片。
-            </span>
-          </p>
+        <div className="mt-4 space-y-2 pl-[52px]">
+          <p className="text-sm font-medium text-[#333] mb-2">建议：</p>
+          <ul className="text-sm text-[#666] space-y-1.5 list-disc list-inside">
+            <li>使用正面或侧面人像照片</li>
+            <li>确保面部清晰可见</li>
+            <li>避免使用风景、物品等非人像照片</li>
+          </ul>
         </div>
-        
-        {/* 确认按钮 - 圆角矩形，indigo主题色，16px字体，hover效果 */}
-        <div className="flex justify-center" style={{ marginTop: '20px', paddingBottom: '30px' }}>
+        <div className="mt-5 flex justify-center">
           <button
             onClick={() => setShowDetectionFailed(false)}
-            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
+            className="px-5 py-2.5 text-sm font-medium text-white bg-[#4a90e2] hover:bg-[#3a7bc8] rounded-[5px] shadow-sm hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#4a90e2] focus:ring-offset-2 border-none cursor-pointer"
             style={{
-              fontSize: '16px',
-              fontWeight: 700,
+              backgroundColor: '#4a90e2',
+              color: 'white',
               padding: '10px 20px',
-              borderRadius: '8px',
-              marginTop: '20px',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              border: 'none',
             }}
           >
-            确认
+            确定
           </button>
         </div>
       </DialogContent>

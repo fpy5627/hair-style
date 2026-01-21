@@ -1867,26 +1867,26 @@ export default function HomePage() {
       >
         <DialogHeader className="space-y-0">
           {/* 错误提示框头部 - 图标在文字上方，所有内容居中 */}
-          <div className="flex flex-col items-center text-center mb-8">
+          <div className="flex flex-col items-center text-center mb-6">
             {/* 警告图标 - 红色圆形标志带"！"，放在文字上方 */}
-            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 mb-6">
+            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 mb-4">
               <AlertCircle className="h-8 w-8 text-red-600" strokeWidth={2.5} />
             </div>
             <div className="flex-1 w-full">
               {/* 标题 - 放大文字，24-28px 加粗，居中 */}
-              <DialogTitle className="text-[28px] sm:text-[24px] font-bold text-slate-900 leading-tight mb-6 text-center">
+              <DialogTitle className="text-[28px] sm:text-[24px] font-bold text-slate-900 leading-tight mb-4 text-center">
                 检测失败：无法识别到人像
               </DialogTitle>
               {/* 错误信息 - 16-18px，深灰色，居中 */}
-              <DialogDescription className="text-[18px] sm:text-[16px] text-slate-700 leading-relaxed text-center">
+              <DialogDescription className="text-[18px] sm:text-[16px] text-slate-700 leading-relaxed text-center mb-0">
                 请上传包含清晰正面或侧面的人像照片，以便 AI 为您推荐合适的发型。
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
         
-        {/* 建议信息 - 25px 间距，14-16px 字体，居中 */}
-        <div className="border-t border-slate-200/60" style={{ marginTop: '30px', paddingTop: '30px' }}>
+        {/* 建议信息 - 调整间距，14-16px 字体，居中 */}
+        <div className="border-t border-slate-200/60 mt-6 pt-6">
           <p className="text-[16px] sm:text-[14px] text-slate-800 leading-relaxed text-center">
             <span className="font-semibold text-slate-900">建议：</span>
             <span className="text-blue-600 ml-2">
@@ -1895,17 +1895,16 @@ export default function HomePage() {
           </p>
         </div>
         
-        {/* 确认按钮 - 圆角矩形，indigo主题色，16px字体，hover效果 */}
-        <div className="flex justify-center" style={{ marginTop: '20px', paddingBottom: '30px' }}>
+        {/* 确认按钮 - 圆角矩形，紫色主题，16px字体，hover效果 */}
+        <div className="flex justify-center mt-8 pb-4">
           <button
             onClick={() => setShowDetectionFailed(false)}
-            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
+            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-[#6c63ff] hover:bg-[#5a53e6] active:bg-[#5a53e6] rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6c63ff] focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
             style={{
               fontSize: '16px',
               fontWeight: 700,
               padding: '10px 20px',
               borderRadius: '8px',
-              marginTop: '20px',
             }}
           >
             确认

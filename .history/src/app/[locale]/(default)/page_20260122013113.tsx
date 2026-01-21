@@ -1845,11 +1845,11 @@ export default function HomePage() {
           height: '100%',
           zIndex: 1000,
         }}
-        className="!fixed !left-[64%] sm:!left-[69%] !top-[75%] sm:!top-[80%] !-translate-x-1/2 !-translate-y-[40%] !w-[90%] sm:!w-[80%] !max-w-[600px] !min-h-[500px] !max-h-[85vh] !bg-white !border-none !shadow-[0_4px_10px_rgba(0,0,0,0.2)] !p-5 sm:!p-8 focus:outline-none overflow-y-auto !m-0 !z-[1001] !text-center"
+        className="!fixed !left-[62%] sm:!left-[67%] !top-[75%] sm:!top-[80%] !-translate-x-1/2 !-translate-y-[40%] !w-[90%] sm:!w-[80%] !max-w-[600px] !min-h-[500px] !max-h-[85vh] !bg-white !border-none !shadow-[0_4px_10px_rgba(0,0,0,0.2)] !p-5 sm:!p-8 focus:outline-none overflow-y-auto !m-0 !z-[1001] !text-center"
         style={{
           position: 'relative',
           top: '75%',
-          left: '64%',
+          left: '62%',
           transform: 'translate(-50%, -40%)',
           width: '80%',
           maxWidth: '600px',
@@ -1895,11 +1895,11 @@ export default function HomePage() {
           </p>
         </div>
         
-        {/* 确认按钮 - 圆角矩形，indigo主题色，16px字体，hover效果 */}
+        {/* 确认按钮 - 圆角矩形，紫色主题，16px字体，hover效果 */}
         <div className="flex justify-center" style={{ marginTop: '20px', paddingBottom: '30px' }}>
           <button
             onClick={() => setShowDetectionFailed(false)}
-            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
+            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-[#6c63ff] hover:bg-[#5a53e6] active:bg-[#5a53e6] rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6c63ff] focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
             style={{
               fontSize: '16px',
               fontWeight: 700,

@@ -1832,62 +1832,53 @@ export default function HomePage() {
     {/* 检测失败弹窗 - 优化后的界面设计 */}
     <Dialog open={showDetectionFailed} onOpenChange={setShowDetectionFailed}>
       <DialogContent 
-        overlayClassName="!bg-black/40 !z-[1000]"
+        overlayClassName="!bg-black/60 !backdrop-blur-[10px]"
         overlayStyle={{
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1000,
+          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
         }}
-        className="!fixed !left-[64%] sm:!left-[69%] !top-[75%] sm:!top-[80%] !-translate-x-1/2 !-translate-y-[40%] !w-[90%] sm:!w-[80%] !max-w-[600px] !min-h-[500px] !max-h-[85vh] !bg-white !border-none !shadow-[0_4px_10px_rgba(0,0,0,0.2)] !p-5 sm:!p-8 focus:outline-none overflow-y-auto !m-0 !z-[1001] !text-center"
+        className="!w-[95%] sm:!w-[85%] !max-w-[800px] !bg-slate-100/95 !backdrop-blur-[10px] !border !border-slate-200/60 !rounded !shadow-lg !p-8 focus:outline-none overflow-y-auto"
         style={{
-          position: 'relative',
-          top: '75%',
-          left: '64%',
-          transform: 'translate(-50%, -40%)',
-          width: '80%',
-          maxWidth: '600px',
-          minHeight: '500px',
-          maxHeight: '85vh',
-          backgroundColor: 'white',
-          borderRadius: '10px',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-          padding: '20px',
-          margin: 0,
-          overflow: 'auto',
-          zIndex: 1001,
-          textAlign: 'center',
+          position: 'fixed !important',
+          top: '50% !important',
+          left: '50% !important',
+          transform: 'translate(-50%, -50%) !important',
+          width: '95%',
+          maxWidth: '800px',
+          backgroundColor: 'rgba(241, 245, 249, 0.95)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          borderRadius: '4px',
+          boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+          padding: '32px',
+          zIndex: 9999,
+          margin: '0 !important',
         }}
       >
         <DialogHeader className="space-y-0">
-          {/* 错误提示框头部 - 图标在文字上方，所有内容居中 */}
-          <div className="flex flex-col items-center text-center mb-8">
-            {/* 警告图标 - 红色圆形标志带"！"，放在文字上方 */}
-            <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0 mb-6">
-              <AlertCircle className="h-8 w-8 text-red-600" strokeWidth={2.5} />
+          {/* 错误提示框头部 - 带红色警告图标 */}
+          <div className="flex items-start gap-5 mb-6">
+            {/* 警告图标 - 红色圆形标志带"！" */}
+            <div className="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="h-7 w-7 text-red-600" strokeWidth={2.5} />
             </div>
-            <div className="flex-1 w-full">
-              {/* 标题 - 放大文字，24-28px 加粗，居中 */}
-              <DialogTitle className="text-[28px] sm:text-[24px] font-bold text-slate-900 leading-tight mb-6 text-center">
+            <div className="flex-1">
+              {/* 标题 - 18-20px 加粗 */}
+              <DialogTitle className="text-[20px] sm:text-[18px] font-bold text-slate-900 leading-tight mb-4">
                 检测失败：无法识别到人像
               </DialogTitle>
-              {/* 错误信息 - 16-18px，深灰色，居中 */}
-              <DialogDescription className="text-[18px] sm:text-[16px] text-slate-700 leading-relaxed text-center">
+              {/* 错误信息 - 14-16px，深灰色 */}
+              <DialogDescription className="text-[16px] sm:text-[15px] text-slate-700 leading-relaxed">
                 请上传包含清晰正面或侧面的人像照片，以便 AI 为您推荐合适的发型。
               </DialogDescription>
             </div>
           </div>
         </DialogHeader>
         
-        {/* 建议信息 - 25px 间距，14-16px 字体，居中 */}
-        <div className="border-t border-slate-200/60" style={{ marginTop: '30px', paddingTop: '30px' }}>
-          <p className="text-[16px] sm:text-[14px] text-slate-800 leading-relaxed text-center">
+        {/* 建议信息 - 25px 间距，14px 字体，使用淡蓝色增强视觉层次 */}
+        <div className="border-t border-slate-200/60" style={{ marginTop: '25px', paddingTop: '25px' }}>
+          <p className="text-[14px] text-slate-800 leading-relaxed">
             <span className="font-semibold text-slate-900">建议：</span>
             <span className="text-blue-600 ml-2">
               使用正面或侧面人像照片；确保面部部位清晰可见；避免使用风景、物品等非人像照片。
@@ -1895,17 +1886,15 @@ export default function HomePage() {
           </p>
         </div>
         
-        {/* 确认按钮 - 圆角矩形，indigo主题色，16px字体，hover效果 */}
-        <div className="flex justify-center" style={{ marginTop: '20px', paddingBottom: '30px' }}>
+        {/* 确认按钮 - 底部留白 25px，高度50px，16px加粗字体，深蓝色 */}
+        <div className="mt-6 flex justify-center" style={{ paddingBottom: '25px' }}>
           <button
             onClick={() => setShowDetectionFailed(false)}
-            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
+            className="w-full sm:w-auto px-10 h-[50px] text-[16px] font-bold text-white bg-[#1e40af] hover:bg-[#1e3a8a] active:bg-[#1e3a8a] rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#1e40af] focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
             style={{
               fontSize: '16px',
               fontWeight: 700,
-              padding: '10px 20px',
-              borderRadius: '8px',
-              marginTop: '20px',
+              height: '50px',
             }}
           >
             确认

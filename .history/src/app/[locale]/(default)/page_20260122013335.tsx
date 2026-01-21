@@ -1895,11 +1895,11 @@ export default function HomePage() {
           </p>
         </div>
         
-        {/* 确认按钮 - 圆角矩形，indigo主题色，16px字体，hover效果 */}
+        {/* 确认按钮 - 圆角矩形，紫色主题，16px字体，hover效果 */}
         <div className="flex justify-center" style={{ marginTop: '20px', paddingBottom: '30px' }}>
           <button
             onClick={() => setShowDetectionFailed(false)}
-            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-700 rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
+            className="w-full sm:w-auto px-6 py-3 text-[16px] font-bold text-white bg-[#6c63ff] hover:bg-[#5a53e6] active:bg-[#5a53e6] rounded-lg shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#6c63ff] focus:ring-offset-2 border-none cursor-pointer min-w-[160px] sm:min-w-[180px]"
             style={{
               fontSize: '16px',
               fontWeight: 700,
